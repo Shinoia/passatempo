@@ -760,7 +760,7 @@ function emMostra(){
   const box=$('#em-box');
   if(em.i>=em.lista.length){
     box.innerHTML=`<div class="em-tema">Fim de jogo!</div><p style="font-size:22px;font-weight:700">Você fez ${em.pts} de ${em.lista.length*3} pontos</p><button class="prim" id="em-de-novo">Jogar de novo</button>`;
-    $('#em-de-novo').onclick=emNovo;ganhou('embaralhadas',{pontos:em.pts});return;
+    $('#em-de-novo').onclick=emNovo;ganhou('embaralhadas',{pontos:em.pts,somar:false});return;
   }
   const w=norm(em.lista[em.i]);let s;
   do{s=shuffle([...w]).join('');}while(s===w&&new Set(w).size>1);
@@ -781,7 +781,7 @@ function emMostra(){
 function emConfirma(){
   if(em.espera)return;
   if(norm($('#em-resp').value)===em.w){
-    const p=Math.max(1,3-em.revel);em.pts+=p;em.espera=true;
+    const p=Math.max(1,3-em.revel);em.pts+=p;em.espera=true;pontuou('embaralhadas',p,em.w);
     msg('#em-msg',`✔ Certo! +${p} ponto${p>1?'s':''}`,'ok');
     setTimeout(()=>{em.i++;emMostra();},1000);
   }else msg('#em-msg','Ainda não… tente de novo!','erro');
@@ -1317,6 +1317,7 @@ async function contaEntrar(nick,cod,lembrar){
   const r=await api({acao:'entrar',nick,codigo:cod});
   if(!r||!r.ok)throw new Error((r&&r.erro)||'Não foi possível entrar.');
   conta.nick=r.nick;conta.cod=cod;conta.dados=normaliza(r.perfil);conta.ajuda=!!r.ajuda;conta.lido=Date.now();
+  conta.antigo=!r.perfil;   // servidor ainda com o Apps Script antigo
   try{if(lembrar)localStorage.setItem(LOGIN_KEY,JSON.stringify({nick:r.nick,cod}));else localStorage.removeItem(LOGIN_KEY);}catch(e){}
   contaMudou();return r;
 }
@@ -1356,9 +1357,16 @@ function ganhou(jogo,extra={}){
   g.v=(g.v||0)+1;
   const seg=extra.tempo?Math.max(1,Math.round(extra.tempo/1000)):0;
   if(seg)g.t=g.t?Math.min(g.t,seg):seg;
-  if(extra.pontos!=null){g.s=(g.s||0)+extra.pontos;g.p=Math.max(g.p||0,extra.pontos);}
+  if(extra.pontos!=null){if(extra.somar!==false)g.s=(g.s||0)+extra.pontos;g.p=Math.max(g.p||0,extra.pontos);}
   desenhaPerfil();
-  enviar({acao:'jogo',jogo,tempo:seg||'',pontos:extra.pontos??''});
+  enviar({acao:'jogo',jogo,tempo:seg||'',pontos:extra.pontos??'',somar:extra.somar===false?0:1});
+}
+/* cada acerto/ponto vai para a planilha na hora (não espera o fim da partida) */
+function pontuou(jogo,pts,detalhe){
+  if(!logado()||!pts)return;
+  const g=conta.dados.jogos[jogo]||(conta.dados.jogos[jogo]={v:0});
+  g.s=(g.s||0)+pts;desenhaPerfil();
+  enviar({acao:'ponto',jogo,pontos:pts,detalhe:String(detalhe||'').slice(0,120)});
 }
 function alertaConta(t){const b=$('#conta-bar');b.innerHTML=`<span style="color:var(--erro);font-weight:700">${esc(t)}</span>`;setTimeout(desenhaBarra,4000);}
 function desenhaBarra(){
@@ -1373,9 +1381,10 @@ function desenhaPerfil(){
   const d=conta.dados;
   const linhas=Object.entries(JOGOS_NOMES).map(([k,n])=>{const g=d.jogos[k]||{};
     const un=k==='mapa'?'acertos':'pontos';
-    const rec=g.t?'Melhor tempo '+tempo(g.t*1000):g.s!=null&&g.v?`Melhor: ${g.p||0} ${un} · Total: ${g.s||0} ${un}`:'—';
+    const rec=g.t?'Melhor tempo '+tempo(g.t*1000):(g.s||g.v)?`Total: ${g.s||0} ${un} · Melhor partida: ${g.p||0}`:'—';
     return `<tr><td>${n}</td><td style="text-align:right;font-weight:700">${g.v||0}</td><td>${rec}</td></tr>`;}).join('');
   p.innerHTML=`<h3>📊 Meus resultados — ${esc(conta.nick)}</h3>
+    ${conta.antigo?'<p class="msg erro">⚠️ O servidor (Apps Script) ainda está na versão antiga, por isso os resultados não ficam salvos. Publique a nova versão do script.</p>':''}
     <table><tr><th>Jogo</th><th style="text-align:right">Concluídos</th><th>Recorde</th></tr>
     <tr><td>🧠 Quiz</td><td style="text-align:right;font-weight:700">${d.respondidas}/${PERGUNTAS.length}</td><td>${d.acertos} acertos</td></tr>${linhas}</table>`;
   p.classList.add('on');
@@ -1644,7 +1653,7 @@ $('#mp-ok').onclick=()=>{
   if(mp.feito){mp.i++;if(mp.i<MP_RODADAS){mpRodada();}else mpFim();return;}
   if(!mp.palpite)return;
   const L=mp.lista[mp.i],certo={lat:L[2],lng:L[3]},km=mpDist(mp.palpite,certo),pts=mpPontos(km);
-  mp.total+=pts;mp.feito=true;
+  mp.total+=pts;mp.feito=true;if(pts)pontuou('mapa',1,L[0]);
   mpMarcas();
   mp.mundo.ligar(mp.palpite,certo);mp.mundo.enquadrar(mp.palpite,certo);
   $('#mp-pontos').textContent=`Acertos: ${mp.total}`;
@@ -1661,7 +1670,7 @@ function mpFim(){
   const r=$('#mp-res');r.classList.add('on');
   r.innerHTML=`<b class="lugar">Fim da partida: ${mp.total} de ${max} acertos</b><br>${frase}${logado()?'':'<br><small>Entre com nick para guardar seu recorde.</small>'}`;
   $('#mp-ok').disabled=true;$('#mp-ok').textContent='Confirmar palpite';
-  ganhou('mapa',{pontos:mp.total});
+  ganhou('mapa',{pontos:mp.total,somar:false});
 }
 $('#mp-novo').onclick=mpNovo;
 
