@@ -147,6 +147,25 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 .qz-anon{background:#fef3c7;border:1px dashed var(--tinta);border-radius:6px;padding:10px 12px;font-size:14px;margin-bottom:12px}
 .qz-link{background:none;border:0;padding:0;color:var(--acento2);font-weight:600;text-decoration:underline;cursor:pointer;font-size:14px}
 
+/* Onde é? (mapa) */
+.mp-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.mp-wrap{grid-template-columns:1fr}}
+.mp-bloco h3{font-family:Georgia,serif;margin:0 0 6px;font-size:18px}
+.mm{position:relative;overflow:hidden;height:340px;border:2px solid var(--tinta);border-radius:6px;background:#dfe7ea;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+@media(max-width:760px){.mm{height:280px}}
+.mm.arrastando{cursor:grabbing}
+.mm img{position:absolute;width:256px;height:256px;max-width:none;pointer-events:none;-webkit-user-drag:none}
+.mm .mm-ctl{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:4px;z-index:5}
+.mm .mm-ctl button{width:36px;height:36px;padding:0;font-size:20px;line-height:1;background:#fff}
+.mm .mm-attr{position:absolute;right:0;bottom:0;background:rgba(255,255,255,.8);font-size:10px;padding:1px 5px;z-index:5;pointer-events:auto}
+.mm .mm-attr a{color:#333}
+.mm svg{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.mm .mk{position:absolute;z-index:4;transform:translate(-50%,-100%);font-size:28px;line-height:1;pointer-events:none;filter:drop-shadow(0 1px 1px rgba(0,0,0,.5))}
+.mp-info{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-weight:600;color:var(--suave);margin-bottom:10px}
+.mp-res{background:var(--card);border:2px solid var(--tinta);border-radius:6px;padding:14px;margin-top:12px;display:none}
+.mp-res.on{display:block}
+.mp-res b.lugar{font-family:Georgia,serif;font-size:20px;color:var(--tinta)}
+
 /* Labirinto */
 .lb-wrap{max-width:560px}
 .lb-wrap canvas{display:block;background:#fff;border:2px solid var(--tinta);touch-action:none}
@@ -158,7 +177,6 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 <body>
 <header>
   <a href="#"><h1>📖 Passatempos</h1></a>
-  <p>Caça-palavras, cruzadinha, sudoku e outros desafios — direto no navegador.</p>
   <div class="conta-bar" id="conta-bar"></div>
 </header>
 
@@ -185,6 +203,7 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
   <a class="card" href="#criptograma"><div class="ic">🔐</div><h2>Criptograma</h2><p>Cada número é uma letra. Descubra o ditado popular escondido.</p></a>
   <a class="card" href="#quiz"><div class="ic">🧠</div><h2>Quiz de Conhecimentos</h2><p>Política, eleições, história e o mundo. Cada resposta vem com a fonte oficial.</p></a>
   <a class="card" href="#embaralhadas"><div class="ic">🔀</div><h2>Palavras Embaralhadas</h2><p>Desembaralhe as letras e ache a palavra certa.</p></a>
+  <a class="card" href="#mapa"><div class="ic">🌍</div><h2>Onde é?</h2><p>Veja um lugar do mundo por satélite e marque no mapa onde ele fica.</p></a>
   <a class="card" href="#labirinto"><div class="ic">🌀</div><h2>Labirinto</h2><p>Saia do início e chegue até a bandeira no menor tempo.</p></a>
 </div>
 
@@ -274,6 +293,19 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
   <div class="qz-box qz-rank" id="qz-rank"></div>
 </section>
 
+<!-- ONDE É? -->
+<section class="jogo" id="mapa">
+  <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Onde é?</h2></div>
+  <p class="instr">Olhe a imagem de satélite (dá para arrastar e dar zoom) e toque no mapa-múndi onde você acha que é. Quanto mais perto, mais pontos: até 5.000 por lugar.</p>
+  <div class="mp-info"><span id="mp-rodada"></span><span id="mp-pontos"></span></div>
+  <div class="mp-wrap">
+    <div class="mp-bloco"><h3>📡 Que lugar é este?</h3><div class="mm" id="mp-sat"></div></div>
+    <div class="mp-bloco"><h3>🗺️ Seu palpite</h3><div class="mm" id="mp-mundo"></div>
+      <div class="controles" style="margin-top:10px"><button class="prim" id="mp-ok" disabled>Confirmar palpite</button><button id="mp-novo">Nova partida</button></div></div>
+  </div>
+  <div class="mp-res" id="mp-res"></div>
+</section>
+
 <!-- LABIRINTO -->
 <section class="jogo" id="labirinto">
   <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Labirinto</h2></div>
@@ -296,9 +328,9 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 </main>
 
 <footer>
-  <div class="contador"><span>Visitantes</span><div id="cont-dig"></div></div>
-  <div>© 2014–<span id="ano"></span> Passatempos · No ar desde 2014</div>
-  <div>Jogos gerados na hora, cada partida é diferente</div>
+  <div class="contador" id="contador" style="visibility:hidden"><span>Visitantes</span><div id="cont-dig"></div></div>
+  <div>© 2014–<span id="ano"></span></div>
+  <div>@cqcfoda</div>
 </footer>
 
 <script>
@@ -368,6 +400,7 @@ function rota(){
   document.querySelectorAll('section.jogo').forEach(s=>s.classList.toggle('ativo',s.id===atual));
   if(atual&&!iniciados[atual]){iniciados[atual]=1;INIT[atual]();}
   if(atual==='labirinto'&&lb.m)lbDesenha();
+  if(atual==='mapa'&&mp.sat){mp.sat.redesenha();mp.mundo.redesenha();}
   window.scrollTo(0,0);
 }
 for(const id of ['#ws-tema','#em-tema'])$(id).innerHTML=Object.keys(TEMAS).map(t=>`<option>${t}</option>`).join('');
@@ -1151,14 +1184,94 @@ const LIVROS=[
   e:'Raízes do Brasil apresentou a ideia do "homem cordial" para discutir a cultura política brasileira.',
   f:{nome:'SciELO — Revista Brasileira de Literatura Comparada: Raízes do Brasil',url:'https://scielo.br/j/rblc/a/NM9xLWM9ZcgJXB45CLtzjCt/?lang=en'}}
 ];
-NOVAS.push(...LIVROS);
+/* ---- Política mundial atual (conferido em novembro de 2026) ---- */
+const PM='Política mundial atual';
+const MUNDO=[
+ {cat:PM,p:'Quem se tornou primeiro-ministro do Reino Unido em julho de 2026, sucedendo Keir Starmer?',
+  o:['Andy Burnham','Rishi Sunak','Boris Johnson'],
+  e:'Andy Burnham, novo líder do Partido Trabalhista, assumiu em 20 de julho de 2026, após a renúncia de Keir Starmer.',
+  f:{nome:'CartaCapital — Andy Burnham assume como primeiro-ministro',url:'https://www.cartacapital.com.br/mundo/andy-burnham-assume-o-cargo-de-primeiro-ministro-do-reino-unido/'}},
+ {cat:PM,p:'Antes de virar primeiro-ministro britânico, Andy Burnham era prefeito de qual região?',
+  o:['Grande Manchester','Londres','Escócia'],
+  e:'Burnham era prefeito da Grande Manchester e tornou-se o sétimo primeiro-ministro do Reino Unido em uma década.',
+  f:{nome:'SBT News — Andy Burnham assume como novo premiê',url:'https://sbtnews.sbt.com.br/noticia/mundo/andy-burnham-assume-como-novo-premie-do-reino-unido'}},
+ {cat:PM,p:'Quem é a primeira mulher a chefiar o governo do Japão?',
+  o:['Sanae Takaichi','Yuriko Koike','Fumio Kishida'],
+  e:'Sanae Takaichi assumiu em 21 de outubro de 2025 e foi reconduzida pelo Parlamento em fevereiro de 2026, após eleições antecipadas.',
+  f:{nome:'CIDOB — Perfil de Sanae Takaichi',url:'https://www.cidob.org/lider-politico/sanae-takaichi'}},
+ {cat:PM,p:'Quem tomou posse como presidente do Chile em 11 de março de 2026?',
+  o:['José Antonio Kast','Gabriel Boric','Michelle Bachelet'],
+  e:'José Antonio Kast assumiu para o período 2026–2030, sucedendo Gabriel Boric.',
+  f:{nome:'Radio Universidad de Chile — Kast asume la Presidencia',url:'https://radio.uchile.cl/2026/03/11/jose-antonio-kast-asume-la-presidencia-y-marca-inicio-del-gobierno-de-emergencia/'}},
+ {cat:PM,p:'O papa Leão XIV, eleito em maio de 2025, é o primeiro papa nascido em qual país?',
+  o:['Estados Unidos','Argentina','Peru'],
+  e:'Robert Francis Prevost, nascido em Chicago, foi eleito em 8 de maio de 2025 e é o primeiro pontífice nascido nos EUA. Ele também tem nacionalidade peruana.',
+  f:{nome:'Migalhas — Leão XIV: Robert Prevost é eleito novo papa',url:'https://www.migalhas.com.br/quentes/429917/robert-prevost-eleito-novo-papa-da-igreja-catolica'}},
+ {cat:PM,p:'Onde aconteceu a COP31, a conferência do clima da ONU, em novembro de 2026?',
+  o:['Antália, na Turquia','Belém, no Brasil','Sydney, na Austrália'],
+  e:'A COP31 foi marcada para Antália, na Turquia, de 9 a 20 de novembro de 2026. A COP30 tinha sido em Belém.',
+  f:{nome:'UNFCCC — COP31 Antalya',url:'https://unfccc.int/cop31'}},
+ {cat:PM,p:'Num arranjo inédito, a Turquia sediou a COP31. Qual país ficou encarregado de conduzir as negociações?',
+  o:['Austrália','Brasil','Alemanha'],
+  e:'Pelo acordo entre os dois candidatos, a Turquia exerce a presidência e recebe a conferência, enquanto a Austrália conduz as negociações.',
+  f:{nome:'Folha PE — COP31 promete ambições modestas',url:'https://www.folhape.com.br/noticias/cop31-promete-ambicoes-modestas-apesar-da-emergencia-climatica/516801/'}},
+ {cat:PM,p:'Qual país exerce a presidência do G20 em 2026?',
+  o:['Estados Unidos','África do Sul','Brasil'],
+  e:'Os EUA assumiram a presidência do G20 em 1º de dezembro de 2025, sucedendo a África do Sul.',
+  f:{nome:'G20 Research Group — US assumes the 2026 presidency',url:'https://g20.utoronto.ca/2026/251201-us-assumes-presidency.html'}},
+ {cat:PM,p:'Em que cidade foi marcada a cúpula de líderes do G20 de 2026?',
+  o:['Miami','Nova York','Washington'],
+  e:'A cúpula foi marcada para dezembro de 2026, no resort Trump National Doral, em Miami.',
+  f:{nome:'CFR — The U.S. G20 Presidency in 2026',url:'https://www.cfr.org/articles/us-g20-presidency-narrow-agenda-2026'}},
+ {cat:PM,p:'Quantos países são membros da OTAN em 2026?',
+  o:['32','30','28'],
+  e:'A OTAN tem 32 membros, quase todos na Europa, mais Estados Unidos e Canadá.',
+  f:{nome:'Revista Oeste — OTAN',url:'https://revistaoeste.com/mundo/otan/'}},
+ {cat:PM,p:'Qual foi o país mais recente a entrar na OTAN?',
+  o:['Suécia','Ucrânia','Áustria'],
+  e:'A Suécia entrou em 7 de março de 2024 e se tornou o 32º membro.',
+  f:{nome:'Statista — NATO member states',url:'https://www.statista.com/statistics/1293471/nato-member-states-2025/'}},
+ {cat:PM,p:'Quem é o secretário-geral da OTAN?',
+  o:['Mark Rutte','Jens Stoltenberg','Ursula von der Leyen'],
+  e:'O holandês Mark Rutte, ex-primeiro-ministro dos Países Baixos, ocupa o cargo desde 1º de outubro de 2024.',
+  f:{nome:'CNN (via ABC17) — NATO Fast Facts',url:'https://abc17news.com/?p=1294494'}},
+ {cat:PM,p:'Quantos países são membros plenos do BRICS?',
+  o:['11','5','20'],
+  e:'São 11 membros plenos: Brasil, Rússia, Índia, China, África do Sul, Arábia Saudita, Egito, Emirados Árabes, Etiópia, Indonésia e Irã. Há ainda 10 países parceiros.',
+  f:{nome:'CNN Brasil — Quais são os membros do Brics?',url:'https://www.cnnbrasil.com.br/economia/macroeconomia/quais-sao-os-membros-do-brics-veja-lista/'}},
+ {cat:PM,p:'Qual país assumiu a presidência do BRICS em 2026, sucedendo o Brasil?',
+  o:['Índia','China','Rússia'],
+  e:'A Índia assumiu a presidência do BRICS em 1º de janeiro de 2026.',
+  f:{nome:'The Rio Times — BRICS 2026 guide',url:'https://www.riotimesonline.com/brics-2026-complete-guide/'}},
+ {cat:PM,p:'Quando a saída dos Estados Unidos do Acordo de Paris sobre o clima passou a valer oficialmente?',
+  o:['Em janeiro de 2026','Em janeiro de 2021','Os EUA nunca saíram'],
+  e:'A retirada anunciada em janeiro de 2025 entrou em vigor em 27 de janeiro de 2026, após o prazo de um ano previsto no acordo.',
+  f:{nome:'Metrópoles — Trump retira EUA do Acordo de Paris',url:'https://www.metropoles.com/mundo/trump-retira-eua-do-acordo-de-paris-sobre-mudanca-do-clima'}},
+ {cat:PM,p:'Quando o próximo secretário-geral da ONU, escolhido em 2026, assume o cargo?',
+  o:['Em 1º de janeiro de 2027','Em 1º de janeiro de 2026','Em julho de 2028'],
+  e:'O novo secretário-geral tem mandato de cinco anos a partir de 1º de janeiro de 2027. António Guterres termina seu segundo mandato em 31 de dezembro de 2026.',
+  f:{nome:'CNN Brasil — ONU prepara sucessão de António Guterres',url:'https://www.cnnbrasil.com.br/internacional/onu-prepara-sucessao-de-antonio-guterres-entenda-como-funciona-o-processo/'}},
+ {cat:PM,p:'De qual país é António Guterres, secretário-geral da ONU até o fim de 2026?',
+  o:['Portugal','Espanha','Brasil'],
+  e:'O português António Guterres foi eleito em 2016 e cumpre dois mandatos de cinco anos.',
+  f:{nome:'CNN Brasil — ONU prepara sucessão de António Guterres',url:'https://www.cnnbrasil.com.br/internacional/onu-prepara-sucessao-de-antonio-guterres-entenda-como-funciona-o-processo/'}},
+ {cat:PM,p:'Quem é o primeiro-ministro do Canadá?',
+  o:['Mark Carney','Justin Trudeau','Pierre Poilievre'],
+  e:'Mark Carney é o 24º primeiro-ministro do Canadá, empossado em março de 2025.',
+  f:{nome:'Gabinete do Primeiro-Ministro do Canadá',url:'https://pm.gc.ca/fra/premier-ministre-justin-trudeau'}},
+ {cat:PM,p:'Quem é o chanceler (chefe de governo) da Alemanha?',
+  o:['Friedrich Merz','Olaf Scholz','Angela Merkel'],
+  e:'Friedrich Merz é o chanceler alemão. Em julho de 2026, ele foi um dos líderes a cumprimentar o novo premiê britânico.',
+  f:{nome:'Tiempo Argentino — Burnham asume como primer ministro',url:'https://www.tiempoar.com.ar/ta_article/andy-burnham-asumio-como-primer-ministro-britanico-tras-la-renuncia-de-keir-starmer/'}}
+];
+NOVAS.push(...LIVROS,...MUNDO);
 NOVAS.forEach(q=>q.novo=true);
 PERGUNTAS.forEach(q=>q.o=q.o.slice(0,3));   // agora todas têm 3 opções
 PERGUNTAS.unshift(...NOVAS);
 /* ================= CONTA (login opcional com nick + código) ================= */
 /* Link do App da Web do Apps Script (termina em /exec). Guarda logins, progresso, ranking e o contador. */
 const SERVIDOR_URL='https://script.google.com/macros/s/AKfycbzG439rQqMfUq9qFRBdON50NgU3lf6ECE7AJpz-CNLoCmtYDT_9A0_lwIm56mCHfEu7/exec';
-const JOGOS_NOMES={cacapalavras:'🔎 Caça-palavras',cruzadinha:'✏️ Cruzadinha',sudoku:'🔢 Sudoku',criptograma:'🔐 Criptograma',embaralhadas:'🔀 Palavras Embaralhadas',labirinto:'🌀 Labirinto'};
+const JOGOS_NOMES={cacapalavras:'🔎 Caça-palavras',cruzadinha:'✏️ Cruzadinha',sudoku:'🔢 Sudoku',criptograma:'🔐 Criptograma',embaralhadas:'🔀 Palavras Embaralhadas',labirinto:'🌀 Labirinto',mapa:'🌍 Onde é?'};
 const LOGIN_KEY='pt-login';
 // limpa dados antigos que versões anteriores do site deixavam no navegador
 ['pt-contador','pt-quiz-v1','pt-quiz-rank-local'].forEach(k=>{try{localStorage.removeItem(k);}catch(e){}});
@@ -1327,6 +1440,175 @@ function qzDesenhaRanking(lista){
     ${logado()?'':'<p class="qz-aviso">Só aparece no ranking quem joga com nick e código.</p>'}`;
 }
 
+/* ================= MINI MAPA (sem bibliotecas) ================= */
+const TILE=256;
+const mmLon2x=(lng,z)=>(lng+180)/360*TILE*2**z;
+const mmLat2y=(lat,z)=>{const s=Math.sin(Math.max(-85.0511,Math.min(85.0511,lat))*Math.PI/180);return (0.5-Math.log((1+s)/(1-s))/(4*Math.PI))*TILE*2**z;};
+const mmX2lon=(x,z)=>x/(TILE*2**z)*360-180;
+const mmY2lat=(y,z)=>{const n=Math.PI-2*Math.PI*y/(TILE*2**z);return 180/Math.PI*Math.atan(0.5*(Math.exp(n)-Math.exp(-n)));};
+function MiniMapa(el,op){
+  const m={el,z:op.zoom,minZ:op.minZ??1,maxZ:op.maxZ??18,cx:0,cy:0,marcas:[],linha:null,tiles:new Map()};
+  el.innerHTML=`<div class="mm-t"></div><svg></svg><div class="mm-m"></div>
+    <div class="mm-ctl"><button type="button" aria-label="Aproximar">+</button><button type="button" aria-label="Afastar">−</button></div>
+    <div class="mm-attr">${op.attr||''}</div>`;
+  const camT=el.querySelector('.mm-t'),svg=el.querySelector('svg'),camM=el.querySelector('.mm-m');
+  const W=()=>el.clientWidth,H=()=>el.clientHeight,mundo=()=>TILE*2**m.z;
+  function limita(){
+    const w=mundo();m.cx=((m.cx%w)+w)%w;
+    const h=H();m.cy=w<=h?w/2:Math.max(h/2,Math.min(w-h/2,m.cy));
+  }
+  function url(x,y,z){return op.tiles.replace('{s}','abcd'[(x+y)%4]).replace('{z}',z).replace('{x}',x).replace('{y}',y);}
+  function px(lat,lng){
+    const w=mundo();let x=mmLon2x(lng,m.z)-(m.cx-W()/2);
+    while(x-W()/2>w/2)x-=w;while(W()/2-x>w/2)x+=w;
+    return {x,y:mmLat2y(lat,m.z)-(m.cy-H()/2)};
+  }
+  function desenha(){
+    limita();
+    const n=2**m.z,l=m.cx-W()/2,t=m.cy-H()/2,usados=new Set();
+    for(let tx=Math.floor(l/TILE);tx<=Math.floor((l+W())/TILE);tx++)
+      for(let ty=Math.floor(t/TILE);ty<=Math.floor((t+H())/TILE);ty++){
+        if(ty<0||ty>=n)continue;
+        const wx=((tx%n)+n)%n,k=m.z+'/'+tx+'/'+ty;usados.add(k);
+        let im=m.tiles.get(k);
+        if(!im){im=document.createElement('img');im.alt='';im.draggable=false;im.src=url(wx,ty,m.z);camT.appendChild(im);m.tiles.set(k,im);}
+        im.style.left=(tx*TILE-l)+'px';im.style.top=(ty*TILE-t)+'px';
+      }
+    for(const [k,im] of m.tiles)if(!usados.has(k)){im.remove();m.tiles.delete(k);}
+    camM.innerHTML=m.marcas.map(mk=>{const p=px(mk.lat,mk.lng);return `<div class="mk" style="left:${p.x}px;top:${p.y}px">${mk.ic}</div>`;}).join('');
+    if(m.linha){const a=px(m.linha[0].lat,m.linha[0].lng),b=px(m.linha[1].lat,m.linha[1].lng);
+      svg.innerHTML=`<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="#c2410c" stroke-width="3" stroke-dasharray="7 6"/>`;}
+    else svg.innerHTML='';
+  }
+  function zoomEm(nz,ax=W()/2,ay=H()/2){
+    nz=Math.max(m.minZ,Math.min(m.maxZ,nz));if(nz===m.z)return;
+    const k=2**(nz-m.z),wx=m.cx-W()/2+ax,wy=m.cy-H()/2+ay;
+    m.z=nz;m.cx=wx*k-(ax-W()/2);m.cy=wy*k-(ay-H()/2);desenha();
+  }
+  m.centraliza=(lat,lng,z)=>{if(z!=null)m.z=z;m.cx=mmLon2x(lng,m.z);m.cy=mmLat2y(lat,m.z);desenha();};
+  m.marcar=(lista)=>{m.marcas=lista;desenha();};
+  m.ligar=(a,b)=>{m.linha=a&&b?[a,b]:null;desenha();};
+  m.enquadrar=(a,b)=>{
+    let l1=a.lng,l2=b.lng;if(Math.abs(l1-l2)>180){if(l1<l2)l1+=360;else l2+=360;}
+    for(let z=m.maxZ;z>=m.minZ;z--){
+      const dx=Math.abs(mmLon2x(l1,z)-mmLon2x(l2,z)),dy=Math.abs(mmLat2y(a.lat,z)-mmLat2y(b.lat,z));
+      if(dx<W()-80&&dy<H()-80||z===m.minZ){m.z=z;m.cx=(mmLon2x(l1,z)+mmLon2x(l2,z))/2;m.cy=(mmLat2y(a.lat,z)+mmLat2y(b.lat,z))/2;desenha();return;}
+    }
+  };
+  m.redesenha=desenha;
+  const [bMais,bMenos]=el.querySelectorAll('.mm-ctl button');
+  bMais.onclick=e=>{e.stopPropagation();zoomEm(m.z+1);};bMenos.onclick=e=>{e.stopPropagation();zoomEm(m.z-1);};
+  ['pointerdown','click'].forEach(ev=>el.querySelector('.mm-ctl').addEventListener(ev,e=>e.stopPropagation()));
+  el.addEventListener('wheel',e=>{e.preventDefault();const r=el.getBoundingClientRect();zoomEm(m.z+(e.deltaY<0?1:-1),e.clientX-r.left,e.clientY-r.top);},{passive:false});
+  const ptr=new Map();let arr=null,pinca=null;
+  el.addEventListener('pointerdown',e=>{
+    if(e.target.closest('.mm-attr'))return;
+    el.setPointerCapture(e.pointerId);ptr.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(ptr.size===1)arr={x:e.clientX,y:e.clientY,cx:m.cx,cy:m.cy,mov:0};
+    else if(ptr.size===2){const [p1,p2]=[...ptr.values()];pinca=Math.hypot(p1.x-p2.x,p1.y-p2.y);arr=null;}
+  });
+  el.addEventListener('pointermove',e=>{
+    if(!ptr.has(e.pointerId))return;ptr.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(ptr.size===2&&pinca){const [p1,p2]=[...ptr.values()],d=Math.hypot(p1.x-p2.x,p1.y-p2.y),r=el.getBoundingClientRect();
+      const ax=(p1.x+p2.x)/2-r.left,ay=(p1.y+p2.y)/2-r.top;
+      if(d/pinca>1.5){zoomEm(m.z+1,ax,ay);pinca=d;}else if(d/pinca<0.67){zoomEm(m.z-1,ax,ay);pinca=d;}return;}
+    if(!arr)return;
+    const dx=e.clientX-arr.x,dy=e.clientY-arr.y;arr.mov=Math.max(arr.mov,Math.abs(dx)+Math.abs(dy));
+    if(arr.mov>4){el.classList.add('arrastando');m.cx=arr.cx-dx;m.cy=arr.cy-dy;desenha();}
+  });
+  const solta=e=>{
+    if(!ptr.has(e.pointerId))return;ptr.delete(e.pointerId);el.classList.remove('arrastando');
+    if(arr&&arr.mov<=4&&e.type==='pointerup'&&op.aoTocar){const r=el.getBoundingClientRect();
+      const x=m.cx-W()/2+(e.clientX-r.left),y=m.cy-H()/2+(e.clientY-r.top);
+      let lng=mmX2lon(x,m.z);lng=((lng+540)%360)-180;op.aoTocar({lat:mmY2lat(y,m.z),lng});}
+    if(ptr.size<2)pinca=null;if(!ptr.size)arr=null;
+  };
+  el.addEventListener('pointerup',solta);el.addEventListener('pointercancel',solta);
+  m.centraliza(op.lat??0,op.lng??0,op.zoom);
+  return m;
+}
+
+/* ================= ONDE É? ================= */
+const SAT_TILES='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+const SAT_ATTR='Imagens © <a href="https://www.esri.com" target="_blank" rel="noopener">Esri</a>, Maxar, Earthstar Geographics';
+const MAPA_TILES='https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png';
+const MAPA_ATTR='© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> © <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>';
+// nome, país, latitude, longitude, zoom inicial da imagem de satélite
+const LUGARES=[
+ ['Pão de Açúcar, Rio de Janeiro','Brasil',-22.9486,-43.1566,15],['Esplanada dos Ministérios, Brasília','Brasil',-15.7998,-47.8645,15],
+ ['Parque Ibirapuera, São Paulo','Brasil',-23.5874,-46.6576,15],['Cataratas do Iguaçu','Brasil/Argentina',-25.6953,-54.4367,14],
+ ['Encontro das Águas, Manaus','Brasil',-3.1366,-59.8970,13],['Fernando de Noronha','Brasil',-3.8549,-32.4239,13],
+ ['Lençóis Maranhenses','Brasil',-2.4800,-43.1300,12],['Elevador Lacerda, Salvador','Brasil',-12.9744,-38.5131,16],
+ ['Torre Eiffel, Paris','França',48.8584,2.2945,16],['Central Park, Nova York','Estados Unidos',40.7829,-73.9654,14],
+ ['Tower Bridge, Londres','Reino Unido',51.5055,-0.0754,16],['Coliseu, Roma','Itália',41.8902,12.4922,16],
+ ['Pirâmides de Gizé','Egito',29.9792,31.1342,15],['Ópera de Sydney','Austrália',-33.8568,151.2153,16],
+ ['Palm Jumeirah, Dubai','Emirados Árabes Unidos',25.1124,55.1390,13],['Cruzamento de Shibuya, Tóquio','Japão',35.6595,139.7005,16],
+ ['Praça de São Marcos, Veneza','Itália',45.4341,12.3388,15],['Obelisco, Buenos Aires','Argentina',-34.6037,-58.3816,16],
+ ['Machu Picchu','Peru',-13.1631,-72.5450,15],['Table Mountain, Cidade do Cabo','África do Sul',-33.9628,18.4098,13],
+ ['Praça Vermelha, Moscou','Rússia',55.7539,37.6208,16],['Cidade Proibida, Pequim','China',39.9163,116.3972,15],
+ ['Taj Mahal, Agra','Índia',27.1751,78.0421,16],['Sagrada Família, Barcelona','Espanha',41.4036,2.1744,16],
+ ['Ponte Golden Gate, São Francisco','Estados Unidos',37.8199,-122.4783,14],['Las Vegas Strip','Estados Unidos',36.1147,-115.1728,15],
+ ['Santa Sofia, Istambul','Turquia',41.0086,28.9802,16],['Marina Bay Sands, Singapura','Singapura',1.2834,103.8607,15],
+ ['Praça do Comércio, Lisboa','Portugal',38.7075,-9.1364,16],['Capitólio, Washington','Estados Unidos',38.8899,-77.0091,15],
+ ['Zócalo, Cidade do México','México',19.4326,-99.1332,16],['Acrópole, Atenas','Grécia',37.9715,23.7257,16],
+ ['Petra','Jordânia',30.3285,35.4444,15],['Grand Canyon','Estados Unidos',36.0544,-112.1401,12],
+ ['Uluru','Austrália',-25.3444,131.0369,13],['Monte Fuji','Japão',35.3606,138.7274,12],
+ ['Portão de Brandemburgo, Berlim','Alemanha',52.5163,13.3777,16],['Porto de Victoria, Hong Kong','China',22.2930,114.1694,14],
+ ['Ushuaia','Argentina',-54.8019,-68.3030,14],['Reykjavík','Islândia',64.1466,-21.9426,14],
+ ['Malecón, Havana','Cuba',23.1440,-82.3700,15],['Estátua da Liberdade, Nova York','Estados Unidos',40.6892,-74.0445,16]
+];
+const MP_RODADAS=5;
+let mp={};
+function mpDist(a,b){const R=6371,r=Math.PI/180,dLa=(b.lat-a.lat)*r,dLo=(b.lng-a.lng)*r;
+  const h=Math.sin(dLa/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dLo/2)**2;return 2*R*Math.asin(Math.sqrt(h));}
+const mpPontos=km=>Math.round(5000*Math.exp(-km/2000));
+const fmt=n=>n.toLocaleString('pt-BR');
+function mpNovo(){
+  if(!mp.sat){
+    mp.sat=MiniMapa($('#mp-sat'),{tiles:SAT_TILES,attr:SAT_ATTR,zoom:15,minZ:3,maxZ:18});
+    mp.mundo=MiniMapa($('#mp-mundo'),{tiles:MAPA_TILES,attr:MAPA_ATTR,zoom:1,minZ:1,maxZ:12,lat:15,lng:-20,aoTocar:mpPalpite});
+    addEventListener('resize',()=>{if(atual==='mapa'){mp.sat.redesenha();mp.mundo.redesenha();}});
+  }
+  mp.lista=shuffle(LUGARES.slice()).slice(0,MP_RODADAS);mp.i=0;mp.total=0;
+  mpRodada();
+}
+function mpRodada(){
+  const L=mp.lista[mp.i];mp.palpite=null;mp.feito=false;
+  mp.sat.minZ=Math.max(3,L[4]-3);mp.sat.centraliza(L[2],L[3],L[4]);
+  mp.mundo.ligar(null);mp.mundo.marcar([]);mp.mundo.centraliza(15,-20,1);
+  $('#mp-ok').disabled=true;$('#mp-ok').textContent='Confirmar palpite';
+  $('#mp-res').classList.remove('on');
+  $('#mp-rodada').textContent=`Lugar ${mp.i+1} de ${MP_RODADAS}`;
+  $('#mp-pontos').textContent=`Pontos: ${fmt(mp.total)}`;
+}
+function mpPalpite(p){
+  if(mp.feito)return;
+  mp.palpite=p;mp.mundo.marcar([{lat:p.lat,lng:p.lng,ic:'📍'}]);$('#mp-ok').disabled=false;
+}
+$('#mp-ok').onclick=()=>{
+  if(mp.feito){mp.i++;if(mp.i<MP_RODADAS){mpRodada();}else mpFim();return;}
+  if(!mp.palpite)return;
+  const L=mp.lista[mp.i],certo={lat:L[2],lng:L[3]},km=mpDist(mp.palpite,certo),pts=mpPontos(km);
+  mp.total+=pts;mp.feito=true;
+  mp.mundo.marcar([{lat:mp.palpite.lat,lng:mp.palpite.lng,ic:'📍'},{lat:certo.lat,lng:certo.lng,ic:'🚩'}]);
+  mp.mundo.ligar(mp.palpite,certo);mp.mundo.enquadrar(mp.palpite,certo);
+  $('#mp-pontos').textContent=`Pontos: ${fmt(mp.total)}`;
+  const r=$('#mp-res');r.classList.add('on');
+  r.innerHTML=`Era: <b class="lugar">${esc(L[0])}</b> — ${esc(L[1])}<br>
+    Seu palpite ficou a <b>${km<1?'menos de 1':fmt(Math.round(km))} km</b> do lugar certo: <b style="color:var(--ok)">+${fmt(pts)} pontos</b>`;
+  $('#mp-ok').textContent=mp.i+1<MP_RODADAS?'Próximo lugar →':'Ver resultado';
+  r.scrollIntoView({behavior:'smooth',block:'nearest'});
+};
+function mpFim(){
+  const max=MP_RODADAS*5000,pct=mp.total/max;
+  const frase=pct>=.8?'Você é um explorador nato! 🧭':pct>=.5?'Mandou bem! 👏':pct>=.25?'Bom começo!':'Que tal mais uma volta ao mundo?';
+  const r=$('#mp-res');r.classList.add('on');
+  r.innerHTML=`<b class="lugar">Fim da partida: ${fmt(mp.total)} de ${fmt(max)} pontos</b><br>${frase}${logado()?'':'<br><small>Entre com nick para guardar seu recorde.</small>'}`;
+  $('#mp-ok').disabled=true;$('#mp-ok').textContent='Confirmar palpite';
+  ganhou('mapa',{pontos:mp.total});
+}
+$('#mp-novo').onclick=mpNovo;
+
 /* ================= teclado ================= */
 addEventListener('keydown',e=>{
   if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT')return;
@@ -1345,11 +1627,11 @@ addEventListener('keydown',e=>{
 
 /* ================= contador de visitas (fica na planilha, nada no navegador) ================= */
 function mostraContador(n){$('#cont-dig').innerHTML=String(n).padStart(7,'0').split('').map(d=>`<b>${d}</b>`).join('');}
-mostraContador(866000+rnd(134000));
-api({acao:'visita'}).then(r=>{if(r&&r.ok&&r.contador)mostraContador(r.contador);}).catch(()=>{});
+// o número vem só da planilha (igual para todos e sempre subindo); se o servidor não responder, o contador fica oculto
+api({acao:'visita'}).then(r=>{if(r&&r.ok&&r.contador){mostraContador(r.contador);$('#contador').style.visibility='visible';}}).catch(()=>{});
 $('#ano').textContent=new Date().getFullYear();
 
-const INIT={cacapalavras:wsNovo,cruzadinha:cwNovo,sudoku:sdNovo,criptograma:crNovo,embaralhadas:emNovo,labirinto:lbNovo,quiz:qzNovo};
+const INIT={cacapalavras:wsNovo,cruzadinha:cwNovo,sudoku:sdNovo,criptograma:crNovo,embaralhadas:emNovo,labirinto:lbNovo,quiz:qzNovo,mapa:mpNovo};
 addEventListener('hashchange',rota);
 contaIniciar();
 rota();
