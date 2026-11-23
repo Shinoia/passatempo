@@ -25,7 +25,7 @@ section.jogo.ativo{display:block}
 .topo h2{font-family:Georgia,serif;margin:0;font-size:30px}
 .voltar{color:var(--acento2);text-decoration:none;font-weight:600}
 .controles{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
-select,button,input[type=text]{font:inherit;padding:8px 12px;border:2px solid var(--tinta);border-radius:5px;background:var(--card);color:var(--tinta)}
+select,button,input[type=text],input[type=password]{font:inherit;padding:8px 12px;border:2px solid var(--tinta);border-radius:5px;background:var(--card);color:var(--tinta)}
 button{cursor:pointer;font-weight:600}
 button.prim{background:var(--tinta);color:var(--papel)}
 button:active{transform:translateY(1px)}
@@ -126,6 +126,25 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 .qz-placar span{font-size:11px;color:var(--suave);font-weight:600;overflow-wrap:anywhere}
 .qz-placar div{min-width:0;padding:8px 4px}
 @media(max-width:480px){.qz-box{padding:14px}.qz-placar b{font-size:22px}}
+.conta-bar{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;font-size:14px}
+.conta-bar b{font-size:15px}
+.conta-bar button{padding:6px 12px;font-size:14px}
+#login{position:fixed;inset:0;background:rgba(20,16,12,.55);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+#login.on{display:flex}
+.login-box{background:var(--card);border:2px solid var(--tinta);border-radius:8px;box-shadow:6px 6px 0 var(--tinta);padding:22px;max-width:380px;width:100%}
+.login-box h3{font-family:Georgia,serif;font-size:24px;margin:0 0 6px}
+.login-box label{display:block;font-weight:700;margin-top:12px;font-size:14px}
+.login-box input[type=text],.login-box input[type=password]{width:100%;margin-top:4px;font-size:18px}
+.login-box .lembrar{display:flex;align-items:center;gap:8px;font-weight:500;margin-top:12px}
+.login-box .botoes{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.login-box small{color:var(--suave);display:block;margin-top:4px;line-height:1.4}
+.perfil{margin-top:22px;background:var(--card);border:2px solid var(--tinta);border-radius:6px;padding:18px;display:none}
+.perfil.on{display:block}
+.perfil h3{font-family:Georgia,serif;margin:0 0 10px;font-size:22px}
+.perfil table{width:100%;border-collapse:collapse;font-size:15px}
+.perfil td,.perfil th{padding:7px 6px;border-bottom:1px solid var(--linha);text-align:left}
+.perfil th{font-size:13px;color:var(--suave)}
+.qz-anon{background:#fef3c7;border:1px dashed var(--tinta);border-radius:6px;padding:10px 12px;font-size:14px;margin-bottom:12px}
 .qz-link{background:none;border:0;padding:0;color:var(--acento2);font-weight:600;text-decoration:underline;cursor:pointer;font-size:14px}
 
 /* Labirinto */
@@ -140,7 +159,23 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 <header>
   <a href="#"><h1>📖 Passatempos</h1></a>
   <p>Caça-palavras, cruzadinha, sudoku e outros desafios — direto no navegador.</p>
+  <div class="conta-bar" id="conta-bar"></div>
 </header>
+
+<div id="login" role="dialog" aria-modal="true">
+  <div class="login-box">
+    <h3>Entrar com nick</h3>
+    <small>Opcional. Com nick e código, seu progresso do quiz e seus recordes nos jogos ficam salvos e você aparece no ranking. Sem login, nada é guardado.</small>
+    <label for="lg-nick">Nick</label>
+    <input type="text" id="lg-nick" maxlength="20" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Ex.: Campeao123">
+    <label for="lg-cod">Código de 4 caracteres</label>
+    <input type="password" id="lg-cod" maxlength="4" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Ex.: A7k2">
+    <small>Letras e números. Maiúsculas e minúsculas fazem diferença. Nick novo? Ele é criado com este código. Nick que já existe? Só entra quem souber o código.</small>
+    <label class="lembrar"><input type="checkbox" id="lg-lembrar" checked> Continuar conectado neste aparelho</label>
+    <div class="botoes"><button class="prim" id="lg-ok">Entrar</button><button id="lg-cancelar">Jogar sem login</button></div>
+    <div class="msg erro" id="lg-msg"></div>
+  </div>
+</div>
 
 <main>
 <div id="menu" class="menu">
@@ -152,6 +187,8 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
   <a class="card" href="#embaralhadas"><div class="ic">🔀</div><h2>Palavras Embaralhadas</h2><p>Desembaralhe as letras e ache a palavra certa.</p></a>
   <a class="card" href="#labirinto"><div class="ic">🌀</div><h2>Labirinto</h2><p>Saia do início e chegue até a bandeira no menor tempo.</p></a>
 </div>
+
+<div class="perfil" id="perfil"></div>
 
 <!-- CAÇA-PALAVRAS -->
 <section class="jogo" id="cacapalavras">
@@ -386,13 +423,13 @@ function wsConfere(){
   const cor=CORES[ws.cor++%CORES.length],k=$('#ws-grid').children;
   ws.selec.forEach(i=>k[i].style.background=cor);
   $(`#ws-lista li[data-p="${idx}"]`).classList.add('ach');
-  if(ws.palavras.every(p=>p.ach))msg('#ws-msg','🎉 Parabéns! Você achou todas as palavras!','ok');
+  if(ws.palavras.every(p=>p.ach)){msg('#ws-msg','🎉 Parabéns! Você achou todas as palavras!','ok');if(!ws.rev)ganhou('cacapalavras');}
 }
 $('#ws-grid').addEventListener('pointerdown',e=>{const i=wsCelula(e);if(i<0)return;e.preventDefault();ws.ini=i;wsMarca([i]);});
 addEventListener('pointermove',e=>{if(ws.ini<0)return;const i=wsCelula(e);if(i<0)return;const l=wsLinha(ws.ini,i);if(l)wsMarca(l);});
 addEventListener('pointerup',()=>{if(ws.ini<0)return;wsConfere();ws.ini=-1;wsMarca([]);});
 $('#ws-novo').onclick=wsNovo;$('#ws-tema').onchange=wsNovo;$('#ws-dif').onchange=wsNovo;
-$('#ws-rev').onclick=()=>{const k=$('#ws-grid').children;ws.palavras.forEach((p,i)=>{if(p.ach)return;p.cells.forEach(c=>{k[c].style.background='#e7e2d6';k[c].style.color='#b91c1c';});$(`#ws-lista li[data-p="${i}"]`).classList.add('rev');});};
+$('#ws-rev').onclick=()=>{ws.rev=true;const k=$('#ws-grid').children;ws.palavras.forEach((p,i)=>{if(p.ach)return;p.cells.forEach(c=>{k[c].style.background='#e7e2d6';k[c].style.color='#b91c1c';});$(`#ws-lista li[data-p="${i}"]`).classList.add('rev');});};
 
 /* ================= CRUZADINHA ================= */
 let cw={};
@@ -521,10 +558,10 @@ $('#cw-ver').onclick=()=>{
   cw.grid.forEach((c,i)=>{const inp=cwInp(i),d=inp.parentNode;d.classList.remove('err','ok');
     if(!inp.value){cheio=false;tudo=false;return;}
     if(inp.value===c.ch)d.classList.add('ok');else{d.classList.add('err');tudo=false;}});
-  if(tudo)msg('#cw-msg','🎉 Cruzadinha completa! Tudo certo!','ok');
+  if(tudo){msg('#cw-msg','🎉 Cruzadinha completa! Tudo certo!','ok');if(!cw.fim&&!cw.rev){cw.fim=true;ganhou('cruzadinha');}}
   else msg('#cw-msg',cheio?'Há letras erradas (marcadas em vermelho).':'As letras em vermelho estão erradas. Continue!','erro');
 };
-$('#cw-rev').onclick=()=>{cw.grid.forEach((c,i)=>{const inp=cwInp(i);inp.value=c.ch;inp.parentNode.classList.remove('err');});msg('#cw-msg','Respostas reveladas.');};
+$('#cw-rev').onclick=()=>{cw.rev=true;cw.grid.forEach((c,i)=>{const inp=cwInp(i);inp.value=c.ch;inp.parentNode.classList.remove('err');});msg('#cw-msg','Respostas reveladas.');};
 
 /* ================= SUDOKU ================= */
 let sd={};
@@ -597,7 +634,7 @@ function sdDesenha(){
 function sdPoe(v){
   if(sd.sel<0||sd.dado[sd.sel]||sd.fim)return;
   sd.val[sd.sel]=v;sdDesenha();msg('#sd-msg','');
-  if(sd.val.every((x,i)=>x===sd.sol[i])){sd.fim=true;msg('#sd-msg','🎉 Sudoku resolvido em '+tempo(Date.now()-sd.t0)+'!','ok');}
+  if(sd.val.every((x,i)=>x===sd.sol[i])){sd.fim=true;msg('#sd-msg','🎉 Sudoku resolvido em '+tempo(Date.now()-sd.t0)+'!','ok');ganhou('sudoku',{tempo:Date.now()-sd.t0});}
 }
 $('#sd-pad').innerHTML=[1,2,3,4,5,6,7,8,9].map(n=>`<button data-n="${n}">${n}</button>`).join('')+'<button data-n="0" title="Apagar">⌫</button>';
 $('#sd-pad').onclick=e=>{const b=e.target.closest('button');if(b)sdPoe(+b.dataset.n);};
@@ -639,7 +676,7 @@ function crNovo(){
 function crTodos(){return [...document.querySelectorAll('#cr-frase input')];}
 function crFim(){
   const t=crTodos();
-  if(t.every(i=>i.value===i.dataset.l)){msg('#cr-msg','🎉 Isso aí! Você decifrou a frase!','ok');t.forEach(i=>i.disabled=true);}
+  if(t.every(i=>i.value===i.dataset.l)){msg('#cr-msg','🎉 Isso aí! Você decifrou a frase!','ok');t.forEach(i=>i.disabled=true);if(!cr.fim){cr.fim=true;ganhou('criptograma');}}
 }
 $('#cr-frase').addEventListener('input',e=>{
   const t=e.target,v=norm(t.value).slice(-1);
@@ -683,7 +720,7 @@ function emMostra(){
   const box=$('#em-box');
   if(em.i>=em.lista.length){
     box.innerHTML=`<div class="em-tema">Fim de jogo!</div><p style="font-size:22px;font-weight:700">Você fez ${em.pts} de ${em.lista.length*3} pontos</p><button class="prim" id="em-de-novo">Jogar de novo</button>`;
-    $('#em-de-novo').onclick=emNovo;return;
+    $('#em-de-novo').onclick=emNovo;ganhou('embaralhadas',{pontos:em.pts});return;
   }
   const w=norm(em.lista[em.i]);let s;
   do{s=shuffle([...w]).join('');}while(s===w&&new Set(w).size>1);
@@ -759,7 +796,7 @@ function lbMove(dx,dy){
   lb.x+=dx;lb.y+=dy;lb.mov++;
   const ni=lb.y*lb.n+lb.x,r=lb.rastro;
   if(r.length>1&&r[r.length-2]===ni)r.pop();else r.push(ni);
-  if(lb.x===lb.n-1&&lb.y===lb.n-1){lb.fim=true;msg('#lb-msg',`🎉 Você saiu do labirinto em ${tempo(Date.now()-lb.t0)} com ${lb.mov} movimentos!`,'ok');}
+  if(lb.x===lb.n-1&&lb.y===lb.n-1){lb.fim=true;msg('#lb-msg',`🎉 Você saiu do labirinto em ${tempo(Date.now()-lb.t0)} com ${lb.mov} movimentos!`,'ok');ganhou('labirinto',{tempo:Date.now()-lb.t0});}
   lbInfo();lbDesenha();
 }
 document.querySelector('.dpad').onclick=e=>{const b=e.target.closest('button');if(b){const [x,y]=b.dataset.d.split(',').map(Number);lbMove(x,y);}};
@@ -1118,62 +1155,142 @@ NOVAS.push(...LIVROS);
 NOVAS.forEach(q=>q.novo=true);
 PERGUNTAS.forEach(q=>q.o=q.o.slice(0,3));   // agora todas têm 3 opções
 PERGUNTAS.unshift(...NOVAS);
-/* ---------- Progresso salvo no navegador + ranking ---------- */
-/* RANKING COMPARTILHADO: cole aqui o link do App da Web do Apps Script (termina em /exec).
-   Enquanto estiver vazio, o ranking mostra só quem jogou neste aparelho. */
-const RANKING_URL='https://script.google.com/macros/s/AKfycbzG439rQqMfUq9qFRBdON50NgU3lf6ECE7AJpz-CNLoCmtYDT_9A0_lwIm56mCHfEu7/exec';
-const QZ_KEY='pt-quiz-v1',QZ_RANK_LOCAL='pt-quiz-rank-local';
+/* ================= CONTA (login opcional com nick + código) ================= */
+/* Link do App da Web do Apps Script (termina em /exec). Guarda logins, progresso, ranking e o contador. */
+const SERVIDOR_URL='https://script.google.com/macros/s/AKfycbzG439rQqMfUq9qFRBdON50NgU3lf6ECE7AJpz-CNLoCmtYDT_9A0_lwIm56mCHfEu7/exec';
+const JOGOS_NOMES={cacapalavras:'🔎 Caça-palavras',cruzadinha:'✏️ Cruzadinha',sudoku:'🔢 Sudoku',criptograma:'🔐 Criptograma',embaralhadas:'🔀 Palavras Embaralhadas',labirinto:'🌀 Labirinto'};
+const LOGIN_KEY='pt-login';
+// limpa dados antigos que versões anteriores do site deixavam no navegador
+['pt-contador','pt-quiz-v1','pt-quiz-rank-local'].forEach(k=>{try{localStorage.removeItem(k);}catch(e){}});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const conta={nick:'',cod:'',dados:null};
+let semLogin={quiz:{resp:{}}};          // só na memória: some ao fechar ou recarregar a página
+const logado=()=>!!conta.nick;
+const dadosAtuais=()=>logado()?conta.dados:semLogin;
+function normaliza(d){d=d&&typeof d==='object'?d:{};d.quiz=d.quiz||{};d.quiz.resp=d.quiz.resp||{};d.jogos=d.jogos||{};return d;}
+function api(params){
+  if(!SERVIDOR_URL)return Promise.reject(new Error('Servidor não configurado.'));
+  return fetch(SERVIDOR_URL+'?'+new URLSearchParams(params).toString()).then(r=>r.json());
+}
+async function contaEntrar(nick,cod,lembrar){
+  const r=await api({acao:'entrar',nick,codigo:cod});
+  if(!r||!r.ok)throw new Error((r&&r.erro)||'Não foi possível entrar.');
+  conta.nick=r.nick;conta.cod=cod;conta.dados=normaliza(r.dados);
+  try{if(lembrar)localStorage.setItem(LOGIN_KEY,JSON.stringify({nick:r.nick,cod}));else localStorage.removeItem(LOGIN_KEY);}catch(e){}
+  contaMudou();return r;
+}
+function contaSair(){
+  conta.nick='';conta.cod='';conta.dados=null;semLogin={quiz:{resp:{}}};
+  try{localStorage.removeItem(LOGIN_KEY);}catch(e){}
+  contaMudou();
+}
+let tSalvar=null;
+function contaSalvar(){
+  if(!logado())return;
+  clearTimeout(tSalvar);
+  tSalvar=setTimeout(()=>{
+    api({acao:'salvar',nick:conta.nick,codigo:conta.cod,dados:JSON.stringify(conta.dados)})
+      .then(r=>{
+        if(r&&r.ok&&r.ranking)qzDesenhaRanking(r.ranking);
+        else if(r&&!r.ok&&r.sair){alertaConta(r.erro||'Sessão inválida. Entre novamente.');contaSair();}
+      }).catch(()=>{});
+  },900);
+}
+function ganhou(jogo,extra={}){
+  if(!logado())return;                 // sem login: nada é guardado
+  const g=conta.dados.jogos[jogo]||(conta.dados.jogos[jogo]={v:0});
+  g.v=(g.v||0)+1;
+  if(extra.tempo)g.t=g.t?Math.min(g.t,Math.round(extra.tempo)):Math.round(extra.tempo);
+  if(extra.pontos!=null)g.p=Math.max(g.p||0,extra.pontos);
+  contaSalvar();desenhaPerfil();
+}
+function alertaConta(t){const b=$('#conta-bar');b.innerHTML=`<span style="color:var(--erro);font-weight:700">${esc(t)}</span>`;setTimeout(desenhaBarra,4000);}
+function desenhaBarra(){
+  const b=$('#conta-bar');
+  if(logado()){b.innerHTML=`<span>👤 <b>${esc(conta.nick)}</b></span><button id="cb-trocar">Trocar nick</button><button id="cb-sair">Sair</button>`;
+    $('#cb-trocar').onclick=abrirLogin;$('#cb-sair').onclick=contaSair;}
+  else{b.innerHTML=`<button class="prim" id="cb-entrar">👤 Entrar com nick (opcional)</button>`;$('#cb-entrar').onclick=abrirLogin;}
+}
+function desenhaPerfil(){
+  const p=$('#perfil');
+  if(!logado()){p.classList.remove('on');p.innerHTML='';return;}
+  const d=conta.dados,resp=d.quiz.resp,ids=Object.keys(resp).filter(k=>PERGUNTAS.some(q=>q.id===k));
+  const ac=ids.filter(k=>resp[k]===1).length;
+  const linhas=Object.entries(JOGOS_NOMES).map(([k,n])=>{const g=d.jogos[k]||{};
+    const rec=g.t?'Melhor tempo '+tempo(g.t):g.p!=null?'Melhor: '+g.p+' pontos':'—';
+    return `<tr><td>${n}</td><td style="text-align:right;font-weight:700">${g.v||0}</td><td>${rec}</td></tr>`;}).join('');
+  p.innerHTML=`<h3>📊 Meus resultados — ${esc(conta.nick)}</h3>
+    <table><tr><th>Jogo</th><th style="text-align:right">Concluídos</th><th>Recorde</th></tr>
+    <tr><td>🧠 Quiz</td><td style="text-align:right;font-weight:700">${ids.length}/${PERGUNTAS.length}</td><td>${ac} acertos</td></tr>${linhas}</table>`;
+  p.classList.add('on');
+}
+function contaMudou(){
+  desenhaBarra();desenhaPerfil();
+  if(iniciados.quiz){qzProxima();qzRanking();}
+}
+function abrirLogin(){
+  $('#lg-nick').value=conta.nick||'';$('#lg-cod').value='';$('#lg-msg').textContent='';
+  $('#login').classList.add('on');setTimeout(()=>$('#lg-nick').focus(),50);
+}
+function fecharLogin(){$('#login').classList.remove('on');}
+async function enviarLogin(){
+  const nick=$('#lg-nick').value.replace(/[<>"'=]/g,'').trim(),cod=$('#lg-cod').value.trim(),m=$('#lg-msg');
+  if(nick.length<2){m.textContent='O nick precisa ter pelo menos 2 caracteres.';return;}
+  if(!/^[A-Za-z0-9]{4}$/.test(cod)){m.textContent='O código precisa ter exatamente 4 letras ou números.';return;}
+  const bt=$('#lg-ok');bt.disabled=true;m.className='msg';m.textContent='Conectando…';
+  try{
+    const r=await contaEntrar(nick,cod,$('#lg-lembrar').checked);
+    m.className='msg ok';m.textContent=r.novo?'Nick criado! Guarde bem o seu código.':'Bem-vindo de volta!';
+    setTimeout(fecharLogin,r.novo?1600:600);
+  }catch(e){m.className='msg erro';m.textContent=e.message==='Failed to fetch'?'Não foi possível conectar ao servidor. Tente de novo.':e.message;}
+  bt.disabled=false;
+}
+$('#lg-ok').onclick=enviarLogin;
+$('#lg-cod').onkeydown=e=>{if(e.key==='Enter')enviarLogin();};
+$('#lg-nick').onkeydown=e=>{if(e.key==='Enter')$('#lg-cod').focus();};
+$('#lg-cancelar').onclick=fecharLogin;
+$('#login').onclick=e=>{if(e.target.id==='login')fecharLogin();};
+function contaIniciar(){
+  desenhaBarra();
+  let s=null;try{s=JSON.parse(localStorage.getItem(LOGIN_KEY));}catch(e){}
+  if(s&&s.nick&&s.cod)contaEntrar(s.nick,s.cod,true).catch(()=>{try{localStorage.removeItem(LOGIN_KEY);}catch(e){}});
+}
+
+/* ================= QUIZ: progresso + ranking ================= */
 const qzHash=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))|0;return 'q'+(h>>>0).toString(36);};
 PERGUNTAS.forEach(q=>q.id=qzHash(q.p));
-function qzLer(){let d;try{d=JSON.parse(localStorage.getItem(QZ_KEY));}catch(e){}
-  d=d||{};if(!d.id)d.id='u'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
-  d.resp=d.resp||{};d.nick=d.nick||'';return d;}
-function qzGravar(){try{localStorage.setItem(QZ_KEY,JSON.stringify(qz.d));}catch(e){}}
-let qz={d:qzLer()};
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const qzValidas=()=>Object.keys(qz.d.resp).filter(k=>PERGUNTAS.some(q=>q.id===k));
-const qzAcertos=()=>qzValidas().filter(k=>qz.d.resp[k]===1).length;
+const qzResp=()=>dadosAtuais().quiz.resp;
+const qzValidas=()=>Object.keys(qzResp()).filter(k=>PERGUNTAS.some(q=>q.id===k));
+const qzAcertos=()=>qzValidas().filter(k=>qzResp()[k]===1).length;
 const qzRespondidas=()=>qzValidas().length;
 function qzPlacar(){
   const r=qzRespondidas(),a=qzAcertos(),t=PERGUNTAS.length;
   return `<div class="qz-placar"><div><b>${a}</b><span>ACERTOS</span></div><div><b>${r}/${t}</b><span>RESPONDIDAS</span></div><div><b>${r?Math.round(a/r*100):0}%</b><span>MÉDIA</span></div></div>`;
 }
-function qzNovo(){
-  qz.d=qzLer();
-  if(!qz.d.nick)qzTelaNick();else qzProxima();
-  qzRanking();
-}
-function qzTelaNick(){
-  const box=$('#qz-box');
-  box.innerHTML=`<div class="qz-nick"><div class="qz-perg" style="margin-top:0">Qual é o seu nick?</div>
-    <p class="instr" style="margin:0">Ele aparece no ranking junto com a quantidade de perguntas que você acertou.</p>
-    <input type="text" id="qz-nick" maxlength="20" placeholder="Ex.: Campeão123" autocomplete="off" value="${esc(qz.d.nick)}"><br>
-    <button class="prim" id="qz-ok-nick">${qz.d.nick?'Salvar e continuar':'Começar'}</button>
-    <div class="msg erro" id="qz-nick-msg"></div></div>`;
-  const inp=$('#qz-nick');inp.focus();
-  const ok=()=>{const n=inp.value.replace(/[<>"]/g,'').trim();
-    if(n.length<2){$('#qz-nick-msg').textContent='O nick precisa ter pelo menos 2 letras.';return;}
-    qz.d.nick=n;qzGravar();qzEnviar();qzProxima();};
-  $('#qz-ok-nick').onclick=ok;inp.onkeydown=e=>{if(e.key==='Enter')ok();};
+function qzNovo(){qzProxima();qzRanking();}
+function qzTopo(falta){
+  return logado()
+    ?`<div class="qz-topo"><span>Jogando como <b>${esc(conta.nick)}</b> · <button class="qz-link" data-login>trocar nick</button></span><span>Faltam ${falta} de ${PERGUNTAS.length}</span></div>`
+    :`<div class="qz-anon">Você está jogando <b>sem login</b>: nada fica salvo e, se sair, recomeça do zero. <button class="qz-link" data-login>Entrar com nick</button> para salvar o progresso e aparecer no ranking.</div>
+      <div class="qz-topo"><span></span><span>Faltam ${falta} de ${PERGUNTAS.length}</span></div>`;
 }
 function qzProxima(){
-  const box=$('#qz-box');
-  const falta=shuffle(PERGUNTAS.filter(q=>!(q.id in qz.d.resp)));
+  const box=$('#qz-box'),resp=qzResp();
+  const falta=shuffle(PERGUNTAS.filter(q=>!(q.id in resp)));
   if(!falta.length){qzFinal();return;}
   const q=falta[0],ops=shuffle(q.o.map((t,k)=>({t,k})));
-  box.innerHTML=`<div class="qz-topo"><span>Jogando como <b>${esc(qz.d.nick)}</b> · <button class="qz-link" id="qz-trocar">trocar nick</button></span><span>Faltam ${falta.length} de ${PERGUNTAS.length}</span></div>
-    ${qzPlacar()}
+  box.innerHTML=`${qzTopo(falta.length)}${qzPlacar()}
     <span class="qz-cat">${esc(q.cat)}</span>
     <div class="qz-perg">${esc(q.p)}</div>
     <div class="qz-ops">${ops.map(o=>`<button data-k="${o.k}">${esc(o.t)}</button>`).join('')}</div>
     <div class="qz-exp" id="qz-exp"></div>`;
-  $('#qz-trocar').onclick=qzTelaNick;
+  box.querySelectorAll('[data-login]').forEach(b=>b.onclick=abrirLogin);
   box.querySelector('.qz-ops').onclick=e=>{
     const b=e.target.closest('button');if(!b||b.disabled)return;
     const ok=b.dataset.k==='0';
     box.querySelectorAll('.qz-ops button').forEach(x=>{x.disabled=true;if(x.dataset.k==='0')x.classList.add('certa');});
     if(!ok)b.classList.add('errada');
-    qz.d.resp[q.id]=ok?1:0;qzGravar();qzEnviar();
+    qzResp()[q.id]=ok?1:0;contaSalvar();desenhaPerfil();
     box.querySelector('.qz-placar').outerHTML=qzPlacar();
     const ultima=falta.length===1,exp=$('#qz-exp');exp.classList.add('on');
     exp.innerHTML=`<b class="${ok?'ok':'erro'}">${ok?'✔ Resposta certa!':'✘ Não foi dessa vez.'}</b> ${esc(q.e)}<br>
@@ -1191,35 +1308,23 @@ function qzFinal(){
     <button id="qz-zerar">Zerar meu progresso e jogar de novo</button></div>`;
   const z=$('#qz-zerar');
   z.onclick=()=>{
-    if(!z.dataset.c){z.dataset.c=1;z.textContent='Toque de novo para confirmar (o ranking também zera)';return;}
-    qz.d.resp={};qzGravar();qzEnviar();qzProxima();
+    if(!z.dataset.c){z.dataset.c=1;z.textContent='Toque de novo para confirmar'+(logado()?' (sua pontuação no ranking também zera)':'');return;}
+    dadosAtuais().quiz.resp={};contaSalvar();desenhaPerfil();qzProxima();
   };
-  qzRanking();
-}
-/* ----- ranking ----- */
-function qzLocalRank(){let r;try{r=JSON.parse(localStorage.getItem(QZ_RANK_LOCAL));}catch(e){}return r||{};}
-function qzEnviar(){
-  if(!qz.d.nick)return;
-  const dados={nick:qz.d.nick,acertos:qzAcertos(),respondidas:qzRespondidas()};
-  const loc=qzLocalRank();loc[qz.d.id]=dados;try{localStorage.setItem(QZ_RANK_LOCAL,JSON.stringify(loc));}catch(e){}
-  if(!RANKING_URL){qzRanking();return;}
-  clearTimeout(qz.tEnvio);
-  qz.tEnvio=setTimeout(()=>{
-    const u=`${RANKING_URL}?acao=salvar&id=${encodeURIComponent(qz.d.id)}&nick=${encodeURIComponent(dados.nick)}&acertos=${dados.acertos}&respondidas=${dados.respondidas}`;
-    fetch(u).then(r=>r.json()).then(qzDesenhaRanking).catch(()=>{});
-  },800);
 }
 function qzRanking(){
-  if(!RANKING_URL){qzDesenhaRanking(Object.values(qzLocalRank()));return;}
+  if(!SERVIDOR_URL){$('#qz-rank').innerHTML='<h3>🏆 Ranking</h3><p class="instr">Ranking indisponível.</p>';return;}
   $('#qz-rank').innerHTML='<h3>🏆 Ranking</h3><p class="instr">Carregando…</p>';
-  fetch(`${RANKING_URL}?acao=ranking`).then(r=>r.json()).then(qzDesenhaRanking)
+  api({acao:'ranking'}).then(r=>qzDesenhaRanking(r&&r.ranking))
     .catch(()=>{$('#qz-rank').innerHTML='<h3>🏆 Ranking</h3><p class="instr">Não foi possível carregar o ranking agora.</p>';});
 }
 function qzDesenhaRanking(lista){
   lista=(lista||[]).filter(x=>x&&x.nick).sort((a,b)=>b.acertos-a.acertos||a.respondidas-b.respondidas).slice(0,20);
+  const eu=(conta.nick||'').toLowerCase();
   $('#qz-rank').innerHTML=`<h3>🏆 Ranking</h3>${lista.length?`<table><tr><th>#</th><th>Nick</th><th style="text-align:right">Acertos</th></tr>
-    ${lista.map((x,i)=>`<tr class="${x.nick===qz.d.nick?'eu':''}"><td>${i<3?['🥇','🥈','🥉'][i]:i+1}</td><td>${esc(x.nick)}</td><td class="n">${Number(x.acertos)||0}</td></tr>`).join('')}</table>`
-    :'<p class="instr">Ninguém no ranking ainda. Responda a primeira pergunta para aparecer aqui!</p>'}`;
+    ${lista.map((x,i)=>`<tr class="${x.nick.toLowerCase()===eu?'eu':''}"><td>${i<3?['🥇','🥈','🥉'][i]:i+1}</td><td>${esc(x.nick)}</td><td class="n">${Number(x.acertos)||0}</td></tr>`).join('')}</table>`
+    :'<p class="instr">Ninguém no ranking ainda. Entre com um nick e responda para aparecer aqui!</p>'}
+    ${logado()?'':'<p class="qz-aviso">Só aparece no ranking quem joga com nick e código.</p>'}`;
 }
 
 /* ================= teclado ================= */
@@ -1238,21 +1343,15 @@ addEventListener('keydown',e=>{
   }
 });
 
-/* ================= contador de visitas ================= */
-(function(){
-  let n;
-  try{
-    n=parseInt(localStorage.getItem('pt-contador'),10);
-    if(!n)n=866000+rnd(134000);   // primeira visita: número aleatório entre 866.000 e 999.999
-    else n+=666;                  // cada nova visita soma 666
-    localStorage.setItem('pt-contador',n);
-  }catch(e){n=866000+rnd(134000);}
-  $('#cont-dig').innerHTML=String(n).padStart(7,'0').split('').map(d=>`<b>${d}</b>`).join('');
-  $('#ano').textContent=new Date().getFullYear();
-})();
+/* ================= contador de visitas (fica na planilha, nada no navegador) ================= */
+function mostraContador(n){$('#cont-dig').innerHTML=String(n).padStart(7,'0').split('').map(d=>`<b>${d}</b>`).join('');}
+mostraContador(866000+rnd(134000));
+api({acao:'visita'}).then(r=>{if(r&&r.ok&&r.contador)mostraContador(r.contador);}).catch(()=>{});
+$('#ano').textContent=new Date().getFullYear();
 
 const INIT={cacapalavras:wsNovo,cruzadinha:cwNovo,sudoku:sdNovo,criptograma:crNovo,embaralhadas:emNovo,labirinto:lbNovo,quiz:qzNovo};
 addEventListener('hashchange',rota);
+contaIniciar();
 rota();
 </script>
 </body>
