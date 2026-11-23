@@ -112,6 +112,21 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 .qz-fim li{margin-bottom:6px}
 .qz-fim li.x{color:var(--erro)}
 .qz-aviso{font-size:13px;color:var(--suave);margin-top:10px}
+.qz-rank{margin-top:16px}
+.qz-rank h3{font-family:Georgia,serif;margin:0 0 10px;font-size:22px}
+.qz-rank table{width:100%;border-collapse:collapse;font-size:15px}
+.qz-rank td,.qz-rank th{padding:7px 6px;border-bottom:1px solid var(--linha);text-align:left}
+.qz-rank th{font-size:13px;color:var(--suave)}
+.qz-rank td.n{text-align:right;font-weight:700}
+.qz-rank tr.eu td{background:#fef3c7}
+.qz-nick input{width:100%;max-width:280px;margin:8px 0 12px}
+.qz-placar{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.qz-placar div{border:2px solid var(--tinta);border-radius:6px;padding:10px;text-align:center;background:#fff}
+.qz-placar b{display:block;font-size:26px;font-family:Georgia,serif}
+.qz-placar span{font-size:11px;color:var(--suave);font-weight:600;overflow-wrap:anywhere}
+.qz-placar div{min-width:0;padding:8px 4px}
+@media(max-width:480px){.qz-box{padding:14px}.qz-placar b{font-size:22px}}
+.qz-link{background:none;border:0;padding:0;color:var(--acento2);font-weight:600;text-decoration:underline;cursor:pointer;font-size:14px}
 
 /* Labirinto */
 .lb-wrap{max-width:560px}
@@ -217,12 +232,9 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 <!-- QUIZ -->
 <section class="jogo" id="quiz">
   <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Quiz de Conhecimentos</h2></div>
-  <div class="controles">
-    <select id="qz-cat"></select>
-    <button class="prim" id="qz-novo">Nova rodada</button>
-  </div>
-  <p class="instr">10 perguntas por rodada. Depois de responder, toque em "Ver fonte" para conferir o dado no site oficial. Dados conferidos em novembro de 2026.</p>
+  <p class="instr">As perguntas aparecem embaralhadas, e as que você já respondeu neste navegador não se repetem. Depois de responder, toque em "Ver fonte" para conferir o dado. Dados conferidos em novembro de 2026.</p>
   <div class="qz-box" id="qz-box"></div>
+  <div class="qz-box qz-rank" id="qz-rank"></div>
 </section>
 
 <!-- LABIRINTO -->
@@ -1015,51 +1027,200 @@ const NOVAS=[
   o:['MPP — Movimento dos Pescadores e Pescadoras Artesanais','MST — Movimento dos Trabalhadores Rurais Sem Terra','MAM — Movimento pela Soberania Popular na Mineração'],
   e:'É o caderno do MPP, sobre pesca artesanal e participação da sociedade civil.',f:GOV_CAD}
 ];
+/* ---- Livros políticos (obras de várias correntes de pensamento) ---- */
+const LV_MANI={nome:'Britannica — The Communist Manifesto',url:'https://britannica.com/topic/The-Communist-Manifesto'};
+const LV_MANI_TXT={nome:'Manifesto do Partido Comunista — texto (marxists.org)',url:'https://www.marxists.org/portugues/marx/1848/ManifestoDoPartidoComunista/cap1.htm'};
+const LV_CAP={nome:'O Capital, Livro I — marxists.org',url:'https://marxists.org/portugues/marx/1867/capital/'};
+const LV_SMITH={nome:'World History Encyclopedia — Adam Smith',url:'https://www.worldhistory.org/trans/pt/1-22469/adam-smith/'};
+const LV_LOCKE={nome:'World History Encyclopedia — John Locke',url:'https://www.worldhistory.org/trans/pt/1-20857/john-locke/'};
+const LV_MONT={nome:'World History Encyclopedia — Montesquieu',url:'https://www.worldhistory.org/trans/pt/1-22386/montesquieu/'};
+const LV_HOBBES={nome:'World History Encyclopedia — Thomas Hobbes',url:'https://www.worldhistory.org/trans/pt/1-22450/thomas-hobbes/'};
+const LIVROS=[
+ {cat:'Livros políticos',p:'Quem escreveu o "Manifesto do Partido Comunista", de 1848?',
+  o:['Karl Marx e Friedrich Engels','Lênin e Trótski','Proudhon e Bakunin'],
+  e:'O Manifesto (1848) foi escrito por Karl Marx e Friedrich Engels.',f:LV_MANI},
+ {cat:'Livros políticos',p:'O Manifesto Comunista foi escrito para servir de programa de qual organização?',
+  o:['A Liga dos Comunistas','O Partido Bolchevique','A Internacional Socialista'],
+  e:'Marx e Engels o redigiram como plataforma da Liga dos Comunistas.',f:LV_MANI},
+ {cat:'Livros políticos',p:'Qual é a frase final do Manifesto Comunista, que virou lema do movimento?',
+  o:['"Proletários de todos os países, uni-vos!"','"Liberdade, igualdade, fraternidade"','"Terra, pão e paz"'],
+  e:'O texto termina com o chamado "Proletários de todos os países, uni-vos!". "Liberdade, igualdade, fraternidade" é o lema da Revolução Francesa.',
+  f:{nome:'Infopédia — Manifesto do Partido Comunista',url:'https://www.infopedia.pt/artigos/$manifesto-do-partido-comunista'}},
+ {cat:'Livros políticos',p:'Segundo o Manifesto Comunista, a história de todas as sociedades até então é a história de quê?',
+  o:['Das lutas de classes','Das guerras entre nações','Dos avanços da tecnologia'],
+  e:'O primeiro capítulo ("Burgueses e Proletários") abre afirmando que a história das sociedades é a história das lutas de classes.',f:LV_MANI_TXT},
+ {cat:'Livros políticos',p:'O Manifesto Comunista começa dizendo que um "espectro" ronda a Europa. Que espectro é esse?',
+  o:['O comunismo','O liberalismo','O nacionalismo'],
+  e:'A abertura diz que um espectro ronda a Europa: o espectro do comunismo.',
+  f:{nome:'UFRGS — Manifesto do Partido Comunista (texto)',url:'https://www.ufrgs.br/psicoeduc/chasqueweb/filosofia/marx-manifesto.htm'}},
+ {cat:'Livros políticos',p:'Em que ano foi publicado o primeiro volume de "O Capital", de Karl Marx?',
+  o:['1867','1848','1917'],
+  e:'O Livro I de O Capital saiu em setembro de 1867. Os volumes seguintes foram publicados por Engels após a morte de Marx.',f:LV_CAP},
+ {cat:'Livros políticos',p:'Qual conceito é central na análise do capitalismo feita em "O Capital"?',
+  o:['Mais-valia','Mão invisível','Vontade geral'],
+  e:'Seções inteiras do Livro I tratam da produção da mais-valia. "Mão invisível" é de Adam Smith; "vontade geral", de Rousseau.',f:LV_CAP},
+ {cat:'Livros políticos',p:'Em que ano Adam Smith publicou "A Riqueza das Nações"?',
+  o:['1776','1848','1689'],
+  e:'A obra foi publicada em 1776 e é considerada uma das bases da economia moderna e do liberalismo econômico.',f:LV_SMITH},
+ {cat:'Livros políticos',p:'Qual metáfora famosa de Adam Smith descreve o mercado se ajustando sozinho?',
+  o:['A "mão invisível"','O "Leviatã"','O "espectro"'],
+  e:'Smith falou da "mão invisível" do mercado e defendeu o livre comércio com interferência limitada do governo.',f:LV_SMITH},
+ {cat:'Livros políticos',p:'Que exemplo Adam Smith usa, logo no início de "A Riqueza das Nações", para explicar a divisão do trabalho?',
+  o:['Uma fábrica de alfinetes','Um estaleiro de navios','Uma mina de carvão'],
+  e:'O capítulo I mostra como a divisão de tarefas multiplica a produção numa fábrica de alfinetes.',
+  f:{nome:'USP — A Riqueza das Nações, Livro I (Cap. I a VI)',url:'https://edisciplinas.usp.br/mod/resource/view.php?id=5218717'}},
+ {cat:'Livros políticos',p:'"O Caminho da Servidão" (1944), de Friedrich Hayek, critica principalmente o quê?',
+  o:['O planejamento econômico centralizado','O livre comércio entre países','A separação dos Poderes'],
+  e:'Hayek argumenta que o planejamento central da economia ameaça a liberdade individual.',
+  f:{nome:'O Caminho da Servidão — Instituto Liberal (PDF na USP)',url:'https://edisciplinas.usp.br/pluginfile.php/4065188/mod_resource/content/1/hayek-ocaminhodaservidao.pdf'}},
+ {cat:'Livros políticos',p:'Quem escreveu "Capitalismo e Liberdade", de 1962?',
+  o:['Milton Friedman','John Maynard Keynes','Karl Marx'],
+  e:'O livro do economista Milton Friedman foi lançado em 1962 pela University of Chicago Press.',
+  f:{nome:'University of Chicago Press — Capitalism and Freedom',url:'https://www.press.uchicago.edu/ucp/books/book/chicago/C/bo68666099.html'}},
+ {cat:'Livros políticos',p:'Edmund Burke, autor de "Reflexões sobre a Revolução na França" (1790), é considerado o pai de qual corrente?',
+  o:['Do conservadorismo','Do socialismo','Do anarquismo'],
+  e:'Burke criticou a Revolução Francesa e é visto como o pai do conservadorismo.',
+  f:{nome:'Politize! — Edmund Burke e o conservadorismo',url:'https://www.politize.com.br/edmund-burke-e-conservadorismo/'}},
+ {cat:'Livros políticos',p:'No "Segundo Tratado sobre o Governo", John Locke defende quais direitos naturais?',
+  o:['Vida, liberdade e propriedade','Igualdade, fraternidade e solidariedade','Ordem, progresso e fé'],
+  e:'Para Locke, o governo existe para proteger a vida, a liberdade e a propriedade; se falhar, o povo pode retirar seus poderes.',f:LV_LOCKE},
+ {cat:'Livros políticos',p:'Qual é a ideia mais conhecida de "O Espírito das Leis" (1748), de Montesquieu?',
+  o:['A separação dos Poderes','A ditadura do proletariado','A mão invisível do mercado'],
+  e:'Montesquieu defendeu que Legislativo, Executivo e Judiciário sejam separados para evitar abusos de poder.',f:LV_MONT},
+ {cat:'Livros políticos',p:'De onde vem o nome do livro "Leviatã" (1651), de Thomas Hobbes?',
+  o:['De um monstro marinho descrito na Bíblia','De um rei inglês da Idade Média','De um deus da mitologia grega'],
+  e:'O título faz referência ao monstro marinho do Livro de Jó (capítulo 41).',f:LV_HOBBES},
+ {cat:'Livros políticos',p:'Para Hobbes, como seria a vida humana no "estado de natureza", sem governo?',
+  o:['Curta e brutal, em guerra de todos contra todos','Pacífica e cooperativa','Rica, mas sem leis escritas'],
+  e:'Hobbes via o estado de natureza como uma guerra constante e defendia um soberano forte para garantir a paz.',f:LV_HOBBES},
+ {cat:'Livros políticos',p:'Qual conceito está no centro de "Do Contrato Social" (1762), de Rousseau?',
+  o:['Vontade geral','Mais-valia','Separação dos Poderes'],
+  e:'Para Rousseau, a soberania é a vontade geral em ação, base das leis legítimas.',
+  f:{nome:'Revista Espaço Acadêmico (UEM) — Soberania e vontade geral em Rousseau',url:'https://periodicos.uem.br/ojs/index.php/EspacoAcademico/article/download/12989/6862'}},
+ {cat:'Livros políticos',p:'Complete a famosa abertura de "O Contrato Social": "O homem nasceu livre, e por toda parte…"',
+  o:['…está a ferros (acorrentado)','…busca a riqueza','…obedece ao rei'],
+  e:'A frase de abertura de Rousseau (1762) contrapõe a liberdade natural às correntes da sociedade.',
+  f:{nome:'O Contrato Social — edição Público (PDF na USP)',url:'https://edisciplinas.usp.br/pluginfile.php/4978389/mod_resource/content/1/Jean-Jacques%20Rousseau-O%20Contrato%20Social-P%C3%BAblico%20%282010%29.pdf'}},
+ {cat:'Livros políticos',p:'Quando "O Príncipe", de Maquiavel, foi publicado?',
+  o:['Em 1532, depois da morte do autor','Em 1513, logo que foi escrito','Em 1789, durante a Revolução Francesa'],
+  e:'Maquiavel escreveu O Príncipe em 1513, mas o livro só foi publicado em 1532, cinco anos após sua morte.',
+  f:{nome:'Toda Matéria — O Príncipe de Maquiavel',url:'https://www.todamateria.com.br/o-principe-de-maquiavel/'}},
+ {cat:'Livros políticos',p:'A quem Maquiavel dedicou "O Príncipe"?',
+  o:['A Lourenço de Médici, governante de Florença','A Napoleão Bonaparte','Ao rei da Espanha'],
+  e:'O livro foi dedicado a Lorenzo di Piero de Médici, numa tentativa de Maquiavel recuperar um cargo público.',
+  f:{nome:'Cultura Genial — O Príncipe de Maquiavel explicado',url:'https://culturagenial.com/o-principe-maquiavel-explicado/'}},
+ {cat:'Livros políticos',p:'Qual conceito ficou famoso no livro "Raízes do Brasil" (1936), de Sérgio Buarque de Holanda?',
+  o:['O "homem cordial"','A "mão invisível"','O "contrato social"'],
+  e:'Raízes do Brasil apresentou a ideia do "homem cordial" para discutir a cultura política brasileira.',
+  f:{nome:'SciELO — Revista Brasileira de Literatura Comparada: Raízes do Brasil',url:'https://scielo.br/j/rblc/a/NM9xLWM9ZcgJXB45CLtzjCt/?lang=en'}}
+];
+NOVAS.push(...LIVROS);
 NOVAS.forEach(q=>q.novo=true);
 PERGUNTAS.forEach(q=>q.o=q.o.slice(0,3));   // agora todas têm 3 opções
 PERGUNTAS.unshift(...NOVAS);
-const QZ_SITES='Perguntas dos sites indicados (todas)',QZ_TODAS='Todas as perguntas';
-const QZ_CATS=[QZ_SITES,QZ_TODAS,...new Set(PERGUNTAS.map(q=>q.cat))];
-$('#qz-cat').innerHTML=QZ_CATS.map(c=>`<option>${c}</option>`).join('');
-let qz={};
-const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function qzNovo(){
-  const c=$('#qz-cat').value;
-  const lista=PERGUNTAS.filter(q=>c===QZ_TODAS||(c===QZ_SITES?q.novo:q.cat===c));
-  qz={lista:shuffle(lista.slice()).slice(0,10),i:0,pts:0,hist:[]};
-  qzMostra();
+/* ---------- Progresso salvo no navegador + ranking ---------- */
+/* RANKING COMPARTILHADO: cole aqui o link do App da Web do Apps Script (termina em /exec).
+   Enquanto estiver vazio, o ranking mostra só quem jogou neste aparelho. */
+const RANKING_URL='https://script.google.com/macros/s/AKfycbzG439rQqMfUq9qFRBdON50NgU3lf6ECE7AJpz-CNLoCmtYDT_9A0_lwIm56mCHfEu7/exec';
+const QZ_KEY='pt-quiz-v1',QZ_RANK_LOCAL='pt-quiz-rank-local';
+const qzHash=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))|0;return 'q'+(h>>>0).toString(36);};
+PERGUNTAS.forEach(q=>q.id=qzHash(q.p));
+function qzLer(){let d;try{d=JSON.parse(localStorage.getItem(QZ_KEY));}catch(e){}
+  d=d||{};if(!d.id)d.id='u'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+  d.resp=d.resp||{};d.nick=d.nick||'';return d;}
+function qzGravar(){try{localStorage.setItem(QZ_KEY,JSON.stringify(qz.d));}catch(e){}}
+let qz={d:qzLer()};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const qzValidas=()=>Object.keys(qz.d.resp).filter(k=>PERGUNTAS.some(q=>q.id===k));
+const qzAcertos=()=>qzValidas().filter(k=>qz.d.resp[k]===1).length;
+const qzRespondidas=()=>qzValidas().length;
+function qzPlacar(){
+  const r=qzRespondidas(),a=qzAcertos(),t=PERGUNTAS.length;
+  return `<div class="qz-placar"><div><b>${a}</b><span>ACERTOS</span></div><div><b>${r}/${t}</b><span>RESPONDIDAS</span></div><div><b>${r?Math.round(a/r*100):0}%</b><span>MÉDIA</span></div></div>`;
 }
-function qzMostra(){
+function qzNovo(){
+  qz.d=qzLer();
+  if(!qz.d.nick)qzTelaNick();else qzProxima();
+  qzRanking();
+}
+function qzTelaNick(){
   const box=$('#qz-box');
-  if(qz.i>=qz.lista.length){
-    const n=qz.lista.length,pct=qz.pts/n;
-    const frase=pct===1?'Gabaritou! 🏆':pct>=.7?'Mandou muito bem! 👏':pct>=.4?'Bom resultado! Dá pra melhorar.':'Que tal tentar de novo?';
-    box.innerHTML=`<div class="qz-fim"><h3>${qz.pts} de ${n} acertos</h3><p>${frase}</p>
-      <p><b>Confira as fontes desta rodada:</b></p>
-      <ol>${qz.hist.map(h=>`<li class="${h.ok?'':'x'}">${esc(h.q.p)}<br><b>${esc(h.q.o[0])}</b> — <a class="qz-fonte" href="${h.q.f.url}" target="_blank" rel="noopener">🔎 ${esc(h.q.f.nome)}</a></li>`).join('')}</ol>
-      <button class="prim" id="qz-de-novo">Jogar outra rodada</button></div>`;
-    $('#qz-de-novo').onclick=qzNovo;return;
-  }
-  const q=qz.lista[qz.i],ops=shuffle(q.o.map((t,k)=>({t,k})));
-  box.innerHTML=`<div class="qz-topo"><span>Pergunta ${qz.i+1} de ${qz.lista.length}</span><span>Acertos: ${qz.pts}</span></div>
-    <div style="margin-top:10px"><span class="qz-cat">${esc(q.cat)}</span></div>
+  box.innerHTML=`<div class="qz-nick"><div class="qz-perg" style="margin-top:0">Qual é o seu nick?</div>
+    <p class="instr" style="margin:0">Ele aparece no ranking junto com a quantidade de perguntas que você acertou.</p>
+    <input type="text" id="qz-nick" maxlength="20" placeholder="Ex.: Campeão123" autocomplete="off" value="${esc(qz.d.nick)}"><br>
+    <button class="prim" id="qz-ok-nick">${qz.d.nick?'Salvar e continuar':'Começar'}</button>
+    <div class="msg erro" id="qz-nick-msg"></div></div>`;
+  const inp=$('#qz-nick');inp.focus();
+  const ok=()=>{const n=inp.value.replace(/[<>"]/g,'').trim();
+    if(n.length<2){$('#qz-nick-msg').textContent='O nick precisa ter pelo menos 2 letras.';return;}
+    qz.d.nick=n;qzGravar();qzEnviar();qzProxima();};
+  $('#qz-ok-nick').onclick=ok;inp.onkeydown=e=>{if(e.key==='Enter')ok();};
+}
+function qzProxima(){
+  const box=$('#qz-box');
+  const falta=shuffle(PERGUNTAS.filter(q=>!(q.id in qz.d.resp)));
+  if(!falta.length){qzFinal();return;}
+  const q=falta[0],ops=shuffle(q.o.map((t,k)=>({t,k})));
+  box.innerHTML=`<div class="qz-topo"><span>Jogando como <b>${esc(qz.d.nick)}</b> · <button class="qz-link" id="qz-trocar">trocar nick</button></span><span>Faltam ${falta.length} de ${PERGUNTAS.length}</span></div>
+    ${qzPlacar()}
+    <span class="qz-cat">${esc(q.cat)}</span>
     <div class="qz-perg">${esc(q.p)}</div>
     <div class="qz-ops">${ops.map(o=>`<button data-k="${o.k}">${esc(o.t)}</button>`).join('')}</div>
     <div class="qz-exp" id="qz-exp"></div>`;
+  $('#qz-trocar').onclick=qzTelaNick;
   box.querySelector('.qz-ops').onclick=e=>{
     const b=e.target.closest('button');if(!b||b.disabled)return;
     const ok=b.dataset.k==='0';
     box.querySelectorAll('.qz-ops button').forEach(x=>{x.disabled=true;if(x.dataset.k==='0')x.classList.add('certa');});
-    if(!ok)b.classList.add('errada');else qz.pts++;
-    qz.hist.push({q,ok});
-    const exp=$('#qz-exp');exp.classList.add('on');
+    if(!ok)b.classList.add('errada');
+    qz.d.resp[q.id]=ok?1:0;qzGravar();qzEnviar();
+    box.querySelector('.qz-placar').outerHTML=qzPlacar();
+    const ultima=falta.length===1,exp=$('#qz-exp');exp.classList.add('on');
     exp.innerHTML=`<b class="${ok?'ok':'erro'}">${ok?'✔ Resposta certa!':'✘ Não foi dessa vez.'}</b> ${esc(q.e)}<br>
       <a class="qz-fonte" href="${q.f.url}" target="_blank" rel="noopener">🔎 Ver fonte: ${esc(q.f.nome)}</a>
-      <div style="margin-top:12px"><button class="prim" id="qz-prox">${qz.i+1<qz.lista.length?'Próxima pergunta →':'Ver resultado'}</button></div>`;
-    $('#qz-prox').onclick=()=>{qz.i++;qzMostra();window.scrollTo({top:0,behavior:'smooth'});};
+      <div style="margin-top:12px"><button class="prim" id="qz-prox">${ultima?'Ver resultado final':'Próxima pergunta →'}</button></div>`;
+    $('#qz-prox').onclick=()=>{qzProxima();window.scrollTo({top:0,behavior:'smooth'});};
   };
 }
-$('#qz-novo').onclick=qzNovo;$('#qz-cat').onchange=qzNovo;
+function qzFinal(){
+  const a=qzAcertos(),t=PERGUNTAS.length,pct=a/t;
+  const frase=pct===1?'Gabaritou! 🏆':pct>=.7?'Mandou muito bem! 👏':pct>=.4?'Bom resultado!':'Na próxima vai melhor!';
+  $('#qz-box').innerHTML=`<div class="qz-fim"><h3>Você respondeu todas as perguntas!</h3>
+    <p style="font-size:20px"><b>${a} de ${t}</b> respostas corretas. ${frase}</p>${qzPlacar()}
+    <p class="qz-aviso">Quando novas perguntas forem adicionadas ao site, elas aparecem aqui automaticamente.</p>
+    <button id="qz-zerar">Zerar meu progresso e jogar de novo</button></div>`;
+  const z=$('#qz-zerar');
+  z.onclick=()=>{
+    if(!z.dataset.c){z.dataset.c=1;z.textContent='Toque de novo para confirmar (o ranking também zera)';return;}
+    qz.d.resp={};qzGravar();qzEnviar();qzProxima();
+  };
+  qzRanking();
+}
+/* ----- ranking ----- */
+function qzLocalRank(){let r;try{r=JSON.parse(localStorage.getItem(QZ_RANK_LOCAL));}catch(e){}return r||{};}
+function qzEnviar(){
+  if(!qz.d.nick)return;
+  const dados={nick:qz.d.nick,acertos:qzAcertos(),respondidas:qzRespondidas()};
+  const loc=qzLocalRank();loc[qz.d.id]=dados;try{localStorage.setItem(QZ_RANK_LOCAL,JSON.stringify(loc));}catch(e){}
+  if(!RANKING_URL){qzRanking();return;}
+  clearTimeout(qz.tEnvio);
+  qz.tEnvio=setTimeout(()=>{
+    const u=`${RANKING_URL}?acao=salvar&id=${encodeURIComponent(qz.d.id)}&nick=${encodeURIComponent(dados.nick)}&acertos=${dados.acertos}&respondidas=${dados.respondidas}`;
+    fetch(u).then(r=>r.json()).then(qzDesenhaRanking).catch(()=>{});
+  },800);
+}
+function qzRanking(){
+  if(!RANKING_URL){qzDesenhaRanking(Object.values(qzLocalRank()));return;}
+  $('#qz-rank').innerHTML='<h3>🏆 Ranking</h3><p class="instr">Carregando…</p>';
+  fetch(`${RANKING_URL}?acao=ranking`).then(r=>r.json()).then(qzDesenhaRanking)
+    .catch(()=>{$('#qz-rank').innerHTML='<h3>🏆 Ranking</h3><p class="instr">Não foi possível carregar o ranking agora.</p>';});
+}
+function qzDesenhaRanking(lista){
+  lista=(lista||[]).filter(x=>x&&x.nick).sort((a,b)=>b.acertos-a.acertos||a.respondidas-b.respondidas).slice(0,20);
+  $('#qz-rank').innerHTML=`<h3>🏆 Ranking</h3>${lista.length?`<table><tr><th>#</th><th>Nick</th><th style="text-align:right">Acertos</th></tr>
+    ${lista.map((x,i)=>`<tr class="${x.nick===qz.d.nick?'eu':''}"><td>${i<3?['🥇','🥈','🥉'][i]:i+1}</td><td>${esc(x.nick)}</td><td class="n">${Number(x.acertos)||0}</td></tr>`).join('')}</table>`
+    :'<p class="instr">Ninguém no ranking ainda. Responda a primeira pergunta para aparecer aqui!</p>'}`;
+}
 
 /* ================= teclado ================= */
 addEventListener('keydown',e=>{
