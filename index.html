@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Passatempos — Jogos de Palavras e Lógica</title>
+<style>
+:root{--papel:#f6f1e6;--tinta:#2b2620;--suave:#7a6f60;--linha:#d9cfbd;--acento:#c2410c;--acento2:#1d4ed8;--ok:#15803d;--erro:#b91c1c;--card:#fffdf8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+header{padding:28px 16px 10px;text-align:center}
+header a{color:inherit;text-decoration:none}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(30px,6vw,46px);margin:0;letter-spacing:.5px}
+header p{color:var(--suave);margin:6px 0 0}
+main{max-width:1000px;margin:0 auto;padding:12px 14px 40px}
+.menu{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;margin-top:10px}
+.card{display:block;text-decoration:none;color:inherit;background:var(--card);border:2px solid var(--tinta);border-radius:6px;padding:18px;box-shadow:4px 4px 0 var(--tinta);transition:transform .1s,box-shadow .1s}
+.card:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--tinta)}
+.card .ic{font-size:34px}
+.card h2{font-family:Georgia,serif;margin:8px 0 4px;font-size:21px}
+.card p{margin:0;color:var(--suave);font-size:14px;line-height:1.4}
+section.jogo{display:none}
+section.jogo.ativo{display:block}
+.topo{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.topo h2{font-family:Georgia,serif;margin:0;font-size:30px}
+.voltar{color:var(--acento2);text-decoration:none;font-weight:600}
+.controles{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+select,button,input[type=text]{font:inherit;padding:8px 12px;border:2px solid var(--tinta);border-radius:5px;background:var(--card);color:var(--tinta)}
+button{cursor:pointer;font-weight:600}
+button.prim{background:var(--tinta);color:var(--papel)}
+button:active{transform:translateY(1px)}
+.msg{min-height:26px;font-weight:700;margin:10px 0}
+.msg.ok{color:var(--ok)}.msg.erro{color:var(--erro)}
+.instr{color:var(--suave);font-size:14px;margin:0 0 12px}
+footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30px;line-height:1.7}
+.contador{display:inline-flex;align-items:center;gap:8px;margin-bottom:8px;font-weight:600}
+#cont-dig{display:inline-flex;gap:2px}
+#cont-dig b{background:#111;color:#4ade80;font-family:"Courier New",monospace;font-size:18px;padding:3px 5px;border-radius:3px;min-width:20px}
+
+/* Caça-palavras */
+.ws-wrap{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
+.ws-grid{--w:min(92vw,520px);display:grid;grid-template-columns:repeat(var(--n),1fr);width:var(--w);background:var(--card);border:2px solid var(--tinta);padding:6px;touch-action:none;user-select:none;-webkit-user-select:none}
+.ws-grid div{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:calc(var(--w)/var(--n)*.5);border-radius:40%;cursor:pointer}
+.ws-grid div.sel{background:#fde68a!important}
+.ws-lista{columns:2;column-gap:22px;min-width:230px;padding:0;list-style:none;margin:0;font-weight:600;font-size:17px}
+.ws-lista li{padding:3px 0}
+.ws-lista li.ach{text-decoration:line-through;color:var(--suave)}
+.ws-lista li.rev{color:var(--erro)}
+
+/* Cruzadinha */
+.cw-wrap{display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.cw-grid{--s:min(36px,calc((92vw - 4px)/var(--c)));display:grid;grid-template-columns:repeat(var(--c),var(--s));grid-auto-rows:var(--s)}
+.cw-cell{position:relative;outline:1px solid var(--tinta);background:#fff}
+.cw-cell input{width:100%;height:100%;border:0;text-align:center;font-weight:700;font-size:calc(var(--s)*.55);text-transform:uppercase;background:transparent;padding:0;color:var(--tinta);caret-color:transparent;outline:none;border-radius:0}
+.cw-cell .num{position:absolute;top:1px;left:2px;font-size:calc(var(--s)*.28);line-height:1;pointer-events:none;color:var(--suave)}
+.cw-cell.hl{background:#fef3c7}.cw-cell.foco{background:#fcd34d}
+.cw-cell.ok input{color:var(--ok)}.cw-cell.err{background:#fecaca}
+.cw-atual{min-height:24px;font-weight:600;margin-bottom:10px;color:var(--acento)}
+.cw-pistas{flex:1;min-width:250px}
+.cw-pistas h3{font-family:Georgia,serif;margin:0 0 6px}
+.cw-pistas ol{list-style:none;padding:0;margin:0 0 16px}
+.cw-pistas li{padding:4px 6px;cursor:pointer;border-radius:4px;font-size:15px}
+.cw-pistas li.at{background:#fde68a}
+
+/* Sudoku */
+.sd-grid{--w:min(92vw,450px);display:grid;grid-template-columns:repeat(9,1fr);width:var(--w);border:3px solid var(--tinta);background:#fff;user-select:none;-webkit-user-select:none}
+.sd-grid div{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:calc(var(--w)/9*.55);border-right:1px solid var(--linha);border-bottom:1px solid var(--linha);cursor:pointer;color:var(--acento2)}
+.sd-grid div.dado{color:var(--tinta);font-weight:700}
+.sd-grid div.br{border-right:2px solid var(--tinta)}.sd-grid div.bb{border-bottom:2px solid var(--tinta)}
+.sd-grid div.viz{background:#f3eee2}.sd-grid div.igual{background:#fde68a}.sd-grid div.sel{background:#fcd34d}
+.sd-grid div.conf{color:var(--erro);background:#fee2e2}
+.pad{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;width:min(92vw,450px);margin-top:10px}
+.pad button{padding:10px 0;font-size:20px}
+
+/* Criptograma */
+.cr-frase{display:flex;flex-wrap:wrap;gap:16px 24px;background:var(--card);border:2px solid var(--tinta);padding:18px 14px;border-radius:6px}
+.cr-pal{display:flex;gap:3px}
+.cr-l{display:flex;flex-direction:column;align-items:center;width:min(34px,8vw)}
+.cr-l input{width:100%;height:38px;text-align:center;font-weight:700;font-size:20px;border:0;border-bottom:2px solid var(--tinta);background:transparent;text-transform:uppercase;padding:0;color:var(--acento2);outline:none;border-radius:0}
+.cr-l input:disabled{color:var(--tinta);opacity:1;-webkit-text-fill-color:var(--tinta)}
+.cr-l input:focus{background:#fde68a}
+.cr-l span{font-size:12px;color:var(--suave);margin-top:2px}
+.cr-l.err input{color:var(--erro);background:#fee2e2}
+.cr-p{font-size:24px;font-weight:700;align-self:flex-start}
+
+/* Palavras embaralhadas */
+.em-box{background:var(--card);border:2px solid var(--tinta);border-radius:6px;padding:22px;text-align:center;max-width:560px}
+.em-prog{color:var(--suave);font-weight:600}
+.em-tema{font-family:Georgia,serif;font-size:20px;margin-top:6px}
+.em-letras{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:16px 0}
+.em-letras span{width:42px;height:48px;display:flex;align-items:center;justify-content:center;border:2px solid var(--tinta);border-radius:5px;font-size:24px;font-weight:800;background:#fef3c7}
+.em-dica{min-height:22px;color:var(--acento);font-weight:600}
+.em-box input[type=text]{width:100%;max-width:320px;text-align:center;font-size:20px;text-transform:uppercase;margin:8px 0}
+
+/* Labirinto */
+.lb-wrap{max-width:560px}
+.lb-wrap canvas{display:block;background:#fff;border:2px solid var(--tinta);touch-action:none}
+.lb-info{font-weight:600;color:var(--suave);margin-bottom:8px}
+.dpad{display:grid;grid-template-columns:repeat(3,58px);gap:6px;margin-top:12px}
+.dpad button{height:52px;font-size:22px}
+</style>
+</head>
+<body>
+<header>
+  <a href="#"><h1>📖 Passatempos</h1></a>
+  <p>Caça-palavras, cruzadinha, sudoku e outros desafios — direto no navegador.</p>
+</header>
+
+<main>
+<div id="menu" class="menu">
+  <a class="card" href="#cacapalavras"><div class="ic">🔎</div><h2>Caça-palavras</h2><p>Encontre as palavras escondidas na grade, em várias direções.</p></a>
+  <a class="card" href="#cruzadinha"><div class="ic">✏️</div><h2>Cruzadinha</h2><p>Leia as dicas e preencha as palavras que se cruzam.</p></a>
+  <a class="card" href="#sudoku"><div class="ic">🔢</div><h2>Sudoku</h2><p>Números de 1 a 9 sem repetir na linha, coluna ou quadrado.</p></a>
+  <a class="card" href="#criptograma"><div class="ic">🔐</div><h2>Criptograma</h2><p>Cada número é uma letra. Descubra o ditado popular escondido.</p></a>
+  <a class="card" href="#embaralhadas"><div class="ic">🔀</div><h2>Palavras Embaralhadas</h2><p>Desembaralhe as letras e ache a palavra certa.</p></a>
+  <a class="card" href="#labirinto"><div class="ic">🌀</div><h2>Labirinto</h2><p>Saia do início e chegue até a bandeira no menor tempo.</p></a>
+</div>
+
+<!-- CAÇA-PALAVRAS -->
+<section class="jogo" id="cacapalavras">
+  <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Caça-palavras</h2></div>
+  <div class="controles">
+    <select id="ws-tema"></select>
+    <select id="ws-dif"><option value="facil">Fácil</option><option value="medio" selected>Médio</option><option value="dificil">Difícil</option></select>
+    <button class="prim" id="ws-novo">Novo jogo</button>
+    <button id="ws-rev">Mostrar respostas</button>
+  </div>
+  <p class="instr">Arraste o dedo ou o mouse da primeira até a última letra da palavra.</p>
+  <div class="ws-wrap">
+    <div id="ws-grid" class="ws-grid"></div>
+    <div><ul id="ws-lista" class="ws-lista"></ul><div id="ws-msg" class="msg"></div></div>
+  </div>
+</section>
+
+<!-- CRUZADINHA -->
+<section class="jogo" id="cruzadinha">
+  <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Cruzadinha</h2></div>
+  <div class="controles">
+    <select id="cw-dif"><option value="facil">Pequena</option><option value="medio" selected>Média</option><option value="dificil">Grande</option></select>
+    <button class="prim" id="cw-novo">Nova cruzadinha</button>
+    <button id="cw-ver">Verificar</button>
+    <button id="cw-rev">Revelar</button>
+  </div>
+  <p class="instr">Toque numa casa para escrever. Toque de novo na mesma casa para trocar entre horizontal e vertical.</p>
+  <div id="cw-atual" class="cw-atual"></div>
+  <div class="cw-wrap">
+    <div id="cw-grid" class="cw-grid"></div>
+    <div class="cw-pistas">
+      <h3>Horizontais</h3><ol id="cw-h"></ol>
+      <h3>Verticais</h3><ol id="cw-v"></ol>
+      <div id="cw-msg" class="msg"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SUDOKU -->
+<section class="jogo" id="sudoku">
+  <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Sudoku</h2></div>
+  <div class="controles">
+    <select id="sd-dif"><option value="facil">Fácil</option><option value="medio" selected>Médio</option><option value="dificil">Difícil</option></select>
+    <button class="prim" id="sd-novo">Novo sudoku</button>
+    <button id="sd-ver">Verificar</button>
+    <button id="sd-dica">Dica</button>
+  </div>
+  <p class="instr">Toque numa casa e escolha o número. Também dá para usar o teclado.</p>
+  <div id="sd-grid" class="sd-grid"></div>
+  <div class="pad" id="sd-pad"></div>
+  <div id="sd-msg" class="msg"></div>
+</section>
+
+<!-- CRIPTOGRAMA -->
+<section class="jogo" id="criptograma">
+  <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Criptograma</h2></div>
+  <div class="controles">
+    <select id="cr-dif"><option value="facil">Fácil (4 letras dadas)</option><option value="medio" selected>Médio (2 letras dadas)</option><option value="dificil">Difícil (1 letra dada)</option></select>
+    <button class="prim" id="cr-novo">Nova frase</button>
+    <button id="cr-ver">Verificar</button>
+    <button id="cr-dica">Dica</button>
+  </div>
+  <p class="instr">Cada número representa sempre a mesma letra. Ao escrever uma letra, ela aparece em todas as casas com o mesmo número.</p>
+  <div id="cr-frase" class="cr-frase"></div>
+  <div id="cr-msg" class="msg"></div>
+</section>
+
+<!-- EMBARALHADAS -->
+<section class="jogo" id="embaralhadas">
+  <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Palavras Embaralhadas</h2></div>
+  <div class="controles">
+    <select id="em-tema"></select>
+    <button class="prim" id="em-novo">Recomeçar</button>
+  </div>
+  <div class="em-box" id="em-box"></div>
+</section>
+
+<!-- LABIRINTO -->
+<section class="jogo" id="labirinto">
+  <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Labirinto</h2></div>
+  <div class="controles">
+    <select id="lb-dif"><option value="facil">Fácil</option><option value="medio" selected>Médio</option><option value="dificil">Difícil</option></select>
+    <button class="prim" id="lb-novo">Novo labirinto</button>
+  </div>
+  <p class="instr">Use as setas do teclado, arraste o dedo sobre o labirinto ou os botões abaixo.</p>
+  <div class="lb-wrap">
+    <div class="lb-info" id="lb-info"></div>
+    <canvas id="lb-cv"></canvas>
+    <div class="dpad">
+      <span></span><button data-d="0,-1">▲</button><span></span>
+      <button data-d="-1,0">◀</button><span></span><button data-d="1,0">▶</button>
+      <span></span><button data-d="0,1">▼</button><span></span>
+    </div>
+    <div id="lb-msg" class="msg"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="contador"><span>Visitantes</span><div id="cont-dig"></div></div>
+  <div>© 2014–<span id="ano"></span> Passatempos · No ar desde 2014</div>
+  <div>Jogos gerados na hora, cada partida é diferente</div>
+</footer>
+
+<script>
+/* ================= utilidades ================= */
+const $=s=>document.querySelector(s);
+const rnd=n=>Math.floor(Math.random()*n);
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;};
+const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().replace(/[^A-Z]/g,'');
+const msg=(id,t,cls='')=>{const e=$(id);e.textContent=t;e.className='msg '+cls;};
+const tempo=ms=>{const s=Math.round(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+
+/* ================= conteúdo ================= */
+const TEMAS={
+ 'Frutas':['ABACAXI','BANANA','MORANGO','LARANJA','MELANCIA','UVA','GOIABA','MANGA','CAJU','ACEROLA','MARACUJÁ','PITANGA','JABUTICABA','LIMÃO','PERA','KIWI','AMORA','CEREJA','COCO','MAMÃO'],
+ 'Animais':['CACHORRO','GATO','ELEFANTE','GIRAFA','TATU','ONÇA','CAPIVARA','JACARÉ','TUCANO','ARARA','MACACO','COELHO','CAVALO','ZEBRA','LEÃO','TIGRE','PINGUIM','BALEIA','TUBARÃO','CORUJA'],
+ 'Países':['BRASIL','ARGENTINA','PORTUGAL','JAPÃO','CHINA','FRANÇA','ITÁLIA','ALEMANHA','CANADÁ','MÉXICO','CHILE','PERU','EGITO','ÍNDIA','RÚSSIA','ESPANHA','GRÉCIA','URUGUAI','PARAGUAI','COLÔMBIA'],
+ 'Profissões':['MÉDICO','PROFESSOR','PADEIRO','BOMBEIRO','PEDREIRO','ADVOGADO','DENTISTA','MOTORISTA','COZINHEIRO','ENFERMEIRO','PILOTO','CARTEIRO','JORNALISTA','ENGENHEIRO','GARÇOM','BARBEIRO','PINTOR','ATOR','VETERINÁRIO','ELETRICISTA'],
+ 'Cozinha':['PANELA','FOGÃO','GELADEIRA','COLHER','GARFO','FACA','PRATO','COPO','XÍCARA','CONCHA','ESPÁTULA','FORNO','PENEIRA','TALHER','TIGELA','LIQUIDIFICADOR','BATEDEIRA','CHALEIRA','FRIGIDEIRA','RALADOR'],
+ 'Esportes':['FUTEBOL','VÔLEI','BASQUETE','TÊNIS','NATAÇÃO','HANDEBOL','JUDÔ','BOXE','SURFE','CICLISMO','ATLETISMO','XADREZ','GINÁSTICA','REMO','ESGRIMA','GOLFE','CARATÊ','SKATE','RÚGBI','AUTOMOBILISMO'],
+ 'Comidas':['FEIJOADA','COXINHA','PASTEL','BRIGADEIRO','PAMONHA','ACARAJÉ','MOQUECA','TAPIOCA','LASANHA','PIZZA','CHURRASCO','FAROFA','PÃO DE QUEIJO','COCADA','PUDIM','QUINDIM','EMPADA','ESFIHA','POLENTA','CANJICA'],
+ 'Natureza':['FLORESTA','RIO','MONTANHA','CACHOEIRA','PRAIA','DESERTO','VULCÃO','OCEANO','LAGO','ÁRVORE','FLOR','NUVEM','CHUVA','VENTO','ESTRELA','LUA','SOL','ARCO ÍRIS','PEDRA','AREIA']
+};
+
+const PISTAS=[
+ ['SOL','Estrela que ilumina a Terra'],['LUA','Satélite natural da Terra'],['CAFÉ','Bebida preta feita de grãos torrados'],
+ ['BRASIL','País do samba e do futebol'],['PIANO','Instrumento de teclas pretas e brancas'],['LIVRO','Tem capa, páginas e uma história'],
+ ['ESCOLA','Lugar onde se aprende'],['JANELA','Abertura na parede para ver lá fora'],['RELÓGIO','Marca as horas'],
+ ['CHAVE','Abre a fechadura'],['ABELHA','Inseto que produz mel'],['PANELA','Usada para cozinhar no fogão'],
+ ['CAMELO','Animal do deserto com corcovas'],['TESOURA','Corta papel e tecido'],['ESTRELA','Brilha no céu à noite'],
+ ['OCEANO','Atlântico ou Pacífico, por exemplo'],['VERÃO','Estação mais quente do ano'],['INVERNO','Estação mais fria do ano'],
+ ['MONTANHA','Grande elevação natural do terreno'],['ÁRVORE','Tem raiz, tronco e galhos'],['CARTA','Mensagem enviada pelo correio'],
+ ['TREM','Anda sobre trilhos'],['AVIÃO','Voa levando passageiros'],['NAVIO','Grande embarcação'],
+ ['CADEIRA','Móvel feito para sentar'],['MESA','Móvel onde se fazem as refeições'],['QUEIJO','Feito de leite; o rato adora'],
+ ['PÃO','Feito de farinha e assado no forno'],['ARROZ','Par inseparável do feijão'],['FEIJÃO','Grão principal da feijoada'],
+ ['OVO','A galinha bota'],['LEITE','Bebida branca tirada da vaca'],['MEL','Doce produzido pelas abelhas'],
+ ['NEVE','Gelo que cai do céu em flocos'],['CHUVA','Água que cai das nuvens'],['VENTO','Ar em movimento'],
+ ['NUVEM','Fica no céu e pode trazer chuva'],['ILHA','Terra cercada de água por todos os lados'],['RIO','Curso de água doce, como o Amazonas'],
+ ['PRAIA','Areia, mar e sol'],['BOLA','Redonda, usada no futebol'],['VIOLÃO','Instrumento de seis cordas'],
+ ['TAMBOR','Instrumento de percussão'],['PIPOCA','Milho estourado do cinema'],['SORVETE','Doce gelado servido na casquinha'],
+ ['BICICLETA','Tem duas rodas e pedais'],['GIRAFA','Animal de pescoço comprido'],['CORUJA','Ave noturna de olhos grandes'],
+ ['TARTARUGA','Réptil que carrega o próprio casco'],['DOMINGO','Primeiro dia da semana'],['JANEIRO','Primeiro mês do ano'],
+ ['ALFABETO','Conjunto das letras de A a Z'],['DICIONÁRIO','Livro com o significado das palavras'],['MAPA','Desenho que mostra lugares e caminhos'],
+ ['ESPELHO','Reflete a nossa imagem'],['SAPATO','Calçado de couro'],['CHAPÉU','Usado na cabeça para proteger do sol'],
+ ['GELO','Água congelada'],['FOGO','Queima e produz chamas'],['CAVALO','Animal que se monta e que relincha'],
+ ['ELEFANTE','Maior animal terrestre, tem tromba'],['TELEFONE','Aparelho para falar à distância'],['ESCADA','Tem degraus para subir'],
+ ['PENTE','Usado para arrumar o cabelo'],['TOALHA','Usada para se enxugar'],['BANANA','Fruta amarela que o macaco adora'],
+ ['UVA','Fruta do vinho'],['LIMÃO','Fruta azeda da limonada'],['CAMA','Móvel onde dormimos'],['NATAL','Festa de 25 de dezembro']
+];
+
+const FRASES=[
+ 'ÁGUA MOLE EM PEDRA DURA, TANTO BATE ATÉ QUE FURA','QUEM NÃO TEM CÃO CAÇA COM GATO','DEVAGAR SE VAI AO LONGE',
+ 'MAIS VALE UM PÁSSARO NA MÃO DO QUE DOIS VOANDO','A PRESSA É INIMIGA DA PERFEIÇÃO','QUEM TEM BOCA VAI A ROMA',
+ 'DE GRÃO EM GRÃO A GALINHA ENCHE O PAPO','CÃO QUE LADRA NÃO MORDE','QUEM SEMEIA VENTOS COLHE TEMPESTADES',
+ 'EM BOCA FECHADA NÃO ENTRA MOSCA','O SEGURO MORREU DE VELHO','QUEM AMA O FEIO, BONITO LHE PARECE',
+ 'ANTES TARDE DO QUE NUNCA','A UNIÃO FAZ A FORÇA','QUEM ESPERA SEMPRE ALCANÇA','FILHO DE PEIXE, PEIXINHO É',
+ 'UMA ANDORINHA SÓ NÃO FAZ VERÃO','QUEM CALA CONSENTE','NEM TUDO QUE RELUZ É OURO','CADA MACACO NO SEU GALHO',
+ 'A CAVALO DADO NÃO SE OLHAM OS DENTES','DEUS AJUDA QUEM CEDO MADRUGA','DIZE-ME COM QUEM ANDAS E TE DIREI QUEM ÉS',
+ 'GATO ESCALDADO TEM MEDO DE ÁGUA FRIA','QUEM COM FERRO FERE, COM FERRO SERÁ FERIDO','O QUE OS OLHOS NÃO VEEM O CORAÇÃO NÃO SENTE'
+];
+
+/* ================= navegação ================= */
+const iniciados={};let atual='';
+function rota(){
+  const h=location.hash.slice(1);
+  atual=INIT[h]?h:'';
+  $('#menu').style.display=atual?'none':'';
+  document.querySelectorAll('section.jogo').forEach(s=>s.classList.toggle('ativo',s.id===atual));
+  if(atual&&!iniciados[atual]){iniciados[atual]=1;INIT[atual]();}
+  if(atual==='labirinto'&&lb.m)lbDesenha();
+  window.scrollTo(0,0);
+}
+for(const id of ['#ws-tema','#em-tema'])$(id).innerHTML=Object.keys(TEMAS).map(t=>`<option>${t}</option>`).join('');
+
+/* ================= CAÇA-PALAVRAS ================= */
+const DIRS8=[[0,1],[1,0],[1,1],[-1,1],[0,-1],[-1,0],[-1,-1],[1,-1]];
+const WSCFG={facil:{n:10,d:2,k:8},medio:{n:12,d:4,k:10},dificil:{n:15,d:8,k:14}};
+const CORES=['#fca5a5','#93c5fd','#86efac','#fcd34d','#c4b5fd','#f9a8d4','#5eead4','#fdba74','#a5b4fc','#bef264','#67e8f9','#fda4af','#d8b4fe','#fde047'];
+let ws={ini:-1,selec:[]};
+function wsNovo(){
+  const cfg=WSCFG[$('#ws-dif').value],tema=$('#ws-tema').value,n=cfg.n,dirs=DIRS8.slice(0,cfg.d);
+  const g=Array.from({length:n},()=>Array(n).fill(''));
+  const palavras=[];
+  for(const disp of shuffle(TEMAS[tema].slice())){
+    if(palavras.length>=cfg.k)break;
+    const w=norm(disp);if(w.length>n)continue;
+    for(let t=0;t<300;t++){
+      const [dr,dc]=dirs[rnd(dirs.length)],r=rnd(n),c=rnd(n);
+      const er=r+dr*(w.length-1),ec=c+dc*(w.length-1);
+      if(er<0||er>=n||ec<0||ec>=n)continue;
+      let ok=true;
+      for(let i=0;i<w.length;i++){const x=g[r+dr*i][c+dc*i];if(x&&x!==w[i]){ok=false;break;}}
+      if(!ok)continue;
+      const cells=[];
+      for(let i=0;i<w.length;i++){g[r+dr*i][c+dc*i]=w[i];cells.push((r+dr*i)*n+c+dc*i);}
+      palavras.push({w,disp,cells,ach:false});break;
+    }
+  }
+  const LET='AAAAAEEEEIIIOOOUURRSSTTNNMMLLCCDDPPBGVFHQJXZ';
+  for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(!g[r][c])g[r][c]=LET[rnd(LET.length)];
+  palavras.sort((a,b)=>a.w.localeCompare(b.w));
+  ws={n,g,palavras,ini:-1,selec:[],cor:0};
+  const el=$('#ws-grid');el.style.setProperty('--n',n);el.innerHTML='';
+  for(let i=0;i<n*n;i++){const d=document.createElement('div');d.textContent=g[i/n|0][i%n];d.dataset.i=i;el.appendChild(d);}
+  $('#ws-lista').innerHTML=palavras.map((p,i)=>`<li data-p="${i}">${p.disp}</li>`).join('');
+  msg('#ws-msg','');
+}
+function wsCelula(e){const t=document.elementFromPoint(e.clientX,e.clientY);return t&&t.parentNode===$('#ws-grid')?+t.dataset.i:-1;}
+function wsLinha(a,b){
+  const n=ws.n,r0=a/n|0,c0=a%n,dr=(b/n|0)-r0,dc=b%n-c0;
+  if(dr&&dc&&Math.abs(dr)!==Math.abs(dc))return null;
+  const len=Math.max(Math.abs(dr),Math.abs(dc)),sr=Math.sign(dr),sc=Math.sign(dc),out=[];
+  for(let i=0;i<=len;i++)out.push((r0+sr*i)*n+c0+sc*i);
+  return out;
+}
+function wsMarca(l){const k=$('#ws-grid').children;ws.selec.forEach(i=>k[i].classList.remove('sel'));ws.selec=l;l.forEach(i=>k[i].classList.add('sel'));}
+function wsConfere(){
+  if(ws.selec.length<2)return;
+  const s=ws.selec.map(i=>ws.g[i/ws.n|0][i%ws.n]).join(''),inv=[...s].reverse().join('');
+  const idx=ws.palavras.findIndex(p=>!p.ach&&(p.w===s||p.w===inv));
+  if(idx<0)return;
+  const p=ws.palavras[idx];p.ach=true;
+  const cor=CORES[ws.cor++%CORES.length],k=$('#ws-grid').children;
+  ws.selec.forEach(i=>k[i].style.background=cor);
+  $(`#ws-lista li[data-p="${idx}"]`).classList.add('ach');
+  if(ws.palavras.every(p=>p.ach))msg('#ws-msg','🎉 Parabéns! Você achou todas as palavras!','ok');
+}
+$('#ws-grid').addEventListener('pointerdown',e=>{const i=wsCelula(e);if(i<0)return;e.preventDefault();ws.ini=i;wsMarca([i]);});
+addEventListener('pointermove',e=>{if(ws.ini<0)return;const i=wsCelula(e);if(i<0)return;const l=wsLinha(ws.ini,i);if(l)wsMarca(l);});
+addEventListener('pointerup',()=>{if(ws.ini<0)return;wsConfere();ws.ini=-1;wsMarca([]);});
+$('#ws-novo').onclick=wsNovo;$('#ws-tema').onchange=wsNovo;$('#ws-dif').onchange=wsNovo;
+$('#ws-rev').onclick=()=>{const k=$('#ws-grid').children;ws.palavras.forEach((p,i)=>{if(p.ach)return;p.cells.forEach(c=>{k[c].style.background='#e7e2d6';k[c].style.color='#b91c1c';});$(`#ws-lista li[data-p="${i}"]`).classList.add('rev');});};
+
+/* ================= CRUZADINHA ================= */
+let cw={};
+function cwGerar(alvo){
+  let melhor=null;const MAX=13,K=(r,c)=>r+','+c;
+  for(let t=0;t<60;t++){
+    const banco=shuffle(PISTAS.map(([p,d])=>({w:norm(p),dica:d})));
+    const cel=new Map(),pos=[];let b={r0:0,r1:0,c0:0,c1:0};
+    const cabe=(w,r,c,H)=>{
+      const dr=H?0:1,dc=H?1:0,L=w.length;
+      if(cel.has(K(r-dr,c-dc))||cel.has(K(r+dr*L,c+dc*L)))return -1;
+      let x=0;
+      for(let i=0;i<L;i++){
+        const rr=r+dr*i,cc=c+dc*i,k=cel.get(K(rr,cc));
+        if(k){if(k.ch!==w[i]||(H?k.h:k.v))return -1;x++;}
+        else if(cel.has(K(rr+dc,cc+dr))||cel.has(K(rr-dc,cc-dr)))return -1;
+      }
+      const er=r+dr*(L-1),ec=c+dc*(L-1);
+      if(Math.max(b.r1,er)-Math.min(b.r0,r)+1>MAX||Math.max(b.c1,ec)-Math.min(b.c0,c)+1>MAX)return -1;
+      return x;
+    };
+    const por=o=>{
+      const dr=o.H?0:1,dc=o.H?1:0;
+      for(let i=0;i<o.w.length;i++){const k=K(o.r+dr*i,o.c+dc*i);const v=cel.get(k)||{ch:o.w[i],h:false,v:false};if(o.H)v.h=true;else v.v=true;cel.set(k,v);}
+      b={r0:Math.min(b.r0,o.r),r1:Math.max(b.r1,o.r+dr*(o.w.length-1)),c0:Math.min(b.c0,o.c),c1:Math.max(b.c1,o.c+dc*(o.w.length-1))};
+      pos.push(o);
+    };
+    const f=banco.splice(Math.max(0,banco.findIndex(x=>x.w.length>=6&&x.w.length<=9)),1)[0];
+    por({...f,r:0,c:0,H:true});
+    for(const p of banco){
+      if(pos.length>=alvo)break;
+      let ops=[],mx=0;
+      for(const [k,v] of cel){
+        const [r,c]=k.split(',').map(Number);
+        for(let i=0;i<p.w.length;i++){
+          if(p.w[i]!==v.ch)continue;
+          for(const H of [true,false]){
+            if(H?v.h:v.v)continue;
+            const r0=H?r:r-i,c0=H?c-i:c,x=cabe(p.w,r0,c0,H);
+            if(x>0){if(x>mx){mx=x;ops=[];}if(x===mx)ops.push({r:r0,c:c0,H});}
+          }
+        }
+      }
+      if(ops.length)por({...p,...ops[rnd(ops.length)]});
+    }
+    if(!melhor||pos.length>melhor.pos.length)melhor={pos,cel,b};
+    if(pos.length>=alvo)break;
+  }
+  return melhor;
+}
+function cwNovo(){
+  const alvo={facil:7,medio:10,dificil:14}[$('#cw-dif').value];
+  const {pos,cel,b}=cwGerar(alvo);
+  const rows=b.r1-b.r0+1,cols=b.c1-b.c0+1,grid=new Map();
+  for(const [k,v] of cel){const [r,c]=k.split(',').map(Number);grid.set((r-b.r0)*cols+(c-b.c0),{ch:v.ch,palH:null,palV:null});}
+  pos.forEach(o=>{o.r-=b.r0;o.c-=b.c0;});
+  pos.sort((x,y)=>x.r-y.r||x.c-y.c);
+  let n=0;const nums={};
+  pos.forEach(o=>{
+    const i=o.r*cols+o.c;if(!nums[i])nums[i]=++n;o.n=nums[i];o.cells=[];
+    for(let j=0;j<o.w.length;j++){const idx=(o.r+(o.H?0:j))*cols+o.c+(o.H?j:0);o.cells.push(idx);grid.get(idx)[o.H?'palH':'palV']=o;}
+  });
+  cw={rows,cols,grid,pos,dir:true,foco:-1};
+  const el=$('#cw-grid');el.style.setProperty('--c',cols);
+  let h='';
+  for(let i=0;i<rows*cols;i++){
+    if(!grid.has(i)){h+='<div></div>';continue;}
+    h+=`<div class="cw-cell">${nums[i]?`<span class="num">${nums[i]}</span>`:''}<input data-i="${i}" maxlength="2" autocomplete="off" autocapitalize="characters" spellcheck="false"></div>`;
+  }
+  el.innerHTML=h;
+  const li=o=>`<li data-k="${pos.indexOf(o)}"><b>${o.n}.</b> ${o.dica} <small>(${o.w.length})</small></li>`;
+  $('#cw-h').innerHTML=pos.filter(o=>o.H).map(li).join('');
+  $('#cw-v').innerHTML=pos.filter(o=>!o.H).map(li).join('');
+  $('#cw-atual').textContent='';msg('#cw-msg','');
+}
+const cwInp=i=>$(`#cw-grid input[data-i="${i}"]`);
+const cwPal=()=>{const c=cw.grid.get(cw.foco);return c?(cw.dir?c.palH:c.palV):null;};
+function cwRealca(){
+  document.querySelectorAll('#cw-grid .cw-cell').forEach(d=>d.classList.remove('hl','foco'));
+  document.querySelectorAll('.cw-pistas li').forEach(l=>l.classList.remove('at'));
+  const p=cwPal();if(!p)return;
+  p.cells.forEach(i=>cwInp(i).parentNode.classList.add('hl'));
+  cwInp(cw.foco).parentNode.classList.add('foco');
+  $(`.cw-pistas li[data-k="${cw.pos.indexOf(p)}"]`).classList.add('at');
+  $('#cw-atual').textContent=`${p.n} ${p.H?'Horizontal':'Vertical'}: ${p.dica} (${p.w.length})`;
+}
+function cwMove(d,apagar){
+  const p=cwPal();if(!p)return;
+  const j=p.cells.indexOf(cw.foco)+d;if(j<0||j>=p.cells.length)return;
+  const inp=cwInp(p.cells[j]);if(apagar){inp.value='';inp.parentNode.classList.remove('err','ok');}inp.focus();
+}
+const G=$('#cw-grid');
+G.addEventListener('pointerdown',e=>{
+  if(e.target.tagName!=='INPUT')return;
+  const c=cw.grid.get(+e.target.dataset.i);
+  if(document.activeElement===e.target&&c.palH&&c.palV){cw.dir=!cw.dir;cwRealca();}
+});
+G.addEventListener('focusin',e=>{
+  const i=+e.target.dataset.i,c=cw.grid.get(i);
+  if(!(cw.dir?c.palH:c.palV))cw.dir=!cw.dir;
+  cw.foco=i;cwRealca();
+});
+G.addEventListener('input',e=>{
+  const t=e.target;t.value=norm(t.value).slice(-1);
+  t.parentNode.classList.remove('err','ok');
+  if(t.value)cwMove(1);
+});
+G.addEventListener('keydown',e=>{
+  const i=cw.foco,c=cw.cols;
+  if(e.key==='Backspace'&&!e.target.value){e.preventDefault();cwMove(-1,true);return;}
+  const m={ArrowRight:[1,true],ArrowLeft:[-1,true],ArrowDown:[c,false],ArrowUp:[-c,false]}[e.key];
+  if(!m)return;e.preventDefault();
+  const [d,H]=m;let j=i+d;
+  if(H&&(j/c|0)!==(i/c|0))return;
+  if(cw.grid.has(j)){cw.dir=H;cwInp(j).focus();}else if(cw.dir!==H&&cw.grid.get(i)[H?'palH':'palV']){cw.dir=H;cwRealca();}
+});
+document.querySelector('.cw-pistas').addEventListener('click',e=>{
+  const l=e.target.closest('li');if(!l)return;
+  const p=cw.pos[+l.dataset.k];cw.dir=p.H;
+  const vazio=p.cells.find(i=>!cwInp(i).value);
+  cwInp(vazio!==undefined?vazio:p.cells[0]).focus();cwRealca();
+});
+$('#cw-novo').onclick=cwNovo;$('#cw-dif').onchange=cwNovo;
+$('#cw-ver').onclick=()=>{
+  let tudo=true,cheio=true;
+  cw.grid.forEach((c,i)=>{const inp=cwInp(i),d=inp.parentNode;d.classList.remove('err','ok');
+    if(!inp.value){cheio=false;tudo=false;return;}
+    if(inp.value===c.ch)d.classList.add('ok');else{d.classList.add('err');tudo=false;}});
+  if(tudo)msg('#cw-msg','🎉 Cruzadinha completa! Tudo certo!','ok');
+  else msg('#cw-msg',cheio?'Há letras erradas (marcadas em vermelho).':'As letras em vermelho estão erradas. Continue!','erro');
+};
+$('#cw-rev').onclick=()=>{cw.grid.forEach((c,i)=>{const inp=cwInp(i);inp.value=c.ch;inp.parentNode.classList.remove('err');});msg('#cw-msg','Respostas reveladas.');};
+
+/* ================= SUDOKU ================= */
+let sd={};
+function sdUsados(b,i){
+  const r=i/9|0,c=i%9,br=r-r%3,bc=c-c%3;let u=0;
+  for(let k=0;k<9;k++){u|=1<<b[r*9+k];u|=1<<b[k*9+c];u|=1<<b[(br+(k/3|0))*9+bc+k%3];}
+  return u;
+}
+function sdMelhor(b){
+  let best=-1,bm=0,bc=10;
+  for(let i=0;i<81;i++)if(!b[i]){
+    const u=sdUsados(b,i);let n=0;for(let d=1;d<=9;d++)if(!(u>>d&1))n++;
+    if(n<bc){bc=n;best=i;bm=u;if(n===0)break;}
+  }
+  return [best,bm,bc];
+}
+function sdConta(b,lim){
+  const [best,bm,bc]=sdMelhor(b);
+  if(best<0)return 1;if(bc===0)return 0;
+  let tot=0;
+  for(let d=1;d<=9&&tot<lim;d++)if(!(bm>>d&1)){b[best]=d;tot+=sdConta(b,lim-tot);}
+  b[best]=0;return tot;
+}
+function sdPreenche(b){
+  const [best,bm,bc]=sdMelhor(b);
+  if(best<0)return true;if(bc===0)return false;
+  for(const d of shuffle([1,2,3,4,5,6,7,8,9]))if(!(bm>>d&1)){b[best]=d;if(sdPreenche(b))return true;}
+  b[best]=0;return false;
+}
+function sdNovo(){
+  const alvo={facil:38,medio:47,dificil:54}[$('#sd-dif').value];
+  const b=Array(81).fill(0);sdPreenche(b);const sol=b.slice();
+  let tirados=0;
+  for(const i of shuffle([...Array(81).keys()])){
+    if(tirados>=alvo)break;
+    const t=b[i];b[i]=0;
+    if(sdConta(b,2)!==1)b[i]=t;else tirados++;
+  }
+  sd={sol,dado:b.map(v=>v>0),val:b.slice(),sel:-1,t0:Date.now(),fim:false};
+  const el=$('#sd-grid');el.innerHTML='';
+  for(let i=0;i<81;i++){
+    const d=document.createElement('div'),r=i/9|0,c=i%9;
+    if(c===2||c===5)d.classList.add('br');if(r===2||r===5)d.classList.add('bb');
+    if(sd.dado[i])d.classList.add('dado');
+    d.onclick=()=>{sd.sel=i;sdDesenha();};
+    el.appendChild(d);
+  }
+  msg('#sd-msg','');sdDesenha();
+}
+function sdConflito(i){
+  const v=sd.val[i],r=i/9|0,c=i%9;
+  for(let k=0;k<81;k++){
+    if(k===i||sd.val[k]!==v)continue;
+    const r2=k/9|0,c2=k%9;
+    if(r2===r||c2===c||((r2/3|0)===(r/3|0)&&(c2/3|0)===(c/3|0)))return true;
+  }
+  return false;
+}
+function sdDesenha(){
+  const k=$('#sd-grid').children,s=sd.sel,sv=s>=0?sd.val[s]:0;
+  for(let i=0;i<81;i++){
+    const d=k[i],v=sd.val[i],r=i/9|0,c=i%9;d.textContent=v||'';
+    let viz=false;
+    if(s>=0){const sr=s/9|0,sc=s%9;viz=r===sr||c===sc||((r/3|0)===(sr/3|0)&&(c/3|0)===(sc/3|0));}
+    d.classList.toggle('viz',viz);d.classList.toggle('sel',i===s);
+    d.classList.toggle('igual',!!sv&&v===sv&&i!==s);
+    d.classList.toggle('conf',!sd.dado[i]&&!!v&&sdConflito(i));
+  }
+}
+function sdPoe(v){
+  if(sd.sel<0||sd.dado[sd.sel]||sd.fim)return;
+  sd.val[sd.sel]=v;sdDesenha();msg('#sd-msg','');
+  if(sd.val.every((x,i)=>x===sd.sol[i])){sd.fim=true;msg('#sd-msg','🎉 Sudoku resolvido em '+tempo(Date.now()-sd.t0)+'!','ok');}
+}
+$('#sd-pad').innerHTML=[1,2,3,4,5,6,7,8,9].map(n=>`<button data-n="${n}">${n}</button>`).join('')+'<button data-n="0" title="Apagar">⌫</button>';
+$('#sd-pad').onclick=e=>{const b=e.target.closest('button');if(b)sdPoe(+b.dataset.n);};
+$('#sd-novo').onclick=sdNovo;$('#sd-dif').onchange=sdNovo;
+$('#sd-ver').onclick=()=>{
+  let erros=0;
+  const k=$('#sd-grid').children;
+  sd.val.forEach((v,i)=>{if(v&&!sd.dado[i]&&v!==sd.sol[i]){erros++;k[i].classList.add('conf');}});
+  msg('#sd-msg',erros?`${erros} número(s) errado(s) marcado(s) em vermelho.`:'Até aqui está tudo certo!',erros?'erro':'ok');
+};
+$('#sd-dica').onclick=()=>{
+  if(sd.fim)return;
+  let i=sd.sel;
+  if(i<0||sd.dado[i]||sd.val[i]===sd.sol[i]){
+    const vazios=[...Array(81).keys()].filter(j=>sd.val[j]!==sd.sol[j]);
+    if(!vazios.length)return;i=vazios[rnd(vazios.length)];
+  }
+  sd.sel=i;sdPoe(sd.sol[i]);
+};
+
+/* ================= CRIPTOGRAMA ================= */
+let cr={ultima:-1};
+function crNovo(){
+  let k;do{k=rnd(FRASES.length);}while(k===cr.ultima&&FRASES.length>1);
+  const frase=FRASES[k],letras=[...new Set(norm(frase))];
+  const nums=shuffle([...Array(26).keys()].map(x=>x+1)),mapa={};
+  letras.forEach((l,i)=>mapa[l]=nums[i]);
+  const nD={facil:4,medio:2,dificil:1}[$('#cr-dif').value];
+  const dadas=new Set(shuffle(letras.slice()).slice(0,nD));
+  cr={ultima:k,frase,mapa,dadas};
+  $('#cr-frase').innerHTML=frase.split(' ').map(p=>'<div class="cr-pal">'+[...p].map(ch=>{
+    const L=norm(ch);
+    if(!L)return `<span class="cr-p">${ch}</span>`;
+    const d=dadas.has(L);
+    return `<div class="cr-l"><input data-n="${mapa[L]}" data-l="${L}" maxlength="2" autocomplete="off" autocapitalize="characters" spellcheck="false"${d?` value="${L}" disabled`:''}><span>${mapa[L]}</span></div>`;
+  }).join('')+'</div>').join('');
+  msg('#cr-msg','');
+}
+function crTodos(){return [...document.querySelectorAll('#cr-frase input')];}
+function crFim(){
+  const t=crTodos();
+  if(t.every(i=>i.value===i.dataset.l)){msg('#cr-msg','🎉 Isso aí! Você decifrou a frase!','ok');t.forEach(i=>i.disabled=true);}
+}
+$('#cr-frase').addEventListener('input',e=>{
+  const t=e.target,v=norm(t.value).slice(-1);
+  document.querySelectorAll(`#cr-frase input[data-n="${t.dataset.n}"]`).forEach(i=>{i.value=v;i.parentNode.classList.remove('err');});
+  msg('#cr-msg','');
+  if(v){
+    const t2=crTodos(),pos=t2.indexOf(t);
+    const prox=t2.slice(pos+1).concat(t2.slice(0,pos)).find(i=>!i.disabled&&!i.value);
+    if(prox)prox.focus();
+  }
+  crFim();
+});
+$('#cr-frase').addEventListener('keydown',e=>{
+  if(e.key!=='Backspace'||e.target.value)return;
+  const t2=crTodos().filter(i=>!i.disabled),pos=t2.indexOf(e.target);
+  if(pos>0){e.preventDefault();t2[pos-1].focus();}
+});
+$('#cr-novo').onclick=crNovo;$('#cr-dif').onchange=crNovo;
+$('#cr-ver').onclick=()=>{
+  let erros=0;
+  crTodos().forEach(i=>{const e=i.value&&i.value!==i.dataset.l;i.parentNode.classList.toggle('err',!!e);if(e)erros++;});
+  if(erros)msg('#cr-msg','As letras em vermelho estão erradas.','erro');
+  else if(crTodos().some(i=>!i.value))msg('#cr-msg','Até aqui está tudo certo. Continue!','ok');
+  else crFim();
+};
+$('#cr-dica').onclick=()=>{
+  const falta=[...new Set(crTodos().filter(i=>i.value!==i.dataset.l).map(i=>i.dataset.l))];
+  if(!falta.length)return;
+  const L=falta[rnd(falta.length)];
+  document.querySelectorAll(`#cr-frase input[data-l="${L}"]`).forEach(i=>{i.value=L;i.disabled=true;i.parentNode.classList.remove('err');});
+  crFim();
+};
+
+/* ================= PALAVRAS EMBARALHADAS ================= */
+let em={};
+function emNovo(){
+  em={lista:shuffle(TEMAS[$('#em-tema').value].slice()).slice(0,10),i:0,pts:0,tema:$('#em-tema').value};
+  emMostra();
+}
+function emMostra(){
+  const box=$('#em-box');
+  if(em.i>=em.lista.length){
+    box.innerHTML=`<div class="em-tema">Fim de jogo!</div><p style="font-size:22px;font-weight:700">Você fez ${em.pts} de ${em.lista.length*3} pontos</p><button class="prim" id="em-de-novo">Jogar de novo</button>`;
+    $('#em-de-novo').onclick=emNovo;return;
+  }
+  const w=norm(em.lista[em.i]);let s;
+  do{s=shuffle([...w]).join('');}while(s===w&&new Set(w).size>1);
+  em.w=w;em.revel=0;em.espera=false;
+  box.innerHTML=`<div class="em-prog">Palavra ${em.i+1} de ${em.lista.length} · Pontos: ${em.pts}</div>
+    <div class="em-tema">Tema: ${em.tema}</div>
+    <div class="em-letras">${[...s].map(l=>`<span>${l}</span>`).join('')}</div>
+    <div class="em-dica" id="em-dica"></div>
+    <input type="text" id="em-resp" placeholder="Sua resposta" autocomplete="off" autocapitalize="characters" spellcheck="false"><br>
+    <div class="controles" style="justify-content:center"><button class="prim" id="em-ok">Confirmar</button><button id="em-d">Dica</button><button id="em-pular">Pular</button></div>
+    <div class="msg" id="em-msg"></div>`;
+  const r=$('#em-resp');r.focus();
+  r.onkeydown=e=>{if(e.key==='Enter')emConfirma();};
+  $('#em-ok').onclick=emConfirma;
+  $('#em-d').onclick=()=>{if(em.espera)return;if(em.revel<em.w.length-1)em.revel++;$('#em-dica').textContent='Começa com: '+em.w.slice(0,em.revel)+'…';r.focus();};
+  $('#em-pular').onclick=()=>{if(em.espera)return;em.espera=true;msg('#em-msg','A palavra era: '+em.lista[em.i],'erro');setTimeout(()=>{em.i++;emMostra();},1500);};
+}
+function emConfirma(){
+  if(em.espera)return;
+  if(norm($('#em-resp').value)===em.w){
+    const p=Math.max(1,3-em.revel);em.pts+=p;em.espera=true;
+    msg('#em-msg',`✔ Certo! +${p} ponto${p>1?'s':''}`,'ok');
+    setTimeout(()=>{em.i++;emMostra();},1000);
+  }else msg('#em-msg','Ainda não… tente de novo!','erro');
+}
+$('#em-novo').onclick=emNovo;$('#em-tema').onchange=emNovo;
+
+/* ================= LABIRINTO ================= */
+let lb={};
+const LBD=[[0,-1,1,4],[1,0,2,8],[0,1,4,1],[-1,0,8,2]]; // dx,dy,parede,oposta (N=1,L=2,S=4,O=8)
+function lbNovo(){
+  const n={facil:10,medio:16,dificil:24}[$('#lb-dif').value];
+  const m=Array(n*n).fill(15),vis=Array(n*n).fill(false),pilha=[0];vis[0]=true;
+  while(pilha.length){
+    const cur=pilha[pilha.length-1],x=cur%n,y=cur/n|0;
+    const ops=LBD.filter(([dx,dy])=>{const nx=x+dx,ny=y+dy;return nx>=0&&ny>=0&&nx<n&&ny<n&&!vis[ny*n+nx];});
+    if(!ops.length){pilha.pop();continue;}
+    const [dx,dy,p,o]=ops[rnd(ops.length)],ni=(y+dy)*n+x+dx;
+    m[cur]&=~p;m[ni]&=~o;vis[ni]=true;pilha.push(ni);
+  }
+  lb={n,m,x:0,y:0,rastro:[0],mov:0,t0:0,fim:false};
+  msg('#lb-msg','');lbInfo();lbDesenha();
+}
+function lbInfo(){$('#lb-info').textContent=`Movimentos: ${lb.mov}`+(lb.t0&&!lb.fim?' · cronômetro rodando…':'');}
+function lbDesenha(){
+  const cv=$('#lb-cv'),larg=Math.min(560,cv.parentNode.clientWidth||560);
+  const cs=Math.floor((larg-8)/lb.n),S=cs*lb.n+4,dpr=devicePixelRatio||1;
+  lb.cs=cs;cv.width=S*dpr;cv.height=S*dpr;cv.style.width=S+'px';cv.style.height=S+'px';
+  const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,S,S);g.translate(2,2);
+  const n=lb.n;
+  g.fillStyle='#bbf7d0';g.fillRect((n-1)*cs,(n-1)*cs,cs,cs);
+  g.font=`${cs*.7}px sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText('🏁',(n-.5)*cs,(n-.5)*cs+1);
+  if(lb.rastro.length>1){
+    g.strokeStyle='#fdba74';g.lineWidth=Math.max(2,cs*.22);g.lineCap='round';g.lineJoin='round';g.beginPath();
+    lb.rastro.forEach((i,k)=>{const px=(i%n+.5)*cs,py=((i/n|0)+.5)*cs;k?g.lineTo(px,py):g.moveTo(px,py);});g.stroke();
+  }
+  g.strokeStyle='#2b2620';g.lineWidth=2;g.lineCap='square';g.beginPath();
+  for(let i=0;i<n*n;i++){
+    const x=i%n*cs,y=(i/n|0)*cs,w=lb.m[i];
+    if(w&1){g.moveTo(x,y);g.lineTo(x+cs,y);}
+    if(w&2){g.moveTo(x+cs,y);g.lineTo(x+cs,y+cs);}
+    if(w&4){g.moveTo(x,y+cs);g.lineTo(x+cs,y+cs);}
+    if(w&8){g.moveTo(x,y);g.lineTo(x,y+cs);}
+  }
+  g.stroke();
+  g.fillStyle='#c2410c';g.beginPath();g.arc((lb.x+.5)*cs,(lb.y+.5)*cs,cs*.32,0,Math.PI*2);g.fill();
+}
+function lbMove(dx,dy){
+  if(lb.fim||!lb.m)return;
+  const d=LBD.find(v=>v[0]===dx&&v[1]===dy),i=lb.y*lb.n+lb.x;
+  if(lb.m[i]&d[2])return;
+  if(!lb.t0)lb.t0=Date.now();
+  lb.x+=dx;lb.y+=dy;lb.mov++;
+  const ni=lb.y*lb.n+lb.x,r=lb.rastro;
+  if(r.length>1&&r[r.length-2]===ni)r.pop();else r.push(ni);
+  if(lb.x===lb.n-1&&lb.y===lb.n-1){lb.fim=true;msg('#lb-msg',`🎉 Você saiu do labirinto em ${tempo(Date.now()-lb.t0)} com ${lb.mov} movimentos!`,'ok');}
+  lbInfo();lbDesenha();
+}
+document.querySelector('.dpad').onclick=e=>{const b=e.target.closest('button');if(b){const [x,y]=b.dataset.d.split(',').map(Number);lbMove(x,y);}};
+let arr=null;
+$('#lb-cv').addEventListener('pointerdown',e=>{arr={x:e.clientX,y:e.clientY};e.preventDefault();});
+$('#lb-cv').addEventListener('pointermove',e=>{
+  if(!arr)return;
+  const passo=Math.max(14,lb.cs*.7),dx=e.clientX-arr.x,dy=e.clientY-arr.y;
+  if(Math.abs(dx)>=passo&&Math.abs(dx)>=Math.abs(dy)){const s=Math.sign(dx);lbMove(s,0);arr.x+=s*passo;arr.y=e.clientY;}
+  else if(Math.abs(dy)>=passo){const s=Math.sign(dy);lbMove(0,s);arr.y+=s*passo;arr.x=e.clientX;}
+});
+addEventListener('pointerup',()=>arr=null);
+$('#lb-novo').onclick=lbNovo;$('#lb-dif').onchange=lbNovo;
+addEventListener('resize',()=>{if(atual==='labirinto'&&lb.m)lbDesenha();});
+
+/* ================= teclado ================= */
+addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT')return;
+  if(atual==='sudoku'&&sd.val){
+    if(/^[1-9]$/.test(e.key))sdPoe(+e.key);
+    else if(['Backspace','Delete','0'].includes(e.key))sdPoe(0);
+    else{
+      const m={ArrowUp:-9,ArrowDown:9,ArrowLeft:-1,ArrowRight:1}[e.key];
+      if(m){e.preventDefault();sd.sel=sd.sel<0?0:(sd.sel+m+81)%81;sdDesenha();}
+    }
+  }else if(atual==='labirinto'){
+    const m={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0],w:[0,-1],s:[0,1],a:[-1,0],d:[1,0]}[e.key];
+    if(m){e.preventDefault();lbMove(...m);}
+  }
+});
+
+/* ================= contador de visitas ================= */
+(function(){
+  let n;
+  try{
+    n=parseInt(localStorage.getItem('pt-contador'),10);
+    if(!n)n=866000+rnd(134000);   // primeira visita: número aleatório entre 866.000 e 999.999
+    else n+=666;                  // cada nova visita soma 666
+    localStorage.setItem('pt-contador',n);
+  }catch(e){n=866000+rnd(134000);}
+  $('#cont-dig').innerHTML=String(n).padStart(7,'0').split('').map(d=>`<b>${d}</b>`).join('');
+  $('#ano').textContent=new Date().getFullYear();
+})();
+
+const INIT={cacapalavras:wsNovo,cruzadinha:cwNovo,sudoku:sdNovo,criptograma:crNovo,embaralhadas:emNovo,labirinto:lbNovo};
+addEventListener('hashchange',rota);
+rota();
+</script>
+</body>
+</html>
