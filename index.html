@@ -404,6 +404,7 @@ function rota(){
   $('#menu').style.display=atual?'none':'';
   document.querySelectorAll('section.jogo').forEach(s=>s.classList.toggle('ativo',s.id===atual));
   if(atual&&!iniciados[atual]){iniciados[atual]=1;INIT[atual]();}
+  contaAtualizar();
   if(atual==='labirinto'&&lb.m)lbDesenha();
   if(atual==='mapa'&&mp.sat){mp.sat.redesenha();mp.mundo.redesenha();}
   window.scrollTo(0,0);
@@ -1291,7 +1292,8 @@ const LOGIN_KEY='pt-login';
 ['pt-contador','pt-quiz-v1','pt-quiz-rank-local'].forEach(k=>{try{localStorage.removeItem(k);}catch(e){}});
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const conta={nick:'',cod:'',dados:null};
-let semLogin={quiz:{resp:{}}};          // só na memória: some ao fechar ou recarregar a página
+const perfilVazio=()=>({acertos:0,respondidas:0,resp:{},jogos:{}});
+let semLogin=perfilVazio();          // só na memória: some ao fechar ou recarregar a página
 const logado=()=>!!conta.nick;
 const ajuda=()=>logado()&&!!conta.ajuda;      // modo ajuda: liberado pelo servidor só para nicks autorizados
 function aplicarAjuda(){
@@ -1306,7 +1308,7 @@ function aplicarAjuda(){
   document.querySelectorAll('.qz-ops button').forEach(b=>b.classList.toggle('aj',a&&b.dataset.k==='0'&&!b.disabled));
 }
 const dadosAtuais=()=>logado()?conta.dados:semLogin;
-function normaliza(d){d=d&&typeof d==='object'?d:{};d.quiz=d.quiz||{};d.quiz.resp=d.quiz.resp||{};d.jogos=d.jogos||{};return d;}
+function normaliza(d){d=d&&typeof d==='object'?d:{};d.acertos=Number(d.acertos)||0;d.respondidas=Number(d.respondidas)||0;d.resp=d.resp||{};d.jogos=d.jogos||{};return d;}
 function api(params){
   if(!SERVIDOR_URL)return Promise.reject(new Error('Servidor não configurado.'));
   return fetch(SERVIDOR_URL+'?'+new URLSearchParams(params).toString()).then(r=>r.json());
@@ -1314,34 +1316,49 @@ function api(params){
 async function contaEntrar(nick,cod,lembrar){
   const r=await api({acao:'entrar',nick,codigo:cod});
   if(!r||!r.ok)throw new Error((r&&r.erro)||'Não foi possível entrar.');
-  conta.nick=r.nick;conta.cod=cod;conta.dados=normaliza(r.dados);conta.ajuda=!!r.ajuda;
+  conta.nick=r.nick;conta.cod=cod;conta.dados=normaliza(r.perfil);conta.ajuda=!!r.ajuda;conta.lido=Date.now();
   try{if(lembrar)localStorage.setItem(LOGIN_KEY,JSON.stringify({nick:r.nick,cod}));else localStorage.removeItem(LOGIN_KEY);}catch(e){}
   contaMudou();return r;
 }
 function contaSair(){
-  conta.nick='';conta.cod='';conta.dados=null;conta.ajuda=false;semLogin={quiz:{resp:{}}};
+  conta.nick='';conta.cod='';conta.dados=null;conta.ajuda=false;semLogin=perfilVazio();fila=Promise.resolve();
   try{localStorage.removeItem(LOGIN_KEY);}catch(e){}
   contaMudou();
 }
-let tSalvar=null;
-function contaSalvar(){
+/* envia um acontecimento para a planilha (em ordem) e usa o que a planilha devolver como verdade */
+let fila=Promise.resolve();
+function enviar(params){
   if(!logado())return;
-  clearTimeout(tSalvar);
-  tSalvar=setTimeout(()=>{
-    api({acao:'salvar',nick:conta.nick,codigo:conta.cod,dados:JSON.stringify(conta.dados)})
-      .then(r=>{
-        if(r&&r.ok&&r.ranking)qzDesenhaRanking(r.ranking);
-        else if(r&&!r.ok&&r.sair){alertaConta(r.erro||'Sessão inválida. Entre novamente.');contaSair();}
-      }).catch(()=>{});
-  },900);
+  const nick=conta.nick,cod=conta.cod;
+  fila=fila.then(()=>api(Object.assign({nick,codigo:cod},params)).then(r=>receber(r,nick)).catch(()=>{}));
 }
+function receber(r,nick){
+  if(!r||nick!==conta.nick)return;
+  if(!r.ok){if(r.sair){alertaConta(r.erro||'Sessão inválida. Entre novamente.');contaSair();}return;}
+  if(r.perfil){conta.dados=normaliza(r.perfil);conta.ajuda=!!r.ajuda;conta.lido=Date.now();desenhaPerfil();qzAtualizaPlacar();}
+  if(r.ranking&&iniciados.quiz)qzDesenhaRanking(r.ranking);
+}
+/* busca de novo os dados da planilha (mostra no site o que foi editado lá) */
+function contaAtualizar(forcar){
+  if(!logado()||(!forcar&&Date.now()-(conta.lido||0)<8000))return;
+  conta.lido=Date.now();
+  const nick=conta.nick;
+  api({acao:'perfil',nick,codigo:conta.cod}).then(r=>{
+    const antes=JSON.stringify(conta.dados);receber(r,nick);
+    if(r&&r.ok&&JSON.stringify(conta.dados)!==antes&&atual==='quiz'&&!$('#qz-exp.on'))qzProxima();
+  }).catch(()=>{});
+}
+addEventListener('focus',()=>contaAtualizar());
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)contaAtualizar();});
 function ganhou(jogo,extra={}){
   if(!logado())return;                 // sem login: nada é guardado
   const g=conta.dados.jogos[jogo]||(conta.dados.jogos[jogo]={v:0});
   g.v=(g.v||0)+1;
-  if(extra.tempo)g.t=g.t?Math.min(g.t,Math.round(extra.tempo)):Math.round(extra.tempo);
-  if(extra.pontos!=null)g.p=Math.max(g.p||0,extra.pontos);
-  contaSalvar();desenhaPerfil();
+  const seg=extra.tempo?Math.max(1,Math.round(extra.tempo/1000)):0;
+  if(seg)g.t=g.t?Math.min(g.t,seg):seg;
+  if(extra.pontos!=null){g.s=(g.s||0)+extra.pontos;g.p=Math.max(g.p||0,extra.pontos);}
+  desenhaPerfil();
+  enviar({acao:'jogo',jogo,tempo:seg||'',pontos:extra.pontos??''});
 }
 function alertaConta(t){const b=$('#conta-bar');b.innerHTML=`<span style="color:var(--erro);font-weight:700">${esc(t)}</span>`;setTimeout(desenhaBarra,4000);}
 function desenhaBarra(){
@@ -1353,14 +1370,14 @@ function desenhaBarra(){
 function desenhaPerfil(){
   const p=$('#perfil');
   if(!logado()){p.classList.remove('on');p.innerHTML='';return;}
-  const d=conta.dados,resp=d.quiz.resp,ids=Object.keys(resp).filter(k=>PERGUNTAS.some(q=>q.id===k));
-  const ac=ids.filter(k=>resp[k]===1).length;
+  const d=conta.dados;
   const linhas=Object.entries(JOGOS_NOMES).map(([k,n])=>{const g=d.jogos[k]||{};
-    const rec=g.t?'Melhor tempo '+tempo(g.t):g.p!=null?'Melhor: '+g.p+' pontos':'—';
+    const un=k==='mapa'?'acertos':'pontos';
+    const rec=g.t?'Melhor tempo '+tempo(g.t*1000):g.s!=null&&g.v?`Melhor: ${g.p||0} ${un} · Total: ${g.s||0} ${un}`:'—';
     return `<tr><td>${n}</td><td style="text-align:right;font-weight:700">${g.v||0}</td><td>${rec}</td></tr>`;}).join('');
   p.innerHTML=`<h3>📊 Meus resultados — ${esc(conta.nick)}</h3>
     <table><tr><th>Jogo</th><th style="text-align:right">Concluídos</th><th>Recorde</th></tr>
-    <tr><td>🧠 Quiz</td><td style="text-align:right;font-weight:700">${ids.length}/${PERGUNTAS.length}</td><td>${ac} acertos</td></tr>${linhas}</table>`;
+    <tr><td>🧠 Quiz</td><td style="text-align:right;font-weight:700">${d.respondidas}/${PERGUNTAS.length}</td><td>${d.acertos} acertos</td></tr>${linhas}</table>`;
   p.classList.add('on');
 }
 function contaMudou(){
@@ -1398,13 +1415,14 @@ function contaIniciar(){
 /* ================= QUIZ: progresso + ranking ================= */
 const qzHash=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))|0;return 'q'+(h>>>0).toString(36);};
 PERGUNTAS.forEach(q=>q.id=qzHash(q.p));
-const qzResp=()=>dadosAtuais().quiz.resp;
-const qzValidas=()=>Object.keys(qzResp()).filter(k=>PERGUNTAS.some(q=>q.id===k));
-const qzAcertos=()=>qzValidas().filter(k=>qzResp()[k]===1).length;
-const qzRespondidas=()=>qzValidas().length;
+const qzResp=()=>dadosAtuais().resp;
+const qzAcertos=()=>dadosAtuais().acertos;            // com login: valor da planilha
+const qzRespondidas=()=>dadosAtuais().respondidas;
+function qzAtualizaPlacar(){const p=$('#qz-box .qz-placar');if(p)p.outerHTML=qzPlacar();}
 function qzPlacar(){
   const r=qzRespondidas(),a=qzAcertos(),t=PERGUNTAS.length;
-  return `<div class="qz-placar"><div><b>${a}</b><span>ACERTOS</span></div><div><b>${r}/${t}</b><span>RESPONDIDAS</span></div><div><b>${r?Math.round(a/r*100):0}%</b><span>MÉDIA</span></div></div>`;
+  const t2=Math.max(t,r);
+  return `<div class="qz-placar"><div><b>${a}</b><span>ACERTOS</span></div><div><b>${r}/${t2}</b><span>RESPONDIDAS</span></div><div><b>${r?Math.min(100,Math.round(a/r*100)):0}%</b><span>MÉDIA</span></div></div>`;
 }
 function qzNovo(){qzProxima();qzRanking();}
 function qzTopo(falta){
@@ -1429,7 +1447,9 @@ function qzProxima(){
     const ok=b.dataset.k==='0';
     box.querySelectorAll('.qz-ops button').forEach(x=>{x.disabled=true;x.classList.remove('aj');if(x.dataset.k==='0')x.classList.add('certa');});
     if(!ok)b.classList.add('errada');
-    qzResp()[q.id]=ok?1:0;contaSalvar();desenhaPerfil();
+    const d=dadosAtuais();
+    if(!(q.id in d.resp)){d.resp[q.id]=ok?1:0;d.respondidas++;if(ok)d.acertos++;}
+    enviar({acao:'resposta',id:q.id,ok:ok?1:0,pergunta:q.p.slice(0,150)});desenhaPerfil();
     box.querySelector('.qz-placar').outerHTML=qzPlacar();
     const ultima=falta.length===1,exp=$('#qz-exp');exp.classList.add('on');
     exp.innerHTML=`<b class="${ok?'ok':'erro'}">${ok?'✔ Resposta certa!':'✘ Não foi dessa vez.'}</b> ${esc(q.e)}<br>
@@ -1439,7 +1459,7 @@ function qzProxima(){
   };
 }
 function qzFinal(){
-  const a=qzAcertos(),t=PERGUNTAS.length,pct=a/t;
+  const a=qzAcertos(),t=PERGUNTAS.length,pct=Math.min(1,a/t);
   const frase=pct===1?'Gabaritou! 🏆':pct>=.7?'Mandou muito bem! 👏':pct>=.4?'Bom resultado!':'Na próxima vai melhor!';
   $('#qz-box').innerHTML=`<div class="qz-fim"><h3>Você respondeu todas as perguntas!</h3>
     <p style="font-size:20px"><b>${a} de ${t}</b> respostas corretas. ${frase}</p>${qzPlacar()}
@@ -1448,7 +1468,8 @@ function qzFinal(){
   const z=$('#qz-zerar');
   z.onclick=()=>{
     if(!z.dataset.c){z.dataset.c=1;z.textContent='Toque de novo para confirmar'+(logado()?' (sua pontuação no ranking também zera)':'');return;}
-    dadosAtuais().quiz.resp={};contaSalvar();desenhaPerfil();qzProxima();
+    const d=dadosAtuais();d.resp={};d.acertos=0;d.respondidas=0;
+    enviar({acao:'zerar_quiz'});desenhaPerfil();qzProxima();
   };
 }
 function qzRanking(){
