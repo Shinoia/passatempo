@@ -74,9 +74,9 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 
 /* Criptograma */
 .cr-frase{display:flex;flex-wrap:wrap;gap:16px 24px;background:var(--card);border:2px solid var(--tinta);padding:18px 14px;border-radius:6px}
-.cr-pal{display:flex;gap:3px}
-.cr-l{display:flex;flex-direction:column;align-items:center;width:min(34px,8vw)}
-.cr-l input{width:100%;height:38px;text-align:center;font-weight:700;font-size:20px;border:0;border-bottom:2px solid var(--tinta);background:transparent;text-transform:uppercase;padding:0;color:var(--acento2);outline:none;border-radius:0}
+.cr-pal{display:flex;gap:2px}
+.cr-l{display:flex;flex-direction:column;align-items:center;width:min(34px,6.6vw)}
+.cr-l input{width:100%;height:38px;text-align:center;font-weight:700;font-size:clamp(14px,4.4vw,20px);border:0;border-bottom:2px solid var(--tinta);background:transparent;text-transform:uppercase;padding:0;color:var(--acento2);outline:none;border-radius:0}
 .cr-l input:disabled{color:var(--tinta);opacity:1;-webkit-text-fill-color:var(--tinta)}
 .cr-l input:focus{background:#fde68a}
 .cr-l span{font-size:12px;color:var(--suave);margin-top:2px}
@@ -150,6 +150,7 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 .cw-cell input::placeholder,.cr-l input::placeholder,#em-resp::placeholder{color:#cbd5e1;opacity:1}
 .sd-grid div[data-aj]:empty::after{content:attr(data-aj);color:#d6dde6;font-weight:400}
 .mm .mk.aj{font-size:13px;opacity:.5;transform:translate(-50%,-50%)}
+.fato{margin-top:10px;padding:12px 14px;background:#fef3c7;border:1px solid #e5c76b;border-radius:6px;line-height:1.45;max-width:640px}
 .qz-link{background:none;border:0;padding:0;color:var(--acento2);font-weight:600;text-decoration:underline;cursor:pointer;font-size:14px}
 
 /* Onde é? (mapa) */
@@ -202,14 +203,14 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 
 <main>
 <div id="menu" class="menu">
-  <a class="card" href="#cacapalavras"><div class="ic">🔎</div><h2>Caça-palavras</h2><p>Encontre as palavras escondidas na grade, em várias direções.</p></a>
-  <a class="card" href="#cruzadinha"><div class="ic">✏️</div><h2>Cruzadinha</h2><p>Leia as dicas e preencha as palavras que se cruzam.</p></a>
-  <a class="card" href="#sudoku"><div class="ic">🔢</div><h2>Sudoku</h2><p>Números de 1 a 9 sem repetir na linha, coluna ou quadrado.</p></a>
-  <a class="card" href="#criptograma"><div class="ic">🔐</div><h2>Criptograma</h2><p>Cada número é uma letra. Descubra o ditado popular escondido.</p></a>
+  <a class="card" href="#cacapalavras"><div class="ic">🔎</div><h2>Caça-palavras</h2><p>Palavras sobre história, direitos humanos e democracia escondidas na grade.</p></a>
+  <a class="card" href="#cruzadinha"><div class="ic">✏️</div><h2>Cruzadinha</h2><p>Dicas sobre Holocausto, direitos civis, Japão imperial e política de drogas.</p></a>
+  <a class="card" href="#sudoku"><div class="ic">🔢</div><h2>Sudoku</h2><p>Números de 1 a 9 sem repetir. Ao terminar, um fato histórico com fonte.</p></a>
+  <a class="card" href="#criptograma"><div class="ic">🔐</div><h2>Criptograma</h2><p>Cada número é uma letra. Decifre frases da Declaração dos Direitos Humanos e da Constituição.</p></a>
   <a class="card" href="#quiz"><div class="ic">🧠</div><h2>Quiz de Conhecimentos</h2><p>Política, eleições, história e o mundo. Cada resposta vem com a fonte oficial.</p></a>
-  <a class="card" href="#embaralhadas"><div class="ic">🔀</div><h2>Palavras Embaralhadas</h2><p>Desembaralhe as letras e ache a palavra certa.</p></a>
-  <a class="card" href="#mapa"><div class="ic">🌍</div><h2>Onde é?</h2><p>Veja um lugar do mundo por satélite e marque no mapa onde ele fica.</p></a>
-  <a class="card" href="#labirinto"><div class="ic">🌀</div><h2>Labirinto</h2><p>Saia do início e chegue até a bandeira no menor tempo.</p></a>
+  <a class="card" href="#embaralhadas"><div class="ic">🔀</div><h2>Palavras Embaralhadas</h2><p>Desembaralhe termos da história e da política.</p></a>
+  <a class="card" href="#mapa"><div class="ic">🌍</div><h2>Onde é?</h2><p>Memoriais e lugares históricos vistos por satélite: marque no mapa onde ficam.</p></a>
+  <a class="card" href="#labirinto"><div class="ic">🌀</div><h2>Labirinto</h2><p>Chegue à saída e descubra um fato histórico com fonte.</p></a>
 </div>
 
 <div class="perfil" id="perfil"></div>
@@ -349,51 +350,56 @@ const tempo=ms=>{const s=Math.round(ms/1000);return Math.floor(s/60)+':'+String(
 
 /* ================= conteúdo ================= */
 const TEMAS={
- 'Frutas':['ABACAXI','BANANA','MORANGO','LARANJA','MELANCIA','UVA','GOIABA','MANGA','CAJU','ACEROLA','MARACUJÁ','PITANGA','JABUTICABA','LIMÃO','PERA','KIWI','AMORA','CEREJA','COCO','MAMÃO'],
- 'Animais':['CACHORRO','GATO','ELEFANTE','GIRAFA','TATU','ONÇA','CAPIVARA','JACARÉ','TUCANO','ARARA','MACACO','COELHO','CAVALO','ZEBRA','LEÃO','TIGRE','PINGUIM','BALEIA','TUBARÃO','CORUJA'],
- 'Países':['BRASIL','ARGENTINA','PORTUGAL','JAPÃO','CHINA','FRANÇA','ITÁLIA','ALEMANHA','CANADÁ','MÉXICO','CHILE','PERU','EGITO','ÍNDIA','RÚSSIA','ESPANHA','GRÉCIA','URUGUAI','PARAGUAI','COLÔMBIA'],
- 'Profissões':['MÉDICO','PROFESSOR','PADEIRO','BOMBEIRO','PEDREIRO','ADVOGADO','DENTISTA','MOTORISTA','COZINHEIRO','ENFERMEIRO','PILOTO','CARTEIRO','JORNALISTA','ENGENHEIRO','GARÇOM','BARBEIRO','PINTOR','ATOR','VETERINÁRIO','ELETRICISTA'],
- 'Cozinha':['PANELA','FOGÃO','GELADEIRA','COLHER','GARFO','FACA','PRATO','COPO','XÍCARA','CONCHA','ESPÁTULA','FORNO','PENEIRA','TALHER','TIGELA','LIQUIDIFICADOR','BATEDEIRA','CHALEIRA','FRIGIDEIRA','RALADOR'],
- 'Esportes':['FUTEBOL','VÔLEI','BASQUETE','TÊNIS','NATAÇÃO','HANDEBOL','JUDÔ','BOXE','SURFE','CICLISMO','ATLETISMO','XADREZ','GINÁSTICA','REMO','ESGRIMA','GOLFE','CARATÊ','SKATE','RÚGBI','AUTOMOBILISMO'],
- 'Comidas':['FEIJOADA','COXINHA','PASTEL','BRIGADEIRO','PAMONHA','ACARAJÉ','MOQUECA','TAPIOCA','LASANHA','PIZZA','CHURRASCO','FAROFA','PÃO DE QUEIJO','COCADA','PUDIM','QUINDIM','EMPADA','ESFIHA','POLENTA','CANJICA'],
- 'Natureza':['FLORESTA','RIO','MONTANHA','CACHOEIRA','PRAIA','DESERTO','VULCÃO','OCEANO','LAGO','ÁRVORE','FLOR','NUVEM','CHUVA','VENTO','ESTRELA','LUA','SOL','ARCO ÍRIS','PEDRA','AREIA']
+ 'Holocausto e memória':['HOLOCAUSTO','SHOAH','GUETO','AUSCHWITZ','TREBLINKA','SOBIBOR','DACHAU','MAJDANEK','CHELMNO','BELZEC','DEPORTAÇÃO','ANTISSEMITISMO','SOBREVIVENTE','MEMÓRIA','TESTEMUNHO','LIBERTAÇÃO','GENOCÍDIO','PERSEGUIÇÃO','SINAGOGA','KRISTALLNACHT'],
+ 'Nazismo e Segunda Guerra':['NAZISMO','TOTALITARISMO','PROPAGANDA','CENSURA','DITADURA','SUÁSTICA','GESTAPO','WANNSEE','NUREMBERG','TRIBUNAL','ALIADOS','EIXO','RESISTÊNCIA','INVASÃO','BERLIM','POLÔNIA','NORMANDIA','RENDIÇÃO','ARMISTÍCIO','REFUGIADOS'],
+ 'Japão imperial':['KYOKUJITSU','NANQUIM','MANCHÚRIA','IMPERIALISMO','OCUPAÇÃO','COLONIZAÇÃO','COREIA','MILITARISMO','HIROSHIMA','NAGASAKI','PEARL HARBOR','HIROHITO','MEIJI','EXPANSIONISMO','CRIMES DE GUERRA','TÓQUIO','PACÍFICO','RENDIÇÃO','MEMORIAL','PAZ'],
+ 'Racismo nos EUA':['SEGREGAÇÃO','JIM CROW','KU KLUX KLAN','CONFEDERAÇÃO','ESCRAVIDÃO','ABOLIÇÃO','LINCHAMENTO','BOICOTE','MONTGOMERY','SELMA','BIRMINGHAM','CHARLESTON','DIREITOS CIVIS','ROSA PARKS','LUTHER KING','NAACP','DESSEGREGAÇÃO','IGUALDADE','PROTESTO','RECONSTRUÇÃO'],
+ 'Extremismo e ódio':['EXTREMISMO','RADICALIZAÇÃO','INTOLERÂNCIA','XENOFOBIA','RACISMO','PRECONCEITO','DISCRIMINAÇÃO','SUPREMACISMO','FANATISMO','ÓDIO','TERRORISMO','NEGACIONISMO','DESINFORMAÇÃO','ESTEREÓTIPO','BODE EXPIATÓRIO','PROPAGANDA','CONSPIRAÇÃO','INJÚRIA','APOLOGIA','VIOLÊNCIA'],
+ 'Proibição da cannabis':['CANNABIS','PROIBIÇÃO','PITO DO PANGO','CÂNHAMO','ANSLINGER','LEGALIZAÇÃO','URUGUAI','CANADÁ','CONVENÇÃO','ENTORPECENTE','REGULAÇÃO','MEDICINAL','CANABIDIOL','STF','USUÁRIO','TRÁFICO','POLÍTICA','SAÚDE PÚBLICA','REDUÇÃO DE DANOS','QUARENTA GRAMAS'],
+ 'Direitos humanos e democracia':['DEMOCRACIA','LIBERDADE','IGUALDADE','DIGNIDADE','TOLERÂNCIA','DIVERSIDADE','CIDADANIA','JUSTIÇA','DIÁLOGO','VOTO','CONSTITUIÇÃO','DIREITOS','FRATERNIDADE','EDUCAÇÃO','PAZ','RESPEITO','PLURALISMO','IMPRENSA','ASILO','REFÚGIO']
 };
 
 const PISTAS=[
- ['SOL','Estrela que ilumina a Terra'],['LUA','Satélite natural da Terra'],['CAFÉ','Bebida preta feita de grãos torrados'],
- ['BRASIL','País do samba e do futebol'],['PIANO','Instrumento de teclas pretas e brancas'],['LIVRO','Tem capa, páginas e uma história'],
- ['ESCOLA','Lugar onde se aprende'],['JANELA','Abertura na parede para ver lá fora'],['RELÓGIO','Marca as horas'],
- ['CHAVE','Abre a fechadura'],['ABELHA','Inseto que produz mel'],['PANELA','Usada para cozinhar no fogão'],
- ['CAMELO','Animal do deserto com corcovas'],['TESOURA','Corta papel e tecido'],['ESTRELA','Brilha no céu à noite'],
- ['OCEANO','Atlântico ou Pacífico, por exemplo'],['VERÃO','Estação mais quente do ano'],['INVERNO','Estação mais fria do ano'],
- ['MONTANHA','Grande elevação natural do terreno'],['ÁRVORE','Tem raiz, tronco e galhos'],['CARTA','Mensagem enviada pelo correio'],
- ['TREM','Anda sobre trilhos'],['AVIÃO','Voa levando passageiros'],['NAVIO','Grande embarcação'],
- ['CADEIRA','Móvel feito para sentar'],['MESA','Móvel onde se fazem as refeições'],['QUEIJO','Feito de leite; o rato adora'],
- ['PÃO','Feito de farinha e assado no forno'],['ARROZ','Par inseparável do feijão'],['FEIJÃO','Grão principal da feijoada'],
- ['OVO','A galinha bota'],['LEITE','Bebida branca tirada da vaca'],['MEL','Doce produzido pelas abelhas'],
- ['NEVE','Gelo que cai do céu em flocos'],['CHUVA','Água que cai das nuvens'],['VENTO','Ar em movimento'],
- ['NUVEM','Fica no céu e pode trazer chuva'],['ILHA','Terra cercada de água por todos os lados'],['RIO','Curso de água doce, como o Amazonas'],
- ['PRAIA','Areia, mar e sol'],['BOLA','Redonda, usada no futebol'],['VIOLÃO','Instrumento de seis cordas'],
- ['TAMBOR','Instrumento de percussão'],['PIPOCA','Milho estourado do cinema'],['SORVETE','Doce gelado servido na casquinha'],
- ['BICICLETA','Tem duas rodas e pedais'],['GIRAFA','Animal de pescoço comprido'],['CORUJA','Ave noturna de olhos grandes'],
- ['TARTARUGA','Réptil que carrega o próprio casco'],['DOMINGO','Primeiro dia da semana'],['JANEIRO','Primeiro mês do ano'],
- ['ALFABETO','Conjunto das letras de A a Z'],['DICIONÁRIO','Livro com o significado das palavras'],['MAPA','Desenho que mostra lugares e caminhos'],
- ['ESPELHO','Reflete a nossa imagem'],['SAPATO','Calçado de couro'],['CHAPÉU','Usado na cabeça para proteger do sol'],
- ['GELO','Água congelada'],['FOGO','Queima e produz chamas'],['CAVALO','Animal que se monta e que relincha'],
- ['ELEFANTE','Maior animal terrestre, tem tromba'],['TELEFONE','Aparelho para falar à distância'],['ESCADA','Tem degraus para subir'],
- ['PENTE','Usado para arrumar o cabelo'],['TOALHA','Usada para se enxugar'],['BANANA','Fruta amarela que o macaco adora'],
- ['UVA','Fruta do vinho'],['LIMÃO','Fruta azeda da limonada'],['CAMA','Móvel onde dormimos'],['NATAL','Festa de 25 de dezembro']
+ ['NAZISMO','Ideologia totalitária de Hitler na Alemanha'],['HOLOCAUSTO','Genocídio de 6 milhões de judeus pelos nazistas'],
+ ['SHOAH','Palavra hebraica ("catástrofe") para o Holocausto'],['AUSCHWITZ','Maior complexo de campos criado pelos nazistas'],
+ ['GUETO','Bairro onde judeus eram confinados à força'],['CRISTAIS','"Noite dos ___": ataque antijudaico de 1938'],
+ ['NUREMBERG','Cidade do tribunal que julgou líderes nazistas'],['HITLER','Ditador nazista da Alemanha'],
+ ['SUÁSTICA','Símbolo nazista cuja divulgação é crime no Brasil'],['JUDEUS','Principal alvo do Holocausto'],
+ ['WANNSEE','Conferência de 1942 que organizou a "Solução Final"'],['ALIADOS','Países que derrotaram a Alemanha nazista'],
+ ['DACHAU','Campo libertado por tropas americanas em 1945'],['NANQUIM','Cidade chinesa do massacre de 1937'],
+ ['MEIJI','Era em que o Japão adotou a bandeira do sol nascente (1870)'],['COREIA','País colonizado pelo Japão imperial'],
+ ['SOL','Bandeira do ___ nascente, símbolo do militarismo japonês'],['EXÉRCITO','Primeiro a usar a bandeira do sol nascente, em 1870'],
+ ['MARINHA','Adotou a bandeira do sol nascente em 1889'],['KLAN','"Ku Klux ___": grupo racista fundado em 1865'],
+ ['PULASKI','Cidade do Tennessee onde a KKK foi fundada'],['SEGREGAÇÃO','Separação legal entre brancos e negros'],
+ ['CROW','"Jim ___": leis de segregação no sul dos EUA'],['BROWN','Caso de 1954 contra a segregação nas escolas'],
+ ['CHARLESTON','Cidade do ataque racista de 2015 a uma igreja'],['DIXIECRATS','Partido segregacionista de 1948'],
+ ['CONFEDERADA','Bandeira do sul escravista usada por racistas'],['DIREITOS','"Declaração Universal dos ___ Humanos"'],
+ ['DIGNIDADE','Todos nascem livres e iguais em ___ e direitos'],['RACISMO','Crime inafiançável e imprescritível no Brasil'],
+ ['INJÚRIA','"___ racial": equiparada ao racismo em 2023'],['DEMOCRACIA','Regime em que o povo escolhe seus governantes'],
+ ['TOLERÂNCIA','Respeito às diferenças'],['EXTREMISMO','Defesa de ideias radicais, muitas vezes violenta'],
+ ['ÓDIO','"Discurso de ___": ataca grupos de pessoas'],['CANNABIS','Gênero da planta da maconha'],
+ ['PANGO','"Pito do ___": alvo da lei de 1830 no Rio'],['URUGUAI','Primeiro país a legalizar a cannabis (2013)'],
+ ['CANADÁ','Legalizou a cannabis em 2018'],['ANSLINGER','Chefe antidrogas dos EUA por trás da lei de 1937'],
+ ['STF','Tribunal que descriminalizou o porte de até 40 g'],['QUARENTA','Gramas que separam usuário de traficante (STF)'],
+ ['ONU','Organização criada em 1945, após a guerra'],['PAZ','O contrário da guerra'],
+ ['MEMÓRIA','Lembrar o passado para não repeti-lo'],['HIROSHIMA','Primeira cidade atingida por bomba atômica'],
+ ['GENOCÍDIO','Extermínio planejado de um povo'],['TRIBUNAL','Lugar onde criminosos de guerra foram julgados'],
+ ['ESCRAVIDÃO','Abolida no Brasil pela Lei Áurea'],['LIBERDADE','Direito proclamado no art. 3º da Declaração Universal']
 ];
 
+// [frase, fonte] — textos oficiais (Declaração Universal dos Direitos Humanos e Constituição Federal)
+const DUDH_F={nome:'Declaração Universal dos Direitos Humanos — UNICEF',url:'https://www.unicef.org/brazil/declaracao-universal-dos-direitos-humanos'};
 const FRASES=[
- 'ÁGUA MOLE EM PEDRA DURA, TANTO BATE ATÉ QUE FURA','QUEM NÃO TEM CÃO CAÇA COM GATO','DEVAGAR SE VAI AO LONGE',
- 'MAIS VALE UM PÁSSARO NA MÃO DO QUE DOIS VOANDO','A PRESSA É INIMIGA DA PERFEIÇÃO','QUEM TEM BOCA VAI A ROMA',
- 'DE GRÃO EM GRÃO A GALINHA ENCHE O PAPO','CÃO QUE LADRA NÃO MORDE','QUEM SEMEIA VENTOS COLHE TEMPESTADES',
- 'EM BOCA FECHADA NÃO ENTRA MOSCA','O SEGURO MORREU DE VELHO','QUEM AMA O FEIO, BONITO LHE PARECE',
- 'ANTES TARDE DO QUE NUNCA','A UNIÃO FAZ A FORÇA','QUEM ESPERA SEMPRE ALCANÇA','FILHO DE PEIXE, PEIXINHO É',
- 'UMA ANDORINHA SÓ NÃO FAZ VERÃO','QUEM CALA CONSENTE','NEM TUDO QUE RELUZ É OURO','CADA MACACO NO SEU GALHO',
- 'A CAVALO DADO NÃO SE OLHAM OS DENTES','DEUS AJUDA QUEM CEDO MADRUGA','DIZE-ME COM QUEM ANDAS E TE DIREI QUEM ÉS',
- 'GATO ESCALDADO TEM MEDO DE ÁGUA FRIA','QUEM COM FERRO FERE, COM FERRO SERÁ FERIDO','O QUE OS OLHOS NÃO VEEM O CORAÇÃO NÃO SENTE'
+ ['TODOS OS SERES HUMANOS NASCEM LIVRES E IGUAIS EM DIGNIDADE E DIREITOS',{nome:'Declaração Universal dos Direitos Humanos, art. 1º',url:DUDH_F.url}],
+ ['TODO SER HUMANO TEM DIREITO À VIDA, À LIBERDADE E À SEGURANÇA PESSOAL',{nome:'Declaração Universal dos Direitos Humanos, art. 3º',url:DUDH_F.url}],
+ ['NINGUÉM SERÁ MANTIDO EM ESCRAVIDÃO OU SERVIDÃO',{nome:'Declaração Universal dos Direitos Humanos, art. 4º',url:DUDH_F.url}],
+ ['NINGUÉM SERÁ SUBMETIDO À TORTURA',{nome:'Declaração Universal dos Direitos Humanos, art. 5º',url:DUDH_F.url}],
+ ['TODOS SÃO IGUAIS PERANTE A LEI, SEM DISTINÇÃO DE QUALQUER NATUREZA',{nome:'Constituição Federal, art. 5º',url:'https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm'}],
+ ['A PRÁTICA DO RACISMO CONSTITUI CRIME INAFIANÇÁVEL E IMPRESCRITÍVEL',{nome:'Constituição Federal, art. 5º, XLII',url:'https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm'}],
+ ['TODO O PODER EMANA DO POVO',{nome:'Constituição Federal, art. 1º',url:'https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm'}],
+ ['É INVIOLÁVEL A LIBERDADE DE CONSCIÊNCIA E DE CRENÇA',{nome:'Constituição Federal, art. 5º, VI',url:'https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm'}],
+ ['É LIVRE A MANIFESTAÇÃO DO PENSAMENTO, SENDO VEDADO O ANONIMATO',{nome:'Constituição Federal, art. 5º, IV',url:'https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm'}],
+ ['NINGUÉM SERÁ SUBMETIDO A TORTURA NEM A TRATAMENTO DESUMANO OU DEGRADANTE',{nome:'Constituição Federal, art. 5º, III',url:'https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm'}]
 ];
 
 /* ================= navegação ================= */
@@ -417,6 +423,7 @@ const WSCFG={facil:{n:10,d:2,k:8},medio:{n:12,d:4,k:10},dificil:{n:15,d:8,k:14}}
 const CORES=['#fca5a5','#93c5fd','#86efac','#fcd34d','#c4b5fd','#f9a8d4','#5eead4','#fdba74','#a5b4fc','#bef264','#67e8f9','#fda4af','#d8b4fe','#fde047'];
 let ws={ini:-1,selec:[]};
 function wsNovo(){
+  limpaFato();
   const cfg=WSCFG[$('#ws-dif').value],tema=$('#ws-tema').value,n=cfg.n,dirs=DIRS8.slice(0,cfg.d);
   const g=Array.from({length:n},()=>Array(n).fill(''));
   const palavras=[];
@@ -462,7 +469,7 @@ function wsConfere(){
   const cor=CORES[ws.cor++%CORES.length],k=$('#ws-grid').children;
   ws.selec.forEach(i=>k[i].style.background=cor);
   $(`#ws-lista li[data-p="${idx}"]`).classList.add('ach');aplicarAjuda();
-  if(ws.palavras.every(p=>p.ach)){msg('#ws-msg','🎉 Parabéns! Você achou todas as palavras!','ok');if(!ws.rev)ganhou('cacapalavras');}
+  if(ws.palavras.every(p=>p.ach)){msg('#ws-msg','🎉 Parabéns! Você achou todas as palavras!','ok');if(!ws.rev)ganhou('cacapalavras');mostraFato('#ws-msg');}
 }
 $('#ws-grid').addEventListener('pointerdown',e=>{const i=wsCelula(e);if(i<0)return;e.preventDefault();ws.ini=i;wsMarca([i]);});
 addEventListener('pointermove',e=>{if(ws.ini<0)return;const i=wsCelula(e);if(i<0)return;const l=wsLinha(ws.ini,i);if(l)wsMarca(l);});
@@ -520,6 +527,7 @@ function cwGerar(alvo){
   return melhor;
 }
 function cwNovo(){
+  limpaFato();
   const alvo={facil:7,medio:10,dificil:14}[$('#cw-dif').value];
   const {pos,cel,b}=cwGerar(alvo);
   const rows=b.r1-b.r0+1,cols=b.c1-b.c0+1,grid=new Map();
@@ -597,7 +605,7 @@ $('#cw-ver').onclick=()=>{
   cw.grid.forEach((c,i)=>{const inp=cwInp(i),d=inp.parentNode;d.classList.remove('err','ok');
     if(!inp.value){cheio=false;tudo=false;return;}
     if(inp.value===c.ch)d.classList.add('ok');else{d.classList.add('err');tudo=false;}});
-  if(tudo){msg('#cw-msg','🎉 Cruzadinha completa! Tudo certo!','ok');if(!cw.fim&&!cw.rev){cw.fim=true;ganhou('cruzadinha');}}
+  if(tudo){msg('#cw-msg','🎉 Cruzadinha completa! Tudo certo!','ok');if(!cw.fim&&!cw.rev){cw.fim=true;ganhou('cruzadinha');mostraFato('#cw-msg');}}
   else msg('#cw-msg',cheio?'Há letras erradas (marcadas em vermelho).':'As letras em vermelho estão erradas. Continue!','erro');
 };
 $('#cw-rev').onclick=()=>{cw.rev=true;cw.grid.forEach((c,i)=>{const inp=cwInp(i);inp.value=c.ch;inp.parentNode.classList.remove('err');});msg('#cw-msg','Respostas reveladas.');};
@@ -631,6 +639,7 @@ function sdPreenche(b){
   b[best]=0;return false;
 }
 function sdNovo(){
+  limpaFato();
   const alvo={facil:38,medio:47,dificil:54}[$('#sd-dif').value];
   const b=Array(81).fill(0);sdPreenche(b);const sol=b.slice();
   let tirados=0;
@@ -674,7 +683,7 @@ function sdDesenha(){
 function sdPoe(v){
   if(sd.sel<0||sd.dado[sd.sel]||sd.fim)return;
   sd.val[sd.sel]=v;sdDesenha();msg('#sd-msg','');
-  if(sd.val.every((x,i)=>x===sd.sol[i])){sd.fim=true;msg('#sd-msg','🎉 Sudoku resolvido em '+tempo(Date.now()-sd.t0)+'!','ok');ganhou('sudoku',{tempo:Date.now()-sd.t0});}
+  if(sd.val.every((x,i)=>x===sd.sol[i])){sd.fim=true;msg('#sd-msg','🎉 Sudoku resolvido em '+tempo(Date.now()-sd.t0)+'!','ok');ganhou('sudoku',{tempo:Date.now()-sd.t0});mostraFato('#sd-msg');}
 }
 $('#sd-pad').innerHTML=[1,2,3,4,5,6,7,8,9].map(n=>`<button data-n="${n}">${n}</button>`).join('')+'<button data-n="0" title="Apagar">⌫</button>';
 $('#sd-pad').onclick=e=>{const b=e.target.closest('button');if(b)sdPoe(+b.dataset.n);};
@@ -698,13 +707,14 @@ $('#sd-dica').onclick=()=>{
 /* ================= CRIPTOGRAMA ================= */
 let cr={ultima:-1};
 function crNovo(){
+  limpaFato();
   let k;do{k=rnd(FRASES.length);}while(k===cr.ultima&&FRASES.length>1);
-  const frase=FRASES[k],letras=[...new Set(norm(frase))];
+  const [frase,fonteF]=FRASES[k],letras=[...new Set(norm(frase))];
   const nums=shuffle([...Array(26).keys()].map(x=>x+1)),mapa={};
   letras.forEach((l,i)=>mapa[l]=nums[i]);
   const nD={facil:4,medio:2,dificil:1}[$('#cr-dif').value];
   const dadas=new Set(shuffle(letras.slice()).slice(0,nD));
-  cr={ultima:k,frase,mapa,dadas};
+  cr={ultima:k,frase,mapa,dadas,fonte:fonteF};
   $('#cr-frase').innerHTML=frase.split(' ').map(p=>'<div class="cr-pal">'+[...p].map(ch=>{
     const L=norm(ch);
     if(!L)return `<span class="cr-p">${ch}</span>`;
@@ -716,7 +726,7 @@ function crNovo(){
 function crTodos(){return [...document.querySelectorAll('#cr-frase input')];}
 function crFim(){
   const t=crTodos();
-  if(t.every(i=>i.value===i.dataset.l)){msg('#cr-msg','🎉 Isso aí! Você decifrou a frase!','ok');t.forEach(i=>i.disabled=true);if(!cr.fim){cr.fim=true;ganhou('criptograma');}}
+  if(t.every(i=>i.value===i.dataset.l)){msg('#cr-msg','🎉 Isso aí! Você decifrou a frase!','ok');t.forEach(i=>i.disabled=true);if(!cr.fim){cr.fim=true;ganhou('criptograma');mostraFato('#cr-msg',`📜 Fonte: <a class="qz-fonte" href="${cr.fonte.url}" target="_blank" rel="noopener">${esc(cr.fonte.nome)}</a>`);}}
 }
 $('#cr-frase').addEventListener('input',e=>{
   const t=e.target,v=norm(t.value).slice(-1);
@@ -753,6 +763,7 @@ $('#cr-dica').onclick=()=>{
 /* ================= PALAVRAS EMBARALHADAS ================= */
 let em={};
 function emNovo(){
+  limpaFato();
   em={lista:shuffle(TEMAS[$('#em-tema').value].slice()).slice(0,10),i:0,pts:0,tema:$('#em-tema').value};
   emMostra();
 }
@@ -760,7 +771,7 @@ function emMostra(){
   const box=$('#em-box');
   if(em.i>=em.lista.length){
     box.innerHTML=`<div class="em-tema">Fim de jogo!</div><p style="font-size:22px;font-weight:700">Você fez ${em.pts} de ${em.lista.length*3} pontos</p><button class="prim" id="em-de-novo">Jogar de novo</button>`;
-    $('#em-de-novo').onclick=emNovo;ganhou('embaralhadas',{pontos:em.pts,somar:false});return;
+    $('#em-de-novo').onclick=emNovo;mostraFato('#em-de-novo');ganhou('embaralhadas',{pontos:em.pts,somar:false});return;
   }
   const w=norm(em.lista[em.i]);let s;
   do{s=shuffle([...w]).join('');}while(s===w&&new Set(w).size>1);
@@ -792,6 +803,7 @@ $('#em-novo').onclick=emNovo;$('#em-tema').onchange=emNovo;
 let lb={};
 const LBD=[[0,-1,1,4],[1,0,2,8],[0,1,4,1],[-1,0,8,2]]; // dx,dy,parede,oposta (N=1,L=2,S=4,O=8)
 function lbNovo(){
+  limpaFato();
   const n={facil:10,medio:16,dificil:24}[$('#lb-dif').value];
   const m=Array(n*n).fill(15),vis=Array(n*n).fill(false),pilha=[0];vis[0]=true;
   while(pilha.length){
@@ -844,7 +856,7 @@ function lbMove(dx,dy){
   lb.x+=dx;lb.y+=dy;lb.mov++;
   const ni=lb.y*lb.n+lb.x,r=lb.rastro;
   if(r.length>1&&r[r.length-2]===ni)r.pop();else r.push(ni);
-  if(lb.x===lb.n-1&&lb.y===lb.n-1){lb.fim=true;msg('#lb-msg',`🎉 Você saiu do labirinto em ${tempo(Date.now()-lb.t0)} com ${lb.mov} movimentos!`,'ok');ganhou('labirinto',{tempo:Date.now()-lb.t0});}
+  if(lb.x===lb.n-1&&lb.y===lb.n-1){lb.fim=true;msg('#lb-msg',`🎉 Você saiu do labirinto em ${tempo(Date.now()-lb.t0)} com ${lb.mov} movimentos!`,'ok');ganhou('labirinto',{tempo:Date.now()-lb.t0});mostraFato('#lb-msg');}
   lbInfo();lbDesenha();
 }
 document.querySelector('.dpad').onclick=e=>{const b=e.target.closest('button');if(b){const [x,y]=b.dataset.d.split(',').map(Number);lbMove(x,y);}};
@@ -1280,6 +1292,37 @@ const MUNDO=[
   f:{nome:'Tiempo Argentino — Burnham asume como primer ministro',url:'https://www.tiempoar.com.ar/ta_article/andy-burnham-asumio-como-primer-ministro-britanico-tras-la-renuncia-de-keir-starmer/'}}
 ];
 NOVAS.push(...LIVROS,...MUNDO);
+NOVAS.push(
+ {cat:'Holocausto',p:'Quantos judeus foram assassinados no Holocausto?',o:['Cerca de 6 milhões','Cerca de 600 mil','Cerca de 60 milhões'],e:'O regime nazista e seus colaboradores mataram cerca de 6 milhões de judeus entre 1933 e 1945.',f:{nome:'USHMM — Introdução ao Holocausto',url:'https://encyclopedia.ushmm.org/content/pt-br/article/introduction-to-the-holocaust'}},
+ {cat:'Holocausto',p:'Qual foi o maior complexo de campos criado pelos nazistas?',o:['Auschwitz','Dachau','Buchenwald'],e:'O complexo de Auschwitz foi o maior; cerca de 925 mil pessoas morreram ali.',f:{nome:'USHMM — Mapas do Holocausto',url:'https://encyclopedia.ushmm.org/content/pt-br/gallery/introduction-to-the-holocaust-maps'}},
+ {cat:'Holocausto',p:'Quem libertou Auschwitz em 27 de janeiro de 1945?',o:['Tropas soviéticas','Tropas americanas','Tropas britânicas'],e:'Tropas soviéticas libertaram o complexo em 27/01/1945, data hoje lembrada como Dia Internacional em Memória das Vítimas do Holocausto.',f:{nome:'USHMM — Datas-chave',url:'https://encyclopedia.ushmm.org/content/pt-br/article/the-holocaust-and-world-war-ii-key-dates'}},
+ {cat:'Holocausto',p:'Em que ano aconteceu a "Noite dos Cristais"?',o:['1938','1933','1942'],e:'Na noite de 9 para 10 de novembro de 1938, o regime nazista organizou ataques contra judeus em toda a Alemanha.',f:{nome:'USHMM — Noite dos Cristais',url:'https://encyclopedia.ushmm.org/content/pt-br/article/kristallnacht'}},
+ {cat:'Holocausto',p:'Quantas sinagogas foram incendiadas na Noite dos Cristais?',o:['Mais de 1.400','Cerca de 50','Cerca de 200'],e:'Mais de 1.400 sinagogas foram incendiadas e cerca de 26 mil homens judeus foram mandados para campos de concentração.',f:{nome:'USHMM — Noite dos Cristais',url:'https://encyclopedia.ushmm.org/content/pt-br/article/kristallnacht'}},
+ {cat:'Holocausto',p:'Qual era a base ideológica do Holocausto?',o:['O antissemitismo','A disputa por petróleo','Uma crise religiosa interna'],e:'O antissemitismo racial do nazismo apontava os judeus como "inimigos" a serem eliminados.',f:{nome:'USHMM — Introdução ao Holocausto',url:'https://encyclopedia.ushmm.org/content/pt-br/article/introduction-to-the-holocaust'}},
+ {cat:'Holocausto',p:'Quantos centros de extermínio os nazistas criaram na Polônia ocupada?',o:['Seis','Dois','Vinte'],e:'Chelmno, Belzec, Sobibor, Treblinka, Auschwitz-Birkenau e Majdanek.',f:{nome:'USHMM — Mapas do Holocausto',url:'https://encyclopedia.ushmm.org/content/pt-br/gallery/introduction-to-the-holocaust-maps'}},
+ {cat:'Holocausto',p:'Que tropas libertaram o campo de Dachau?',o:['Americanas','Soviéticas','Francesas'],e:'Forças americanas libertaram Dachau em 29 de abril de 1945.',f:{nome:'USHMM — Datas-chave',url:'https://encyclopedia.ushmm.org/content/pt-br/article/the-holocaust-and-world-war-ii-key-dates'}},
+ {cat:'Japão imperial',p:'Em que ano o Exército Imperial japonês adotou a bandeira do sol nascente?',o:['1870','1945','1700'],e:'O Exército adotou a bandeira em 1870, na Era Meiji; a Marinha, em 1889.',f:{nome:'Toda Matéria — Bandeira do Japão',url:'https://www.todamateria.com.br/bandeira-do-japao/'}},
+ {cat:'Japão imperial',p:'Por que a bandeira do sol nascente é polêmica na Coreia e na China?',o:['É associada às atrocidades do Japão imperial','Por ser parecida com a bandeira da ONU','Porque foi proibida pela FIFA'],e:'Para coreanos e chineses, ela lembra a ocupação e os crimes de guerra do militarismo japonês.',f:{nome:'Toda Matéria — Bandeira do Japão',url:'https://www.todamateria.com.br/bandeira-do-japao/'}},
+ {cat:'Japão imperial',p:'Quando aconteceu o Massacre de Nanquim?',o:['Entre dezembro de 1937 e janeiro de 1938','Em 1905','Em 1950'],e:'Após tomar a cidade em 13/12/1937, tropas japonesas mataram civis e soldados rendidos durante semanas.',f:{nome:'Britannica — Massacre de Nanquim',url:'https://www.britannica.com/question/When-did-the-Nanjing-Massacre-take-place'}},
+ {cat:'Japão imperial',p:'O que foi a Unidade 731?',o:['Unidade japonesa que fez experimentos com seres humanos','Um batalhão de resgate da Cruz Vermelha','Um navio da Marinha americana'],e:'Sediada em Harbin (China), fez experimentos letais e produziu armas biológicas entre 1936 e 1945.',f:{nome:'Wikipedia — Unidade 731',url:'https://en.wikipedia.org/wiki/Unit_731'}},
+ {cat:'Racismo nos EUA',p:'Quem fundou a Ku Klux Klan em 1865?',o:['Ex-soldados confederados','Imigrantes irlandeses','Policiais federais'],e:'A KKK foi fundada em Pulaski, Tennessee, por veteranos confederados, para aterrorizar negros libertos.',f:{nome:'National Park Service — Ku Klux Klan',url:'https://home.nps.gov/articles/kukluxklan.htm'}},
+ {cat:'Racismo nos EUA',p:'Quantos membros a KKK chegou a ter nos anos 1920?',o:['Mais de 4 milhões','Cerca de 4 mil','Cerca de 40 mil'],e:'No auge, nos anos 1920, a Klan passou de 4 milhões de membros.',f:{nome:'History — Ku Klux Klan',url:'https://www.history.com/topics/19th-century/ku-klux-klan'}},
+ {cat:'Racismo nos EUA',p:'O que eram as leis Jim Crow?',o:['Leis de segregação racial no sul dos EUA','Leis de proteção ambiental','Leis trabalhistas do New Deal'],e:'Vigoraram de cerca de 1877 até meados dos anos 1960 e separavam negros e brancos em escolas, transportes e espaços públicos.',f:{nome:'Politize! — Leis Jim Crow',url:'https://www.politize.com.br/leis-jim-crow/'}},
+ {cat:'Racismo nos EUA',p:'Qual decisão de 1954 declarou inconstitucional a segregação nas escolas americanas?',o:['Brown v. Board of Education','Roe v. Wade','Marbury v. Madison'],e:'A Suprema Corte decidiu o caso em 17/05/1954.',f:{nome:'Politize! — Leis Jim Crow',url:'https://www.politize.com.br/leis-jim-crow/'}},
+ {cat:'Racismo nos EUA',p:'Quem reviveu a bandeira confederada como símbolo político em 1948?',o:['Os Dixiecrats, segregacionistas','O movimento pelos direitos civis','O exército da União'],e:'Os Dixiecrats a usaram contra o fim da segregação; depois ela virou símbolo de grupos racistas.',f:{nome:'National Geographic — Bandeira confederada',url:'https://www.nationalgeographic.com/history/article/how-confederate-battle-flag-became-symbol-racism'}},
+ {cat:'Racismo nos EUA',p:'O que levou a Carolina do Sul a retirar a bandeira confederada do Capitólio em 2015?',o:['O massacre racista na igreja Emanuel, em Charleston','Uma ordem da ONU','Uma decisão da NFL'],e:'Nove pessoas negras foram assassinadas em 17/06/2015; a bandeira foi removida em 10/07/2015.',f:{nome:'EJI — Charleston e a bandeira confederada',url:'https://eji.org/news/history-racial-injustice-charleston-and-confederate-flag/'}},
+ {cat:'Direitos humanos',p:'Em que ano a ONU proclamou a Declaração Universal dos Direitos Humanos?',o:['1948','1918','1989'],e:'Ela foi adotada em 10 de dezembro de 1948, após as atrocidades da Segunda Guerra.',f:{nome:'UNICEF — Declaração Universal dos Direitos Humanos',url:'https://www.unicef.org/brazil/declaracao-universal-dos-direitos-humanos'}},
+ {cat:'Direitos humanos',p:'No Brasil, divulgar a suástica para fins de propaganda do nazismo é…',o:['Crime previsto na Lei 7.716/1989','Permitido como liberdade de expressão','Apenas uma infração de trânsito'],e:'A Lei do Crime Racial pune quem fabrica, vende ou divulga a suástica para divulgar o nazismo.',f:{nome:'Câmara — Lei 7.716/1989',url:'https://www2.camara.leg.br/legin/fed/lei/1989/lei-7716-5-janeiro-1989-356354-normaatualizada-pl.html'}},
+ {cat:'Direitos humanos',p:'O que a Lei 14.532/2023 fez com a injúria racial?',o:['Equiparou ao crime de racismo','Revogou a punição','Transformou em multa simples'],e:'A injúria racial passou a ser crime de racismo, inafiançável e imprescritível.',f:{nome:'Planalto — Lei 14.532/2023',url:'https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14532.htm'}},
+ {cat:'Proibição da cannabis',p:'Onde foi aprovada, em 1830, a primeira lei conhecida contra a maconha?',o:['Na Câmara Municipal do Rio de Janeiro','No Congresso dos EUA','No Parlamento britânico'],e:'A postura municipal proibia a venda e o uso do "pito do pango"; pesquisadores apontam que ela mirava a população escravizada.',f:{nome:'Revista Brasileira de Segurança Pública',url:'https://revista.forumseguranca.org.br/rbsp/article/download/1262/421/5744'}},
+ {cat:'Proibição da cannabis',p:'Quem foi Harry Anslinger?',o:['Chefe da agência antidrogas dos EUA que redigiu a lei de 1937','Médico que descobriu o canabidiol','Presidente do Uruguai'],e:'Anslinger redigiu o Marihuana Tax Act de 1937, que na prática proibiu a cannabis nos EUA.',f:{nome:'Wikipedia — Marihuana Tax Act',url:'https://en.wikipedia.org/wiki/Marihuana_Tax_Act_of_1937'}},
+ {cat:'Proibição da cannabis',p:'Em que ano a convenção de Genebra passou a punir com prisão o comércio de drogas, incluindo a maconha?',o:['1936','1990','1850'],e:'Em 1936, os países concordaram em punir severamente a produção e a venda, já incluindo o "cânhamo indiano".',f:{nome:'Politize! — Política de combate às drogas',url:'https://www.politize.com.br/politica-de-combate-as-drogas-como-tudo-comecou/'}},
+ {cat:'Proibição da cannabis',p:'Qual foi o primeiro país a legalizar a cannabis?',o:['Uruguai','Holanda','Canadá'],e:'O Uruguai legalizou em 2013; o Canadá, em 2018.',f:{nome:'Wikipedia — Linha do tempo das leis da cannabis',url:'https://en.wikipedia.org/wiki/Timeline_of_cannabis_law'}},
+ {cat:'Proibição da cannabis',p:'Que quantidade o STF definiu em 2024 para presumir porte para uso pessoal?',o:['40 gramas ou 6 plantas fêmeas','1 quilo','5 gramas'],e:'Abaixo disso presume-se uso pessoal, mas a polícia ainda pode enquadrar como tráfico se houver outras provas.',f:{nome:'STF — Notícias (jun/2024)',url:'https://noticias.stf.jus.br/postsnoticias/stf-define-40-gramas-de-maconha-como-criterio-para-diferenciar-usuario-de-traficante/'}},
+ {cat:'Proibição da cannabis',p:'Depois da decisão do STF de 2024, o uso de maconha ficou…',o:['Ainda proibido, mas sem consequência penal para o usuário','Totalmente legalizado','Punido com prisão'],e:'O porte para uso pessoal virou ilícito administrativo: continua proibido, com advertência e medidas educativas.',f:{nome:'Agência Brasil (fev/2025)',url:'https://agenciabrasil.ebc.com.br/justica/noticia/2025-02/stf-mantem-descriminalizacao-do-porte-de-maconha-para-uso-pessoal'}},
+ {cat:'Proibição da cannabis',p:'Qual foi o placar do STF que descriminalizou o porte de maconha em 2024?',o:['6 votos a 3','11 a 0','5 a 4'],e:'Após nove anos de julgamento; em 2025, recursos contra a decisão foram rejeitados por unanimidade.',f:{nome:'Agência Brasil (jun/2024)',url:'https://agenciabrasil.ebc.com.br/justica/noticia/2024-06/entenda-decisao-do-stf-sobre-descriminalizacao-do-porte-de-maconha'}},
+ {cat:'Proibição da cannabis',p:'Qual foi um argumento de ministros que votaram contra a descriminalização?',o:['Que a decisão cabia ao Congresso e poderia piorar a situação','Que a maconha já era legal','Que o tema era da ONU'],e:'O ministro Luiz Fux, por exemplo, votou contra; no Congresso, uma PEC busca criminalizar o porte de qualquer droga.',f:{nome:'SBT News (2024)',url:'https://sbtnews.sbt.com.br/noticia/brasil/stf-forma-maioria-para-descriminalizar-o-porte-de-maconha-para-consumo-proprio'}}
+);
 NOVAS.forEach(q=>q.novo=true);
 PERGUNTAS.forEach(q=>q.o=q.o.slice(0,3));   // agora todas têm 3 opções
 PERGUNTAS.unshift(...NOVAS);
@@ -1290,6 +1333,33 @@ const JOGOS_NOMES={cacapalavras:'🔎 Caça-palavras',cruzadinha:'✏️ Cruzadi
 const LOGIN_KEY='pt-login';
 // limpa dados antigos que versões anteriores do site deixavam no navegador
 ['pt-contador','pt-quiz-v1','pt-quiz-rank-local'].forEach(k=>{try{localStorage.removeItem(k);}catch(e){}});
+/* ================= VOCÊ SABIA? ================= */
+const FATOS=[
+ ['Cerca de 6 milhões de judeus foram assassinados no Holocausto, entre 1933 e 1945.',{nome:'USHMM — Introdução ao Holocausto',url:'https://encyclopedia.ushmm.org/content/pt-br/article/introduction-to-the-holocaust'}],
+ ['Na Noite dos Cristais (1938), os nazistas incendiaram mais de 1.400 sinagogas.',{nome:'USHMM — Noite dos Cristais',url:'https://encyclopedia.ushmm.org/content/pt-br/article/kristallnacht'}],
+ ['Depois da Noite dos Cristais, o regime obrigou os próprios judeus a pagar 1 bilhão de marcos pelos danos.',{nome:'USHMM — Noite dos Cristais',url:'https://encyclopedia.ushmm.org/content/pt-br/article/kristallnacht'}],
+ ['Auschwitz foi libertado em 27/01/1945. Cerca de 925 mil pessoas morreram ali.',{nome:'USHMM — Datas-chave',url:'https://encyclopedia.ushmm.org/content/pt-br/article/the-holocaust-and-world-war-ii-key-dates'}],
+ ['A bandeira do sol nascente foi adotada pelo Exército japonês em 1870 e lembra, para coreanos e chineses, as atrocidades do Japão imperial.',{nome:'Toda Matéria — Bandeira do Japão',url:'https://www.todamateria.com.br/bandeira-do-japao/'}],
+ ['A Unidade 731 do Exército japonês fez experimentos letais em prisioneiros e quase ninguém foi punido.',{nome:'Wikipedia — Unidade 731',url:'https://en.wikipedia.org/wiki/Unit_731'}],
+ ['A Ku Klux Klan foi criada em 1865 por ex-soldados confederados para aterrorizar negros libertos.',{nome:'National Park Service — Ku Klux Klan',url:'https://home.nps.gov/articles/kukluxklan.htm'}],
+ ['As leis Jim Crow mantiveram a segregação racial nos EUA até a Lei dos Direitos Civis de 1964.',{nome:'Politize! — Leis Jim Crow',url:'https://www.politize.com.br/leis-jim-crow/'}],
+ ['A bandeira confederada só virou símbolo político em 1948, com os segregacionistas Dixiecrats.',{nome:'National Geographic — Bandeira confederada',url:'https://www.nationalgeographic.com/history/article/how-confederate-battle-flag-became-symbol-racism'}],
+ ['A Declaração Universal dos Direitos Humanos nasceu em 1948, como resposta às atrocidades da Segunda Guerra.',{nome:'UNICEF — Declaração Universal dos Direitos Humanos',url:'https://www.unicef.org/brazil/declaracao-universal-dos-direitos-humanos'}],
+ ['No Brasil, divulgar a suástica para propagar o nazismo é crime (Lei 7.716/1989).',{nome:'Câmara — Lei 7.716/1989',url:'https://www2.camara.leg.br/legin/fed/lei/1989/lei-7716-5-janeiro-1989-356354-normaatualizada-pl.html'}],
+ ['Desde 2023, injúria racial é crime de racismo: inafiançável e imprescritível.',{nome:'Planalto — Lei 14.532/2023',url:'https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14532.htm'}],
+ ['A primeira lei conhecida contra a maconha foi aprovada no Rio de Janeiro em 1830, e punia com cadeia os escravizados que a usassem.',{nome:'Revista Brasileira de Segurança Pública',url:'https://revista.forumseguranca.org.br/rbsp/article/download/1262/421/5744'}],
+ ['O Marihuana Tax Act de 1937, que na prática proibiu a cannabis nos EUA, foi redigido por Harry Anslinger.',{nome:'Wikipedia — Marihuana Tax Act',url:'https://en.wikipedia.org/wiki/Marihuana_Tax_Act_of_1937'}],
+ ['O Uruguai foi o primeiro país a legalizar a cannabis, em 2013.',{nome:'Wikipedia — Linha do tempo das leis da cannabis',url:'https://en.wikipedia.org/wiki/Timeline_of_cannabis_law'}],
+ ['Desde 2024, portar até 40 g de maconha para uso pessoal não é crime no Brasil, mas continua proibido.',{nome:'Agência Brasil (fev/2025)',url:'https://agenciabrasil.ebc.com.br/justica/noticia/2025-02/stf-mantem-descriminalizacao-do-porte-de-maconha-para-uso-pessoal'}]
+];
+function limpaFato(){document.querySelectorAll('.fato').forEach(e=>e.remove());}
+function mostraFato(sel,extra){
+  limpaFato();const el=$(sel);if(!el)return;
+  const [t,fo]=FATOS[rnd(FATOS.length)];
+  const d=document.createElement('div');d.className='fato';
+  d.innerHTML=(extra?extra+'<br><br>':'')+`💡 <b>Você sabia?</b> ${esc(t)} <a class="qz-fonte" href="${fo.url}" target="_blank" rel="noopener">Ver fonte</a>`;
+  el.after(d);
+}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const conta={nick:'',cod:'',dados:null};
 const perfilVazio=()=>({acertos:0,respondidas:0,resp:{},jogos:{}});
@@ -1590,28 +1660,33 @@ const SAT_ATTR='Imagens © <a href="https://www.esri.com" target="_blank" rel="n
 const MAPA_TILES='https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}';
 const MAPA_ATTR='Mapa © <a href="https://www.esri.com" target="_blank" rel="noopener">Esri</a>, HERE, Garmin, © OpenStreetMap';
 // nome, país, latitude, longitude, zoom inicial da imagem de satélite
+// nome, país/região, latitude, longitude, zoom inicial, o que aconteceu ali
 const LUGARES=[
- ['Pão de Açúcar, Rio de Janeiro','Brasil',-22.9486,-43.1566,15],['Esplanada dos Ministérios, Brasília','Brasil',-15.7998,-47.8645,15],
- ['Parque Ibirapuera, São Paulo','Brasil',-23.5874,-46.6576,15],['Cataratas do Iguaçu','Brasil/Argentina',-25.6953,-54.4367,14],
- ['Encontro das Águas, Manaus','Brasil',-3.1366,-59.8970,13],['Fernando de Noronha','Brasil',-3.8549,-32.4239,13],
- ['Lençóis Maranhenses','Brasil',-2.4800,-43.1300,12],['Elevador Lacerda, Salvador','Brasil',-12.9744,-38.5131,16],
- ['Torre Eiffel, Paris','França',48.8584,2.2945,16],['Central Park, Nova York','Estados Unidos',40.7829,-73.9654,14],
- ['Tower Bridge, Londres','Reino Unido',51.5055,-0.0754,16],['Coliseu, Roma','Itália',41.8902,12.4922,16],
- ['Pirâmides de Gizé','Egito',29.9792,31.1342,15],['Ópera de Sydney','Austrália',-33.8568,151.2153,16],
- ['Palm Jumeirah, Dubai','Emirados Árabes Unidos',25.1124,55.1390,13],['Cruzamento de Shibuya, Tóquio','Japão',35.6595,139.7005,16],
- ['Praça de São Marcos, Veneza','Itália',45.4341,12.3388,15],['Obelisco, Buenos Aires','Argentina',-34.6037,-58.3816,16],
- ['Machu Picchu','Peru',-13.1631,-72.5450,15],['Table Mountain, Cidade do Cabo','África do Sul',-33.9628,18.4098,13],
- ['Praça Vermelha, Moscou','Rússia',55.7539,37.6208,16],['Cidade Proibida, Pequim','China',39.9163,116.3972,15],
- ['Taj Mahal, Agra','Índia',27.1751,78.0421,16],['Sagrada Família, Barcelona','Espanha',41.4036,2.1744,16],
- ['Ponte Golden Gate, São Francisco','Estados Unidos',37.8199,-122.4783,14],['Las Vegas Strip','Estados Unidos',36.1147,-115.1728,15],
- ['Santa Sofia, Istambul','Turquia',41.0086,28.9802,16],['Marina Bay Sands, Singapura','Singapura',1.2834,103.8607,15],
- ['Praça do Comércio, Lisboa','Portugal',38.7075,-9.1364,16],['Capitólio, Washington','Estados Unidos',38.8899,-77.0091,15],
- ['Zócalo, Cidade do México','México',19.4326,-99.1332,16],['Acrópole, Atenas','Grécia',37.9715,23.7257,16],
- ['Petra','Jordânia',30.3285,35.4444,15],['Grand Canyon','Estados Unidos',36.0544,-112.1401,12],
- ['Uluru','Austrália',-25.3444,131.0369,13],['Monte Fuji','Japão',35.3606,138.7274,12],
- ['Portão de Brandemburgo, Berlim','Alemanha',52.5163,13.3777,16],['Porto de Victoria, Hong Kong','China',22.2930,114.1694,14],
- ['Ushuaia','Argentina',-54.8019,-68.3030,14],['Reykjavík','Islândia',64.1466,-21.9426,14],
- ['Malecón, Havana','Cuba',23.1440,-82.3700,15],['Estátua da Liberdade, Nova York','Estados Unidos',40.6892,-74.0445,16]
+ ['Auschwitz-Birkenau','Polônia',50.0343,19.1784,15,'Maior complexo de campos criado pelos nazistas. Foi libertado por tropas soviéticas em 27 de janeiro de 1945.'],
+ ['Memorial aos Judeus Mortos da Europa, Berlim','Alemanha',52.5139,13.3787,17,'Memorial do Holocausto no centro de Berlim, ao lado do Portão de Brandemburgo.'],
+ ['Casa de Anne Frank, Amsterdã','Países Baixos',52.3752,4.8840,17,'Esconderijo da família de Anne Frank durante a ocupação nazista; hoje é museu.'],
+ ['Yad Vashem','Jerusalém',31.7740,35.1753,16,'Centro mundial de memória e pesquisa sobre o Holocausto.'],
+ ['Palácio da Justiça, Nuremberg','Alemanha',49.4545,11.0490,17,'Sede do tribunal internacional que julgou líderes nazistas após a guerra.'],
+ ['Campo de concentração de Dachau','Alemanha',48.2700,11.4680,16,'Libertado por tropas americanas em 29 de abril de 1945.'],
+ ['Treblinka','Polônia',52.6311,22.0517,15,'Um dos seis centros de extermínio que os nazistas criaram na Polônia ocupada.'],
+ ['Muro de Berlim (Bernauer Strasse)','Alemanha',52.5352,13.3903,17,'Memorial do muro que dividiu Berlim de 1961 a 1989.'],
+ ['Memorial do Massacre de Nanquim','China',32.0353,118.7440,16,'Lembra o massacre cometido por tropas japonesas entre dezembro de 1937 e janeiro de 1938.'],
+ ['Unidade 731, Harbin','China',45.6083,126.6319,16,'Sede da unidade do Exército Imperial japonês que fez experimentos com seres humanos e armas biológicas.'],
+ ['Parque Memorial da Paz, Hiroshima','Japão',34.3955,132.4536,16,'Primeira cidade atingida por uma bomba atômica, em 6 de agosto de 1945.'],
+ ['Parque da Paz, Nagasaki','Japão',32.7765,129.8634,16,'Segunda cidade atingida por uma bomba atômica, em 9 de agosto de 1945.'],
+ ['Memorial do USS Arizona, Pearl Harbor','Havaí, Estados Unidos',21.3649,-157.9500,15,'Ataque japonês de 7 de dezembro de 1941 que levou os EUA à Segunda Guerra.'],
+ ['Pulaski, Tennessee','Estados Unidos',35.1998,-87.0306,15,'Cidade onde ex-soldados confederados fundaram a Ku Klux Klan, em 1865.'],
+ ['Igreja Emanuel AME, Charleston','Estados Unidos',32.7848,-79.9327,17,'Alvo de um ataque racista em 2015. Depois dele, a bandeira confederada foi retirada do Capitólio da Carolina do Sul.'],
+ ['Ponte Edmund Pettus, Selma','Estados Unidos',32.4053,-87.0186,16,'Palco das marchas de 1965 pelo direito de voto dos negros.'],
+ ['Escola Central de Little Rock','Estados Unidos',34.7367,-92.2980,16,'Símbolo da luta contra a segregação nas escolas, em 1957.'],
+ ['Lorraine Motel, Memphis','Estados Unidos',35.1345,-90.0578,17,'Onde Martin Luther King Jr. foi assassinado, em 1968. Hoje abriga o Museu Nacional dos Direitos Civis.'],
+ ['Ilha Robben, Cidade do Cabo','África do Sul',-33.8076,18.3712,14,'Prisão onde Nelson Mandela passou 18 anos durante o apartheid.'],
+ ['Memorial do Genocídio de Kigali','Ruanda',-1.9306,30.0607,16,'Lembra o genocídio de 1994 em Ruanda.'],
+ ['Palais de Chaillot, Paris','França',48.8625,2.2880,17,'Onde a ONU proclamou a Declaração Universal dos Direitos Humanos, em 10 de dezembro de 1948.'],
+ ['Cais do Valongo, Rio de Janeiro','Brasil',-22.8972,-43.1880,17,'Antigo porto de desembarque de africanos escravizados; Patrimônio Mundial da UNESCO.'],
+ ['Câmara Municipal do Rio de Janeiro','Brasil',-22.9097,-43.1771,17,'Em 1830, a Câmara do Rio aprovou a primeira lei conhecida contra a maconha (o "pito do pango").'],
+ ['Palácio Legislativo, Montevidéu','Uruguai',-34.8915,-56.1871,16,'Parlamento do Uruguai, primeiro país a legalizar a cannabis, em 2013.'],
+ ['Supremo Tribunal Federal, Brasília','Brasil',-15.8023,-47.8618,17,'Em 2024, o STF decidiu que portar até 40 g de maconha para uso pessoal não é crime, embora continue proibido.']
 ];
 const MP_RODADAS=5;
 let mp={};
@@ -1659,6 +1734,7 @@ $('#mp-ok').onclick=()=>{
   $('#mp-pontos').textContent=`Acertos: ${mp.total}`;
   const r=$('#mp-res');r.classList.add('on');
   r.innerHTML=`Era: <b class="lugar">${esc(L[0])}</b> — ${esc(L[1])}<br>
+    <span style="color:var(--suave)">${esc(L[5]||'')}</span><br>
     Seu palpite ficou a <b>${km<1?'menos de 1':fmt(Math.round(km))} km</b> do lugar certo.<br>
     ${pts?'<b style="color:var(--ok)">✔ Acertou! +1 ponto</b>':`<b style="color:var(--erro)">✘ Errou — passou de ${MP_LIMITE_KM} km</b>`}`;
   $('#mp-ok').textContent=mp.i+1<MP_RODADAS?'Próximo lugar →':'Ver resultado';
