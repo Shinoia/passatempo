@@ -33,9 +33,6 @@ button:active{transform:translateY(1px)}
 .msg.ok{color:var(--ok)}.msg.erro{color:var(--erro)}
 .instr{color:var(--suave);font-size:14px;margin:0 0 12px}
 footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30px;line-height:1.7}
-.contador{display:inline-flex;align-items:center;gap:8px;margin-bottom:8px;font-weight:600}
-#cont-dig{display:inline-flex;gap:2px}
-#cont-dig b{background:#111;color:#4ade80;font-family:"Courier New",monospace;font-size:18px;padding:3px 5px;border-radius:3px;min-width:20px}
 
 /* Caça-palavras */
 .ws-wrap{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start}
@@ -334,7 +331,6 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 </main>
 
 <footer>
-  <div class="contador" id="contador" style="visibility:hidden"><span>Visitantes</span><div id="cont-dig"></div></div>
   <div>© 2014–<span id="ano"></span></div>
   <div>@cqcfoda</div>
 </footer>
@@ -1766,10 +1762,6 @@ addEventListener('keydown',e=>{
   }
 });
 
-/* ================= contador de visitas (fica na planilha, nada no navegador) ================= */
-function mostraContador(n){$('#cont-dig').innerHTML=String(n).padStart(7,'0').split('').map(d=>`<b>${d}</b>`).join('');}
-// o número vem só da planilha (igual para todos e sempre subindo); se o servidor não responder, o contador fica oculto
-api({acao:'visita'}).then(r=>{if(r&&r.ok&&r.contador){mostraContador(r.contador);$('#contador').style.visibility='visible';}}).catch(()=>{});
 $('#ano').textContent=new Date().getFullYear();
 
 const INIT={cacapalavras:wsNovo,cruzadinha:cwNovo,sudoku:sdNovo,criptograma:crNovo,embaralhadas:emNovo,labirinto:lbNovo,quiz:qzNovo,mapa:mpNovo};
