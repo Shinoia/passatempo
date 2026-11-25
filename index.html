@@ -32,6 +32,9 @@ button:active{transform:translateY(1px)}
 .msg{min-height:26px;font-weight:700;margin:10px 0}
 .msg.ok{color:var(--ok)}.msg.erro{color:var(--erro)}
 .instr{color:var(--suave);font-size:14px;margin:0 0 12px}
+.regras{background:#fffdf8;border:1px solid #d6cfc0;border-radius:6px;padding:8px 12px;margin:0 0 12px;font-size:14px;line-height:1.45}
+.regras summary{cursor:pointer;font-weight:700}
+.regras ul{margin:8px 0 2px;padding-left:20px}.regras li{margin:3px 0}
 footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30px;line-height:1.7}
 
 /* Caça-palavras */
@@ -368,7 +371,13 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 <section class="jogo" id="domino">
   <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Dominó</h2></div>
   <div class="controles"><select id="do-dif"><option value="facil">Fácil</option><option value="medio" selected>Médio</option><option value="dificil">Difícil</option></select><button class="prim" id="do-novo">Nova partida</button></div>
-  <p class="instr">Toque numa peça sua que encaixe numa das pontas. Sem peça que sirva, compre no monte; com o monte vazio, passe. Ganha quem bater primeiro ou, se o jogo trancar, quem tiver menos pontos na mão.</p>
+  <details class="regras"><summary>📖 Regras do dominó</summary><ul>
+<li>São 28 peças, do 0|0 ao 6|6. Cada jogador recebe 7 peças, e as outras 14 ficam no monte.</li>
+<li><b>Quem começa:</b> quem tiver o maior duplo (6|6, depois 5|5…) começa jogando essa peça. Se ninguém tiver duplo, começa quem tiver a peça de maior soma.</li>
+<li><b>Jogar:</b> na sua vez, encaixe uma peça que tenha o mesmo número de uma das duas pontas da mesa. Toque na peça; se ela servir nas duas pontas, escolha o lado.</li>
+<li><b>Comprar e passar:</b> sem peça que sirva, compre no monte até conseguir jogar. Se o monte acabar, passe a vez.</li>
+<li><b>Bater:</b> ganha quem colocar a última peça da mão primeiro.</li>
+<li><b>Jogo trancado:</b> se ninguém consegue jogar e o monte acabou, somam-se os pontos das peças na mão de cada um. Ganha quem tiver menos pontos.</li></ul></details>
   <div class="do-info" id="do-info"></div>
   <div class="do-mesa" id="do-mesa"></div>
   <div class="controles" style="justify-content:center"><span id="do-lado" style="display:none"><button id="do-esq">◀ Ponta esquerda</button> <button id="do-dir">Ponta direita ▶</button></span><button id="do-comprar" style="display:none">Comprar peça</button><button id="do-passar" style="display:none">Passar a vez</button></div>
@@ -378,7 +387,13 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 <section class="jogo" id="trilha">
   <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Trilha</h2></div>
   <div class="controles"><select id="tr-dif"><option value="facil">Fácil</option><option value="medio" selected>Médio</option><option value="dificil">Difícil</option></select><button class="prim" id="tr-novo">Nova partida</button></div>
-  <p class="instr">Coloque suas 9 peças e depois mova-as pelas linhas. Três em linha formam um moinho e tiram uma peça do adversário. Perde quem ficar com 2 peças ou sem movimento.</p>
+  <details class="regras"><summary>📖 Regras da trilha</summary><ul>
+<li>Cada jogador tem 9 peças. Você joga com as brancas e começa.</li>
+<li><b>1ª fase, colocar:</b> cada um coloca uma peça por vez em qualquer bolinha vazia do tabuleiro.</li>
+<li><b>2ª fase, mover:</b> depois de colocar as 9, cada peça só anda pela linha, uma casa de cada vez, até a bolinha vizinha vazia. Não dá para pular peças nem ir para longe.</li>
+<li><b>Moinho:</b> 3 peças suas seguidas na mesma linha. Quem forma um moinho tira uma peça do adversário, de preferência uma que não esteja em moinho.</li>
+<li><b>Vitória:</b> ganha quem deixar o adversário com só 2 peças ou sem nenhum movimento possível.</li>
+<li>Com 200 lances sem vencedor, a partida termina empatada.</li></ul></details>
   <div class="do-info" id="tr-info"></div>
   <div class="tr-tab" id="tr-tab"></div>
   <div id="tr-msg" class="msg"></div>
@@ -386,14 +401,28 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 <section class="jogo" id="dama">
   <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Dama</h2></div>
   <div class="controles"><select id="dm-dif"><option value="facil">Fácil</option><option value="medio" selected>Médio</option><option value="dificil">Difícil</option></select><button class="prim" id="dm-novo">Nova partida</button></div>
-  <p class="instr">Regras brasileiras: a pedra anda para a frente e captura para a frente e para trás; a dama anda várias casas. Capturar é obrigatório, e vale a jogada que tira mais peças.</p>
+  <details class="regras"><summary>📖 Regras da dama (regras brasileiras)</summary><ul>
+<li>Tabuleiro de 64 casas, e só as casas escuras são usadas. Cada jogador começa com 12 pedras. Você joga com as brancas, de baixo, e começa.</li>
+<li><b>Movimento:</b> a pedra anda uma casa na diagonal, sempre para a frente.</li>
+<li><b>Captura:</b> a pedra captura pulando por cima de uma peça adversária vizinha, na diagonal, para uma casa vazia logo atrás. Pode capturar para a frente e para trás, e emendar várias capturas seguidas.</li>
+<li><b>Captura obrigatória:</b> se houver captura possível, você é obrigado a capturar. Havendo mais de uma opção, vale a <b>lei da maioria</b>: deve fazer a jogada que captura mais peças.</li>
+<li><b>Dama:</b> a pedra que termina a jogada na última fileira do outro lado vira dama (♛). A dama anda quantas casas quiser na diagonal, para a frente ou para trás, e também captura de longe.</li>
+<li><b>Vitória:</b> ganha quem capturar todas as peças do adversário ou deixá-lo sem movimento.</li>
+<li><b>Empate:</b> 20 lances seguidos só com damas e sem nenhuma captura.</li></ul></details>
   <div class="tb-tab" id="dm-tab"></div>
   <div id="dm-msg" class="msg"></div>
 </section>
 <section class="jogo" id="xadrez">
   <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Xadrez</h2></div>
   <div class="controles"><select id="xz-dif"><option value="facil">Fácil</option><option value="medio" selected>Médio</option><option value="dificil">Difícil</option></select><button class="prim" id="xz-novo">Nova partida</button></div>
-  <p class="instr">Toque numa peça branca e depois na casa de destino. Vale roque, en passant e promoção (o peão vira dama).</p>
+  <details class="regras"><summary>📖 Regras do xadrez</summary><ul>
+<li>Você joga com as brancas e começa. Toque numa peça e depois na casa de destino; os pontinhos azuis mostram onde ela pode ir.</li>
+<li><b>Rei ♚:</b> uma casa em qualquer direção. <b>Dama ♛:</b> quantas casas quiser em linha reta ou na diagonal. <b>Torre ♜:</b> em linha reta. <b>Bispo ♝:</b> na diagonal. <b>Cavalo ♞:</b> anda em "L" (duas casas e uma para o lado) e é a única peça que pula as outras.</li>
+<li><b>Peão ♟:</b> anda uma casa para a frente (duas na primeira jogada) e captura na diagonal. Ao chegar ao outro lado, vira dama.</li>
+<li><b>Roque:</b> o rei anda duas casas em direção a uma torre, e a torre passa para o outro lado dele. Só vale se nenhum dos dois se mexeu antes, se não houver peças entre eles e se o rei não estiver em xeque nem passar por casa atacada.</li>
+<li><b>En passant:</b> se um peão adversário avança duas casas e para ao lado do seu peão, você pode capturá-lo na jogada seguinte como se ele tivesse andado só uma.</li>
+<li><b>Xeque:</b> o rei está sendo atacado e você precisa protegê-lo. <b>Xeque-mate:</b> não há como salvar o rei, e quem deu o mate vence.</li>
+<li><b>Empate:</b> quando quem joga não tem lance possível sem estar em xeque (afogamento), ou quando só restam peças que não conseguem dar mate.</li></ul></details>
   <div class="tb-tab" id="xz-tab"></div>
   <div id="xz-msg" class="msg"></div>
 </section>
@@ -2256,7 +2285,7 @@ function trLegais(s){
   const l=s.vez,b=s.b,ms=[],base=[];
   const qtd=b.filter(x=>x===l).length;
   if(s.mao[l]>0){for(let i=0;i<24;i++)if(!b[i])base.push({f:-1,t:i});}
-  else for(let i=0;i<24;i++){if(b[i]!==l)continue;const ds=qtd===3?[...Array(24).keys()]:TR_ADJ[i];for(const t of ds)if(!b[t])base.push({f:i,t});}
+  else for(let i=0;i<24;i++){if(b[i]!==l)continue;const ds=TR_ADJ[i]; /* só anda pela linha, até a casa vizinha */for(const t of ds)if(!b[t])base.push({f:i,t});}
   for(const m of base){
     const nb=b.slice();if(m.f>=0)nb[m.f]=0;nb[m.t]=l;
     if(trMoinho(nb,m.t,l)){
@@ -2287,7 +2316,7 @@ let tr={};
 function trNovo(){tr={s:{b:Array(24).fill(0),mao:{1:9,'-1':9},vez:1},sel:-1,pend:null,fim:false,lances:0,dica:null};trInstr();trDesenha();}
 function trInstr(t){
   if(t)return msg('#tr-msg',t);const s=tr.s;
-  msg('#tr-msg',tr.pend?'Moinho! Toque numa peça vermelha para tirar.':s.mao[1]>0?`Coloque uma peça (faltam ${s.mao[1]}).`:s.b.filter(x=>x===1).length===3?'Você tem 3 peças: pode voar para qualquer casa vazia.':'Mova uma peça para uma casa vizinha.');
+  msg('#tr-msg',tr.pend?'Moinho! Toque numa peça vermelha para tirar.':s.mao[1]>0?`Coloque uma peça (faltam ${s.mao[1]}).`:'Mova uma peça pela linha até a casa vizinha vazia.');
 }
 function trDesenha(){
   const s=tr.s,L=v=>40+v*60,ms=s.vez===1&&!tr.fim?trLegais(s):[];
@@ -2551,6 +2580,8 @@ $('#xz-tab').onclick=e=>{
   xz.sel=p&&xzBranca(p)?sq:-1;xzDesenha();
 };
 $('#xz-novo').onclick=xzNovo;$('#xz-dif').onchange=xzNovo;
+/* regras abertas no computador; no celular ficam recolhidas para o tabuleiro aparecer logo */
+if(innerWidth>700)document.querySelectorAll('details.regras').forEach(d=>d.open=true);
 const INIT={domino:doNovo,trilha:trNovo,dama:dmNovo,xadrez:xzNovo,cacapalavras:wsNovo,cruzadinha:cwNovo,sudoku:sdNovo,criptograma:crNovo,embaralhadas:emNovo,labirinto:lbNovo,quiz:qzNovo,mapa:mpNovo};
 addEventListener('hashchange',rota);
 contaIniciar();
