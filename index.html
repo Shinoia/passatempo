@@ -140,7 +140,13 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 .login-box small{color:var(--suave);display:block;margin-top:4px;line-height:1.4}
 .perfil{margin-top:22px;background:var(--card);border:2px solid var(--tinta);border-radius:6px;padding:18px;display:none}
 .perfil.on{display:block}
-body.em-jogo .perfil{display:none!important}
+body.em-jogo .perfil,body.em-jogo .top10{display:none!important}
+.top10{background:var(--card);border:2px solid var(--tinta);border-radius:6px;padding:14px 18px;margin:0 auto 22px;max-width:560px}
+.top10 h3{font-family:Georgia,serif;margin:0 0 8px;font-size:22px;text-align:center}
+.top10 table{width:100%;border-collapse:collapse;font-size:15px}
+.top10 td{padding:6px;border-bottom:1px solid var(--linha)}.top10 tr:last-child td{border-bottom:0}
+.top10 td.pos{width:38px;text-align:center;font-weight:700}.top10 td.n{text-align:right;font-weight:700;white-space:nowrap}
+.top10 tr.eu td{background:#fef3c7}
 .perfil h3{font-family:Georgia,serif;margin:0 0 10px;font-size:22px}
 .perfil table{width:100%;border-collapse:collapse;font-size:15px}
 .perfil td,.perfil th{padding:7px 6px;border-bottom:1px solid var(--linha);text-align:left}
@@ -286,6 +292,7 @@ body.em-jogo .perfil{display:none!important}
 </div>
 
 <main>
+<div class="top10" id="top10" style="display:none"></div>
 <div id="menu" class="menu">
   <a class="card" href="#cacapalavras"><div class="ic">🔎</div><h2>Caça-palavras</h2><p>Palavras sobre história, direitos humanos e democracia escondidas na grade.</p></a>
   <a class="card" href="#cruzadinha"><div class="ic">✏️</div><h2>Cruzadinha</h2><p>Dicas sobre Holocausto, direitos civis, Japão imperial e política de drogas.</p></a>
@@ -640,6 +647,7 @@ function rota(){
   atual=INIT[h]?h:'';
   $('#menu').style.display=atual?'none':'';
   document.body.classList.toggle('em-jogo',!!atual);
+  if(!atual)topCarrega();
   document.querySelectorAll('section.jogo').forEach(s=>s.classList.toggle('ativo',s.id===atual));
   if(atual&&!iniciados[atual]){iniciados[atual]=1;INIT[atual]();}
   contaAtualizar();
@@ -1952,6 +1960,7 @@ function receber(r,nick){
   if(!r.ok){if(r.sair){alertaConta(r.erro||'Sessão inválida. Entre novamente.');contaSair();}return;}
   if(r.perfil){conta.dados=normaliza(r.perfil);conta.ajuda=!!r.ajuda;conta.lido=Date.now();desenhaPerfil();qzAtualizaPlacar();}
   if(r.ranking&&iniciados.quiz)qzDesenhaRanking(r.ranking);
+  if(r.ranking)topDesenha(r.ranking);
 }
 /* busca de novo os dados da planilha (mostra no site o que foi editado lá) */
 function contaAtualizar(forcar){
@@ -2095,6 +2104,19 @@ function qzFinal(){
     const d=dadosAtuais();d.resp={};d.acertos=0;d.respondidas=0;
     enviar({acao:'zerar_quiz'});desenhaPerfil();qzProxima();
   };
+}
+/* ===== Top 10 da página inicial (acertos no quiz, lidos da planilha) ===== */
+let topLido=0;
+function topCarrega(){
+  if(!SERVIDOR_URL||Date.now()-topLido<30000)return;topLido=Date.now();
+  api({acao:'ranking'}).then(r=>topDesenha(r&&r.ranking)).catch(()=>{});
+}
+function topDesenha(lista){
+  lista=(lista||[]).filter(x=>x&&x.nick).sort((a,b)=>b.acertos-a.acertos||a.respondidas-b.respondidas).slice(0,10);
+  const el=$('#top10');if(!lista.length){el.style.display='none';return;}
+  const eu=(conta.nick||'').toLowerCase();
+  el.innerHTML=`<h3>🏆 Top 10 jogadores</h3><table>${lista.map((x,i)=>`<tr class="${x.nick.toLowerCase()===eu?'eu':''}"><td class="pos">${i<3?['🥇','🥈','🥉'][i]:i+1}</td><td>${esc(x.nick)}</td><td class="n">${Number(x.acertos)||0} acertos</td></tr>`).join('')}</table>`;
+  el.style.display='';
 }
 function qzRanking(){
   if(!SERVIDOR_URL){$('#qz-rank').innerHTML='<h3>🏆 Ranking</h3><p class="instr">Ranking indisponível.</p>';return;}
