@@ -140,6 +140,7 @@ footer{text-align:center;color:var(--suave);font-size:13px;padding:10px 16px 30p
 .login-box small{color:var(--suave);display:block;margin-top:4px;line-height:1.4}
 .perfil{margin-top:22px;background:var(--card);border:2px solid var(--tinta);border-radius:6px;padding:18px;display:none}
 .perfil.on{display:block}
+body.em-jogo .perfil{display:none!important}
 .perfil h3{font-family:Georgia,serif;margin:0 0 10px;font-size:22px}
 .perfil table{width:100%;border-collapse:collapse;font-size:15px}
 .perfil td,.perfil th{padding:7px 6px;border-bottom:1px solid var(--linha);text-align:left}
@@ -503,6 +504,7 @@ function rota(){
   const h=location.hash.slice(1);
   atual=INIT[h]?h:'';
   $('#menu').style.display=atual?'none':'';
+  document.body.classList.toggle('em-jogo',!!atual);
   document.querySelectorAll('section.jogo').forEach(s=>s.classList.toggle('ativo',s.id===atual));
   if(atual&&!iniciados[atual]){iniciados[atual]=1;INIT[atual]();}
   contaAtualizar();
@@ -1858,11 +1860,12 @@ function desenhaPerfil(){
   const d=conta.dados;
   const linhas=Object.entries(JOGOS_NOMES).map(([k,n])=>{const g=d.jogos[k]||{};
     const un=k==='mapa'?'acertos':'pontos';
-    const rec=g.t?'Melhor tempo '+tempo(g.t*1000):(g.s||g.v)?`Total: ${g.s||0} ${un} · Melhor partida: ${g.p||0}`:'—';
+    const comPontos=k==='mapa'||k==='embaralhadas';
+    const rec=g.t?'Melhor tempo '+tempo(g.t*1000):comPontos&&(g.s||g.p)?`Total: ${g.s||0} ${un}`+(g.p?` · Melhor partida: ${g.p}`:''):'—';
     return `<tr><td>${n}</td><td style="text-align:right;font-weight:700">${g.v||0}</td><td>${rec}</td></tr>`;}).join('');
   p.innerHTML=`<h3>📊 Meus resultados — ${esc(conta.nick)}</h3>
     ${conta.antigo?'<p class="msg erro">⚠️ O servidor (Apps Script) ainda está na versão antiga, por isso os resultados não ficam salvos. Publique a nova versão do script.</p>':''}
-    <table><tr><th>Jogo</th><th style="text-align:right">Concluídos</th><th>Recorde</th></tr>
+    <table><tr><th>Jogo</th><th style="text-align:right">Concluídos / vitórias</th><th>Recorde</th></tr>
     <tr><td>🧠 Quiz</td><td style="text-align:right;font-weight:700">${d.respondidas}/${PERGUNTAS.length}</td><td>${d.acertos} acertos</td></tr>${linhas}</table>`;
   p.classList.add('on');
 }
