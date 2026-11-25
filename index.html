@@ -164,6 +164,12 @@ body.em-jogo .perfil,body.em-jogo .top10{display:none!important}
 .cw-cell input::placeholder,.cr-l input::placeholder,#em-resp::placeholder{color:#cbd5e1;opacity:1}
 .sd-grid div[data-aj]:empty::after{content:attr(data-aj);color:#d6dde6;font-weight:400}
 .mm .mk.aj{font-size:13px;opacity:.5;transform:translate(-50%,-50%)}
+.vs-caixa{background:#fef3c7;border:2px solid var(--tinta);border-radius:6px;padding:12px 16px;margin:0 auto 16px;max-width:720px;box-shadow:4px 4px 0 var(--tinta)}
+.vs-caixa.inuteis{background:#ede9fe}
+.vs-topo{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.vs-topo button{padding:5px 10px;font-size:14px}
+.vs-caixa p{margin:0;line-height:1.45}
+body.em-jogo .vs-caixa{display:none!important}
 .fato{margin-top:10px;padding:12px 14px;background:#fef3c7;border:1px solid #e5c76b;border-radius:6px;line-height:1.45;max-width:640px}
 .qz-link{background:none;border:0;padding:0;color:var(--acento2);font-weight:600;text-decoration:underline;cursor:pointer;font-size:14px}
 
@@ -307,6 +313,8 @@ body.em-jogo .perfil,body.em-jogo .top10{display:none!important}
 </div>
 
 <main>
+<div class="vs-caixa" id="vs-home"><div class="vs-topo"><b>💡 Você sabia?</b><button id="vs-novo" type="button">🔄 Outra</button></div><p id="vs-txt"></p></div>
+<div class="vs-caixa inuteis" id="inuteis" style="display:none"><div class="vs-topo"><b>🤷 Curiosidades inúteis</b><button id="in-novo" type="button">🔄 Outra</button></div><p id="in-txt"></p></div>
 <div id="menu" class="menu">
   <a class="card" href="#cacapalavras"><div class="ic">🔎</div><h2>Caça-palavras</h2><p>Palavras sobre história, direitos humanos e democracia escondidas na grade.</p></a>
   <a class="card" href="#cruzadinha"><div class="ic">✏️</div><h2>Cruzadinha</h2><p>Dicas sobre Holocausto, direitos civis, Japão imperial e política de drogas.</p></a>
@@ -1928,6 +1936,28 @@ const LOGIN_KEY='pt-login';
 ['pt-contador','pt-quiz-v1','pt-quiz-rank-local'].forEach(k=>{try{localStorage.removeItem(k);}catch(e){}});
 /* ================= VOCÊ SABIA? ================= */
 const FATOS=[
+ ["Em agosto de 2024, cerca de 5 milhões de beneficiários do Bolsa Família enviaram R$ 3 bilhões via Pix para sites de apostas, segundo nota técnica do Banco Central.",{nome:"Agência Senado — dados do Banco Central sobre bets",url:'https://www12.senado.leg.br/radio/1/noticia/2024/09/25/beneficiarios-do-bolsa-familia-enviaram-r-3-bi-para-bets-em-agosto-segundo-o-bc'}],
+ ["Segundo o Banco Central, os brasileiros mandaram R$ 20,8 bilhões via Pix para bets só em agosto de 2024: mais de 10 vezes o que as loterias da Caixa arrecadaram no mês.",{nome:"O Povo / Agência Brasil — nota técnica do BC",url:'https://www.opovo.com.br/noticias/economia/2024/09/24/beneficiarios-do-bolsa-familia-gastaram-rs-3-bi-em-bets-em-agosto.html'}],
+ ["Entre os beneficiários do Bolsa Família que apostaram em agosto de 2024, 70% eram chefes de família: os que de fato recebem o benefício.",{nome:"Gazeta do Povo — análise do Banco Central",url:'https://www.gazetadopovo.com.br/economia/bets-beneficiarios-do-bolsa-familia-apostaram-r-3-bilhoes-em-agosto/'}],
+ ["Uma comissão da revista científica The Lancet estimou em 2024 que cerca de 80 milhões de adultos no mundo têm transtorno do jogo ou jogo problemático.",{nome:"Lancet Public Health Commission on gambling (resumo)",url:'https://prnewswire.com/news-releases/cfg-uk-medical-journal-exposes-health-harm-from-online-gambling-302286763.html'}],
+ ["Pela Comissão Lancet sobre jogos de azar, cerca de 16% dos adultos e 26% dos adolescentes que jogam em cassinos online ou caça-níqueis desenvolvem transtorno do jogo.",{nome:"Monash Lens — Comissão Lancet (2024)",url:'https://lens.monash.edu/2024/10/25/1387127/gambling-a-developing-global-disaster-for-public-health'}],
+ ["Nas apostas esportivas, cerca de 9% dos adultos e 16% dos adolescentes que apostam desenvolvem transtorno do jogo, segundo a Comissão Lancet (2024).",{nome:"Monash Lens — Comissão Lancet (2024)",url:'https://lens.monash.edu/@medicine-health/2024/10/25/1387127/gambling-a-developing-global-disaster-for-public-health'}],
+ ["A Comissão Lancet listou danos do jogo: problemas de saúde física e mental, rompimento de relações, maior risco de suicídio e violência doméstica, crime, perda de emprego e de dinheiro.",{nome:"Universidade de Glasgow — Comissão Lancet",url:'https://www.gla.ac.uk/news/headline_1120325_en.html'}],
+ ["Numa pesquisa da Serasa com 4.463 endividados, 44% dos que apostaram disseram ter jogado justamente para tentar pagar uma dívida.",{nome:"Bora Investir (B3) — pesquisa Serasa",url:'https://borainvestir.b3.com.br/noticias/57-dos-endividados-que-apostaram-em-bets-nao-eram-inadimplentes-antes-de-comecarem-a-apostar-revela-pesquisa-da-serasa/'}],
+ ["Segundo a mesma pesquisa da Serasa, 10% dos endividados que apostam chegaram a pegar crédito para apostar.",{nome:"DOL — pesquisa Serasa",url:'https://dol.com.br/noticias/brasil/883408/57-dos-inadimplentes-se-endividaram-por-conta-de-bets'}],
+ ["A OMS estima que a pandemia de covid-19 causou cerca de 14,9 milhões de mortes a mais no mundo em 2020 e 2021, quase 3 vezes as 5,4 milhões registradas oficialmente.",{nome:"OPAS/OMS — excesso de mortalidade",url:'https://www.paho.org/pt/noticias/5-5-2022-excesso-mortalidade-associado-pandemia-covid-19-foi-149-milhoes-em-2020-e-2021'}],
+ ["Até março de 2025, o Brasil somava mais de 715 mil mortes por covid-19 desde 2020, pelos dados do Ministério da Saúde.",{nome:"Revista Oeste — dados do Ministério da Saúde",url:'https://www.revistaoeste.com/politica/brasil-registra-761-mortes-por-covid-19-em-2025/'}],
+ ["No primeiro ano da pandemia, os casos de ansiedade e depressão no mundo aumentaram 25%, segundo a OMS. Isolamento, luto, medo e problemas financeiros pesaram.",{nome:"OPAS/OMS — saúde mental na pandemia",url:'https://www.paho.org/pt/noticias/2-3-2022-pandemia-covid-19-desencadeia-aumento-25-na-prevalencia-ansiedade-e-depressao-em'}],
+ ["Só em 2020, os casos de depressão grave cresceram 27,6% e os de transtornos de ansiedade 25,6% no mundo, segundo a OMS.",{nome:"La República — relatório da OMS",url:'https://www.larepublica.co/globoeconomia/covid-19-incremento-casos-de-ansiedad-y-depresion-crecieron-25-a-nivel-global-3314552'}],
+ ["Entre abril de 2020 e março de 2022, as escolas brasileiras ficaram totalmente fechadas 44% do tempo, e parcial ou totalmente fechadas 90% do tempo, segundo o Banco Mundial.",{nome:"Banco Mundial — Colapso e Recuperação (2023)",url:'https://www.worldbank.org/pt/news/press-release/2023/02/16/o-impacto-da-covid-19-nas-criancas-e-jovens-pode-resultar-numa-geracao-perdida'}],
+ ["No fim de 2021, 22% dos jovens brasileiros não trabalhavam nem estudavam, um aumento forte ligado à pandemia, segundo o Banco Mundial.",{nome:"Banco Mundial — Colapso e Recuperação (2023)",url:'https://www.worldbank.org/pt/news/press-release/2023/02/16/o-impacto-da-covid-19-nas-criancas-e-jovens-pode-resultar-numa-geracao-perdida'}],
+ ["O Banco Mundial estimou que, após 13 meses de escolas fechadas, a parcela de alunos brasileiros abaixo do nível mínimo de aprendizado poderia subir de 50% para 71%.",{nome:"ONU Brasil — estudo do Banco Mundial",url:'https://brasil.un.org/pt-br/node/124506'}],
+ ["Num estudo com 10.318 idosos acompanhados por 10 anos, quem fazia quizzes, palavras cruzadas, xadrez ou jogos de cartas teve risco 9% menor de demência.",{nome:"Monash University — JAMA Network Open (2023)",url:'https://www.monash.edu/news/articles/crosswords-and-chess-may-help-more-than-socialising-in-avoiding-dementia'}],
+ ["No mesmo estudo australiano, atividades de leitura e escrita ativas (diário, cursos, usar computador) foram ligadas a risco 11% menor de demência.",{nome:"Cosmos — estudo publicado no JAMA Network Open",url:'https://cosmosmagazine.com/health/body-and-mind/more-than-a-game-crosswords-and-puzzles-may-reduce-dementia-risk'}],
+ ["O estudo ACTIVE, financiado pelo NIH, mostrou que 5 a 6 semanas de treino de velocidade de raciocínio, com reforços depois, reduziram em 25% os diagnósticos de demência 20 anos depois.",{nome:"Johns Hopkins Medicine — estudo ACTIVE (2026)",url:'https://www.hopkinsmedicine.org/news/newsroom/news-releases/2026/02/cognitive-speed-training-linked-to-lower-dementia-incidence-up-to-20-years-later'}],
+ ["No estudo ACTIVE, quem treinou raciocínio e velocidade de processamento ainda mantinha ganhos cognitivos 10 anos depois do treino.",{nome:"EurekAlert — estudo ACTIVE",url:'https://www.eurekalert.org/news-releases/1115860'}],
+ ["A Comissão Lancet sobre demência (2024) calcula que cerca de 45% dos casos poderiam ser evitados ou adiados atacando 14 fatores de risco. Pouca educação é um deles.",{nome:"Alzheimer Europe — Comissão Lancet (2024)",url:'https://www.alzheimer-europe.org/news/2024-lancet-commission-underscores-potential-dementia-risk-reduction-identifying-14-modifiable'}],
+ ["Jogos e quebra-cabeças não garantem que a demência não vai aparecer, mas, segundo a pesquisadora Joanne Ryan, atividades mentais podem ajudar a atrasar o início dela.",{nome:"Powers Health — HealthDay sobre estudo no JAMA",url:'https://www.powershealth.org/about-us/newsroom/health-library/2023/07/17/stretch-your-brain-as-you-age-lower-your-dementia-risk'}],
  ['Cerca de 6 milhões de judeus foram assassinados no Holocausto, entre 1933 e 1945.',{nome:'USHMM — Introdução ao Holocausto',url:'https://encyclopedia.ushmm.org/content/pt-br/article/introduction-to-the-holocaust'}],
  ['Na Noite dos Cristais (1938), os nazistas incendiaram mais de 1.400 sinagogas.',{nome:'USHMM — Noite dos Cristais',url:'https://encyclopedia.ushmm.org/content/pt-br/article/kristallnacht'}],
  ['Depois da Noite dos Cristais, o regime obrigou os próprios judeus a pagar 1 bilhão de marcos pelos danos.',{nome:'USHMM — Noite dos Cristais',url:'https://encyclopedia.ushmm.org/content/pt-br/article/kristallnacht'}],
@@ -2047,6 +2077,7 @@ function pontosTotais(d){
   return t;
 }
 function desenhaPerfil(){
+  try{inuteisAtualiza();}catch(e){}
   const p=$('#perfil');
   if(!logado()){p.classList.remove('on');p.innerHTML='';return;}
   const d=conta.dados;
@@ -3217,6 +3248,30 @@ $('#jm-tab').onclick=e=>{const d=e.target.closest('[data-i]');if(!d||jm.fim||jm.
     else{jm.trava=true;msg('#jm-msg','Não é par. Memorize!');setTimeout(()=>{jm.ab=[];jm.trava=false;jmDesenha();},1000);}}
   jmDesenha();};
 $('#jm-novo').onclick=()=>{limpaFato();jmNovo();};$('#jm-dif').onchange=()=>{limpaFato();jmNovo();};
+const INUTEIS=[["A melancia que comemos é fruto de milhares de anos de seleção feita pelo ser humano. As espécies selvagens têm polpa clara, dura e amarga.", {"nome": "Agrolink — estudo dos genomas da melancia", "url": "https://www.agrolink.com.br/noticias/genes-selvagens-melhoraram-sabor-da-melancia_426224.html"}], ["Sementes de melancia de 6 mil anos achadas no Saara mostram que os povos de lá comiam as sementes e evitavam a polpa, que era amarga.", {"nome": "Canaltech — genoma de sementes do Neolítico", "url": "https://canaltech.com.br/ciencia/cientistas-sequenciam-genoma-de-planta-mais-antigo-do-mundo-a-partir-de-sementes-224586/"}], ["O parente mais próximo da melancia é o melão de Kordofan, do Sudão. Ao ser domesticada, a melancia perdeu genes de resistência a doenças.", {"nome": "Universidade de Sheffield", "url": "https://www.sheffield.ac.uk/news/ancient-discovery-could-help-us-develop-more-disease-resistant-watermelons"}], ["Bacalhau não é um peixe só: é o nome de espécies do gênero Gadus que, no Brasil, são vendidas salgadas e secas. O processo em si se chama salga.", {"nome": "A Tarde — bióloga do Instituto Oceanográfico da USP", "url": "https://atarde.com.br/gastronomia/bacalhau-nao-e-um-peixe-e-quase-ninguem-sabe-disso-1370173"}], ["O famoso \"bacalhau\" Saithe não pode ser vendido só como bacalhau no Brasil: Saithe, Ling e Zarbo são \"peixe tipo bacalhau salgado seco\".", {"nome": "Bem Paraná — regras da Anvisa e do Ministério da Agricultura", "url": "https://www.bemparana.com.br/noticias/economia/tem-bacalhau-e-peixe-tipo-bacalhau-regra-federal-define-o-peixe-que-recebe-as-definicoes/amp/"}], ["O legítimo \"bacalhau do Porto\" não é pescado em Portugal: é só o nome popular da espécie Gadus morhua, pescada no Atlântico Norte.", {"nome": "Revista Oeste — bacalhau não é um peixe", "url": "https://revistaoeste.com/agronegocio/bacalhau-nao-e-um-peixe/"}], ["O caju não é a fruta do cajueiro: a parte que comemos é um pseudofruto. O fruto verdadeiro é a castanha.", {"nome": "Embrapa Amazônia Oriental", "url": "https://www.infoteca.cnptia.embrapa.br/infoteca/bitstream/doc/406558/1/Cajuacu-Anacardium.pdf"}], ["Mais de 90% da castanha de caju produzida no Brasil é exportada.", {"nome": "Embrapa Agroindústria Tropical", "url": "https://www.alice.cnptia.embrapa.br/alice/bitstream/doc/941834/1/ADM12011.pdf"}], ["O polvo tem três corações: dois mandam o sangue para as brânquias e um bombeia para o resto do corpo.", {"nome": "Correio 24 Horas — curiosidades sobre polvos", "url": "https://www.correio24horas.com.br/entretenimento/variedades/7-curiosidades-impressionantes-sobre-os-polvos-1025"}], ["O sangue do polvo é azul porque usa hemocianina, uma proteína com cobre, e não hemoglobina com ferro, como a nossa.", {"nome": "Metrópoles — anatomia do polvo", "url": "https://www.metropoles.com/ciencia/tres-coracoes-anatomia-polvo"}], ["A Torre Eiffel fica alguns centímetros mais alta no verão: o ferro se dilata com o calor e se contrai no frio.", {"nome": "Correio Braziliense — dilatação da Torre Eiffel", "url": "https://www.correiobraziliense.com.br/aqui/?p=16347"}], ["Num dia de sol, o topo da Torre Eiffel desenha uma curva de cerca de 15 cm, porque o lado iluminado esquenta e se dilata mais.", {"nome": "Canal Rural — movimento da Torre Eiffel", "url": "https://www.canalrural.com.br/alem-do-agro/?p=934"}], ["O mel quase não estraga: tem pouca água, muito açúcar e é ácido, o que impede bactérias de crescer.", {"nome": "Olhar Digital — por que o mel dura tanto", "url": "https://olhardigital.com.br/curiosidades/2026/07/14/por-que-o-mel-dura-tantos-anos-e-a-verdade-por-tras-dos-potes-encontrados-nas-tumbas-do-egito/"}], ["Os potes de \"mel\" da tumba de Tutancâmon tinham só restos secos: a história de mel de 3 mil anos ainda comestível é exagerada.", {"nome": "Olhar Digital — a verdade sobre os potes egípcios", "url": "https://olhardigital.com.br/curiosidades/?p=7861"}], ["Amendoim não é uma castanha: é uma leguminosa, parente do feijão e da ervilha.", {"nome": "Wikipédia — Amendoim", "url": "https://pt.wikipedia.org/wiki/Amendoim"}], ["Pela botânica, a banana é uma baga, e o morango não é: as \"sementinhas\" do lado de fora são os frutos verdadeiros.", {"nome": "Wikipédia — Baga (botânica)", "url": "https://pt.wikipedia.org/wiki/Baga_(bot%C3%A2nica)"}], ["Tomate, pepino, abóbora e berinjela são frutos pela botânica: nascem da flor e guardam as sementes.", {"nome": "Wikipédia — Fruto", "url": "https://pt.wikipedia.org/wiki/Fruto"}], ["Chocolate branco não tem cacau em pó: é feito de manteiga de cacau, açúcar e leite.", {"nome": "Wikipédia — Chocolate branco", "url": "https://pt.wikipedia.org/wiki/Chocolate_branco"}], ["O abacaxi não é uma fruta só: é uma infrutescência, várias frutinhas de flores diferentes grudadas num eixo.", {"nome": "Wikipédia — Abacaxi", "url": "https://pt.wikipedia.org/wiki/Abacaxi"}], ["A banana é levemente radioativa por causa do potássio-40, natural. Seria preciso comer milhões delas de uma vez para fazer mal.", {"nome": "Wikipédia — Dose equivalente de banana", "url": "https://pt.wikipedia.org/wiki/Dose_equivalente_de_banana"}]];
+/* "Você sabia?" e curiosidades inúteis: a planilha coleta novas toda semana da internet (Wikipédia e Useless Facts);
+   as listas fixas daqui servem de reserva enquanto o servidor não responde */
+const curFila={sabia:[],inutil:[]},curBusca={},curVistas=new Set();
+function curPega(tipo){
+  if(curBusca[tipo])return;
+  const prm={acao:'curiosidades',tipo};if(tipo==='inutil'){if(!ajuda())return;prm.nick=conta.nick;prm.codigo=conta.cod;}
+  curBusca[tipo]=1;
+  api(prm).then(r=>{if(r&&r.ok&&r.lista)curFila[tipo].push(...r.lista.filter(x=>!curVistas.has(x.t)));}).catch(()=>{}).finally(()=>{curBusca[tipo]=0;});
+}
+function curMostra(tipo,txt,local,ult){
+  const fila=curFila[tipo];let t,fo;
+  if(fila.length&&(tipo==='inutil'||Math.random()<0.75)){const x=fila.shift();t=x.t;fo={nome:x.nome,url:x.url};curVistas.add(t);}
+  else{let i;do{i=rnd(local.length);}while(local.length>1&&i===ult.i);ult.i=i;[t,fo]=local[i];}
+  if(fila.length<4)curPega(tipo);
+  $(txt).innerHTML=`${esc(t)} <a class="qz-fonte" href="${esc(fo.url)}" target="_blank" rel="noopener" title="${esc(fo.nome||'')}">Ver fonte</a>`;
+}
+const vsUlt={i:-1},inUlt={i:-1};let inMostrou=false;
+$('#vs-novo').onclick=()=>curMostra('sabia','#vs-txt',FATOS,vsUlt);
+$('#in-novo').onclick=()=>curMostra('inutil','#in-txt',INUTEIS,inUlt);
+function inuteisAtualiza(){const on=ajuda();$('#inuteis').style.display=on?'':'none';
+  if(on&&!inMostrou){inMostrou=true;curPega('inutil');curMostra('inutil','#in-txt',INUTEIS,inUlt);}
+  if(!on){inMostrou=false;curFila.inutil.length=0;}}
+curMostra('sabia','#vs-txt',FATOS,vsUlt);
 const INIT={velha:jvNovo,memoria:jmNovo,reversi:rvNovo,lig4:l4Novo,mancala:mcNovo,batalhanaval:bnNovo,escape:esNovo,herois:()=>hrNovo(0),domino:doNovo,trilha:trNovo,dama:dmNovo,xadrez:xzNovo,cacapalavras:wsNovo,cruzadinha:cwNovo,sudoku:sdNovo,criptograma:crNovo,embaralhadas:emNovo,labirinto:lbNovo,quiz:qzNovo,mapa:mpNovo};
 addEventListener('hashchange',rota);
 contaIniciar();
