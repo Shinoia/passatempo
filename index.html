@@ -147,6 +147,9 @@ body.em-jogo .perfil,body.em-jogo .top10{display:none!important}
 .top10 td{padding:6px;border-bottom:1px solid var(--linha)}.top10 tr:last-child td{border-bottom:0}
 .top10 td.pos{width:38px;text-align:center;font-weight:700}.top10 td.n{text-align:right;font-weight:700;white-space:nowrap}
 .top10 tr.eu td{background:#fef3c7}
+.pt-total{display:flex;align-items:baseline;justify-content:center;gap:10px;margin:6px 0 2px}
+.pt-total b{font-size:44px;font-family:Georgia,serif;color:var(--acento)}.pt-total span{font-size:16px;color:var(--suave)}
+.pt-det{margin-top:10px}.pt-det summary{cursor:pointer;font-weight:700;color:var(--acento2)}
 .top-abas{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:0 0 10px}
 .top-abas button{padding:5px 10px;font-size:13px;border-radius:20px}
 .top-abas button.on{background:var(--tinta);color:#fff}
@@ -1943,7 +1946,7 @@ async function contaEntrar(nick,cod,lembrar){
   const r=await api({acao:'entrar',nick,codigo:cod});
   if(!r||!r.ok)throw new Error((r&&r.erro)||'Não foi possível entrar.');
   conta.nick=r.nick;conta.cod=cod;conta.dados=normaliza(r.perfil);conta.ajuda=!!r.ajuda;conta.lido=Date.now();
-  conta.antigo=!r.perfil||(Number(r.versao)||0)<5;   // servidor ainda com o Apps Script antigo
+  conta.antigo=!r.perfil||(Number(r.versao)||0)<6;   // servidor ainda com o Apps Script antigo
   try{if(lembrar)localStorage.setItem(LOGIN_KEY,JSON.stringify({nick:r.nick,cod}));else localStorage.removeItem(LOGIN_KEY);}catch(e){}
   contaMudou();return r;
 }
@@ -2002,6 +2005,12 @@ function desenhaBarra(){
     $('#cb-trocar').onclick=abrirLogin;$('#cb-sair').onclick=contaSair;}
   else{b.innerHTML=`<button class="prim" id="cb-entrar">👤 Entrar com nick (opcional)</button>`;$('#cb-entrar').onclick=abrirLogin;}
 }
+function pontosTotais(d){
+  if(d&&Number.isFinite(Number(d.pontos))&&d.pontos!=='')return Number(d.pontos);
+  let t=Number(d.acertos)||0;
+  Object.keys(JOGOS_NOMES).forEach(k=>{const g=d.jogos[k]||{};t+=(k==='mapa'||k==='embaralhadas')?Number(g.s)||0:Number(g.v)||0;});
+  return t;
+}
 function desenhaPerfil(){
   const p=$('#perfil');
   if(!logado()){p.classList.remove('on');p.innerHTML='';return;}
@@ -2011,10 +2020,13 @@ function desenhaPerfil(){
     const comPontos=k==='mapa'||k==='embaralhadas';
     const rec=g.t?'Melhor tempo '+tempo(g.t*1000):comPontos&&(g.s||g.p)?`Total: ${g.s||0} ${un}`+(g.p?` · Melhor partida: ${g.p}`:''):'—';
     return `<tr><td>${n}</td><td style="text-align:right;font-weight:700">${g.v||0}</td><td>${rec}</td></tr>`;}).join('');
+  const total=pontosTotais(d);
   p.innerHTML=`<h3>📊 Meus resultados — ${esc(conta.nick)}</h3>
     ${conta.antigo?'<p class="msg erro">⚠️ O servidor (Apps Script) ainda está na versão antiga, por isso os resultados não ficam salvos. Publique a nova versão do script.</p>':''}
-    <table><tr><th>Jogo</th><th style="text-align:right">Concluídos / vitórias</th><th>Recorde</th></tr>
-    <tr><td>🧠 Quiz</td><td style="text-align:right;font-weight:700">${d.respondidas}/${PERGUNTAS.length}</td><td>${d.acertos} acertos</td></tr>${linhas}</table>`;
+    <div class="pt-total"><b>${total}</b><span>pontos no total</span></div>
+    <p class="top-obs">1 ponto por acerto no quiz, por vitória ou jogo concluído, e por ponto feito no Embaralhadas e no Onde é?</p>
+    <details class="pt-det"><summary>Ver pontos por jogo</summary><table><tr><th>Jogo</th><th style="text-align:right">Concluídos / vitórias</th><th>Recorde</th></tr>
+    <tr><td>🧠 Quiz</td><td style="text-align:right;font-weight:700">${d.respondidas}/${PERGUNTAS.length}</td><td>${d.acertos} acertos</td></tr>${linhas}</table></details>`;
   p.classList.add('on');
 }
 function contaMudou(){
@@ -2110,7 +2122,7 @@ function qzFinal(){
   };
 }
 /* ===== Top 10 da página inicial: abas com os principais jogos (lidos da planilha) ===== */
-let topLido=0,topDados=null,topAba='quiz';
+let topLido=0,topDados=null,topAba='geral';
 function topCarrega(){
   if(!SERVIDOR_URL||Date.now()-topLido<30000)return;topLido=Date.now();
   api({acao:'rankings'}).then(r=>{
@@ -2130,9 +2142,9 @@ function topRender(){
   const R=abas.find(r=>r.id===topAba),eu=(conta.nick||'').toLowerCase();
   const val=x=>R.un==='tempo'?tempo(x.valor*1000):`${x.valor} ${R.un}`;
   el.innerHTML=`<h3>🏆 Top 10 jogadores</h3>
-    <div class="top-abas">${abas.map(r=>`<button data-t="${r.id}" class="${r.id===topAba?'on':''}">${esc((JOGOS_NOMES[r.id]||'🧠 '+r.nome).split(' ')[0])} ${esc(r.nome)}</button>`).join('')}</div>
+    <div class="top-abas">${abas.map(r=>`<button data-t="${r.id}" class="${r.id===topAba?'on':''}">${esc(r.id==='geral'?'⭐':(JOGOS_NOMES[r.id]||'🧠 '+r.nome).split(' ')[0])} ${esc(r.id==='geral'?'Pontos totais':r.nome)}</button>`).join('')}</div>
     <table>${R.lista.map((x,i)=>`<tr class="${x.nick.toLowerCase()===eu?'eu':''}"><td class="pos">${i<3?['🥇','🥈','🥉'][i]:i+1}</td><td>${esc(x.nick)}</td><td class="n">${val(x)}</td></tr>`).join('')}</table>
-    ${R.un==='tempo'?'<p class="top-obs">Menor tempo primeiro.</p>':''}`;
+    ${R.un==='tempo'?'<p class="top-obs">Menor tempo primeiro.</p>':R.id==='geral'?'<p class="top-obs">Soma dos pontos de todos os jogos.</p>':''}`;
   el.style.display='';
 }
 $('#top10').onclick=e=>{const b=e.target.closest('[data-t]');if(b){topAba=b.dataset.t;topRender();}};
