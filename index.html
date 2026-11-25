@@ -3254,7 +3254,7 @@ const INUTEIS=[["A melancia que comemos é fruto de milhares de anos de seleçã
 const curFila={sabia:[],inutil:[]},curBusca={},curVistas=new Set();
 function curPega(tipo){
   if(curBusca[tipo])return;
-  const prm={acao:'curiosidades',tipo};if(tipo==='inutil'){if(!ajuda())return;prm.nick=conta.nick;prm.codigo=conta.cod;}
+  const prm={acao:'curiosidades',tipo};if(tipo==='inutil'){if(!logado())return;prm.nick=conta.nick;prm.codigo=conta.cod;}
   curBusca[tipo]=1;
   api(prm).then(r=>{if(r&&r.ok&&r.lista)curFila[tipo].push(...r.lista.filter(x=>!curVistas.has(x.t)));}).catch(()=>{}).finally(()=>{curBusca[tipo]=0;});
 }
@@ -3268,7 +3268,7 @@ function curMostra(tipo,txt,local,ult){
 const vsUlt={i:-1},inUlt={i:-1};let inMostrou=false;
 $('#vs-novo').onclick=()=>curMostra('sabia','#vs-txt',FATOS,vsUlt);
 $('#in-novo').onclick=()=>curMostra('inutil','#in-txt',INUTEIS,inUlt);
-function inuteisAtualiza(){const on=ajuda();$('#inuteis').style.display=on?'':'none';
+function inuteisAtualiza(){const on=logado();$('#inuteis').style.display=on?'':'none';
   if(on&&!inMostrou){inMostrou=true;curPega('inutil');curMostra('inutil','#in-txt',INUTEIS,inUlt);}
   if(!on){inMostrou=false;curFila.inutil.length=0;}}
 curMostra('sabia','#vs-txt',FATOS,vsUlt);
