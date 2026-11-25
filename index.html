@@ -212,6 +212,56 @@ body.em-jogo .perfil{display:none!important}
 .do-mao .do-pc.jogavel{opacity:1;border-color:var(--ok)}
 .do-mao .do-pc.sel{border-color:#1d4ed8;box-shadow:0 0 0 3px #93c5fd}
 .do-mao .do-pc.aj{border-bottom-color:#2563eb;border-bottom-style:dotted}
+.rv-tab .tb-c{background:#15803d;box-shadow:inset 0 0 0 1px #0f5a2b}
+.rv-tab .tb-c.alvo::after{width:18%;height:18%;background:rgba(0,0,0,.3)}
+.rv-tab .tb-c.ult{box-shadow:inset 0 0 0 3px #facc15}
+.rv-p{width:80%;height:80%;border-radius:50%}.rv-p.pt{background:#111}.rv-p.bc{background:#fafafa;border:1px solid #bbb}
+.l4-tab{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;background:#1d4ed8;padding:6px;border-radius:10px;width:min(460px,94vw);margin:0 auto}
+.l4-c{aspect-ratio:1;background:var(--papel);border-radius:50%;cursor:pointer;position:relative;display:flex;align-items:center;justify-content:center}
+.l4-c.ult{box-shadow:0 0 0 3px #facc15}.l4-c.lin{box-shadow:0 0 0 4px #22c55e}
+.l4-p{width:100%;height:100%;border-radius:50%}.l4-p.vm{background:#dc2626}.l4-p.am{background:#facc15}
+.l4-aj{position:absolute;top:2px;width:5px;height:5px;border-radius:50%;background:#2563eb}
+.mc-tab{display:grid;grid-template-columns:clamp(38px,10vw,60px) minmax(0,1fr) clamp(38px,10vw,60px);grid-template-rows:auto auto;gap:6px;background:#92400e;padding:clamp(5px,1.5vw,10px);border-radius:30px;width:min(640px,94vw);margin:0 auto}
+.mc-dep{grid-row:1/3;background:#78350f;border-radius:30px;color:#fde68a;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:24px;font-weight:700}
+.mc-dep small{font-size:11px;font-weight:400}.mc-eu{grid-column:3;grid-row:1/3}
+.mc-lin{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(3px,1vw,6px);grid-column:2}
+.mc-cova{aspect-ratio:1;background:#78350f;border-radius:50%;color:#fde68a;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.mc-cova b{font-size:clamp(13px,3.6vw,18px)}.mc-sem{font-size:9px;line-height:1;max-width:80%;text-align:center;word-break:break-all;color:#fcd34d}
+.mc-cova.pode{cursor:pointer;box-shadow:0 0 0 2px #fde68a}.mc-cova.ult{box-shadow:0 0 0 3px #facc15}
+.mc-cova.aj::after{content:"";position:absolute;top:6px;right:22%;width:5px;height:5px;border-radius:50%;background:#93c5fd}
+.bn-mares{display:flex;flex-wrap:wrap;gap:18px;justify-content:center}.bn-mares h4{margin:4px 0;text-align:center}
+.bn-g{display:grid;grid-template-columns:repeat(10,1fr);width:min(340px,92vw);border:2px solid var(--tinta);background:#bfdbfe}
+.bn-meu{width:min(260px,70vw)}
+.bn-c{aspect-ratio:1;border:1px solid #93c5fd;display:flex;align-items:center;justify-content:center;font-size:13px;position:relative}
+.bn-c.mira{cursor:crosshair}.bn-c.mira:hover{background:#93c5fd}
+.bn-c.navio{background:#64748b}.bn-c.agua{color:#1e3a8a}.bn-c.fogo{background:#f97316;color:#fff}.bn-c.afund{background:#7f1d1d;color:#fff}
+.bn-c.ult{box-shadow:inset 0 0 0 2px #facc15}
+.bn-c.aj::after{content:"";position:absolute;top:2px;right:2px;width:4px;height:4px;border-radius:50%;background:#2563eb}
+.es-obj{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:10px 0}
+.es-o{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:96px;padding:10px;background:var(--card);border:2px solid var(--tinta);border-radius:8px;cursor:pointer}
+.es-o span{font-size:34px}.es-o.feito{opacity:.6}
+.es-inv{text-align:center;color:var(--suave);margin:6px 0}
+.es-painel{background:#fffdf8;border:2px dashed #b8a98a;border-radius:8px;padding:14px;max-width:640px;margin:10px auto;line-height:1.5}
+.es-painel h4{margin:0 0 6px}
+.es-cod{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.es-cod input{font-size:22px;width:150px;letter-spacing:6px;text-align:center;padding:6px}
+.es-cod input::placeholder{color:#e5e7eb}
+.es-cod button.aj{border-bottom:2px dotted #2563eb}
+.es-luzes{display:grid;grid-template-columns:repeat(3,56px);gap:6px;margin-top:8px}
+.es-luzes button{height:56px;border-radius:50%;background:#374151;border:2px solid #111;cursor:pointer;position:relative}
+.es-luzes button.on{background:#fde047;box-shadow:0 0 12px #facc15}
+.es-luzes button.aj::after{content:"";position:absolute;top:4px;right:4px;width:4px;height:4px;border-radius:50%;background:#2563eb}
+.hr-tab{display:grid;width:min(720px,96vw);margin:8px auto;border:3px solid var(--tinta);background:#e0f2fe}
+.hr-c{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:clamp(12px,3.6vw,26px);cursor:default}
+.hr-c[data-k]{cursor:pointer}
+.hr-c.pd{background:#57534e;box-shadow:inset 0 0 0 1px #44403c}
+.hr-c.rach{background:repeating-linear-gradient(45deg,#78716c 0 6px,#a8a29e 6px 8px)}
+.hr-c.porta{background:#a16207}.hr-c.esp{color:#dc2626}.hr-c.esc{background:#e0f2fe}
+.hr-c.bot{background:linear-gradient(transparent 70%,#dc2626 70%)}.hr-c.bot.on{background:linear-gradient(transparent 70%,#16a34a 70%)}
+.hr-c.sai{background:#dcfce7}.hr-c.sel{box-shadow:inset 0 0 0 3px #1d4ed8;border-radius:6px}
+.hr-herois{justify-content:center}.hr-herois button.aj{border-bottom:2px dotted #2563eb}
+.hr-setas{display:grid;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(2,52px);gap:6px;justify-content:center;margin:10px auto}
+.hr-setas button{font-size:22px}.hr-setas [data-d=c]{grid-column:2}.hr-setas [data-d=e]{grid-column:1;grid-row:2}.hr-setas [data-d=b]{grid-column:2;grid-row:2}.hr-setas [data-d=d]{grid-column:3;grid-row:2}
+.hr-setas button.aj{border-bottom:3px dotted #2563eb}
 </style>
 </head>
 <body>
@@ -249,6 +299,12 @@ body.em-jogo .perfil{display:none!important}
   <a class="card" href="#trilha"><div class="ic">⭕</div><h2>Trilha</h2><p>Forme moinhos de 3 peças e tire as do adversário.</p></a>
   <a class="card" href="#dama"><div class="ic">⚪</div><h2>Dama</h2><p>Damas com regras brasileiras contra o computador.</p></a>
   <a class="card" href="#xadrez"><div class="ic">♞</div><h2>Xadrez</h2><p>Xadrez completo contra o computador, em 3 níveis.</p></a>
+  <a class="card" href="#reversi"><div class="ic">⚫</div><h2>Reversi</h2><p>Cerque e vire as peças do adversário.</p></a>
+  <a class="card" href="#lig4"><div class="ic">🔴</div><h2>Lig 4</h2><p>Alinhe 4 fichas antes do computador.</p></a>
+  <a class="card" href="#mancala"><div class="ic">🥜</div><h2>Mancala</h2><p>Semeie e capture sementes, um jogo africano milenar.</p></a>
+  <a class="card" href="#batalhanaval"><div class="ic">🚢</div><h2>Batalha naval</h2><p>Encontre e afunde a frota do computador.</p></a>
+  <a class="card" href="#escape"><div class="ic">🗝️</div><h2>Escape</h2><p>Saia do Arquivo Histórico resolvendo enigmas.</p></a>
+  <a class="card" href="#herois"><div class="ic">🛡️</div><h2>Os Três Heróis</h2><p>Use as habilidades de 3 heróis para chegar à saída.</p></a>
 </div>
 
 <div class="perfil" id="perfil"></div>
@@ -427,6 +483,85 @@ body.em-jogo .perfil{display:none!important}
   <div class="tb-tab" id="xz-tab"></div>
   <div id="xz-msg" class="msg"></div>
 </section>
+<section class="jogo" id="reversi">
+  <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Reversi</h2></div>
+  <div class="controles"><select id="rv-dif"><option value="facil">Fácil</option><option value="medio" selected>Médio</option><option value="dificil">Difícil</option></select><button class="prim" id="rv-novo">Nova partida</button></div>
+  <details class="regras"><summary>📖 Regras do Reversi</summary><ul>
+  <li>Você joga com as pretas ⚫ e começa. O tabuleiro começa com 2 peças de cada cor no centro.</li>
+  <li><b>Jogar:</b> coloque uma peça de modo a cercar, em linha reta (na horizontal, vertical ou diagonal), uma ou mais peças do adversário entre a sua peça nova e outra peça sua. As peças cercadas viram para a sua cor.</li>
+  <li>Só vale jogar numa casa que vire pelo menos uma peça. As casas possíveis ficam marcadas com um pontinho.</li>
+  <li><b>Passar:</b> quem não tem jogada possível passa a vez.</li>
+  <li><b>Fim:</b> quando ninguém consegue jogar, ganha quem tiver mais peças da sua cor. Dica: os cantos nunca podem ser virados.</li></ul></details>
+  <div class="do-info" id="rv-info"></div>
+  <div class="tb-tab rv-tab" id="rv-tab"></div>
+  <div id="rv-msg" class="msg"></div>
+</section>
+<section class="jogo" id="lig4">
+  <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Lig 4</h2></div>
+  <div class="controles"><select id="l4-dif"><option value="facil">Fácil</option><option value="medio" selected>Médio</option><option value="dificil">Difícil</option></select><button class="prim" id="l4-novo">Nova partida</button></div>
+  <details class="regras"><summary>📖 Regras do Lig 4</summary><ul>
+  <li>Tabuleiro em pé com 7 colunas e 6 linhas. Você joga com o vermelho 🔴 e começa.</li>
+  <li><b>Jogar:</b> toque numa coluna; a ficha cai até a casa livre mais baixa.</li>
+  <li><b>Vitória:</b> ganha quem alinhar 4 fichas da sua cor seguidas, na horizontal, vertical ou diagonal.</li>
+  <li>Se o tabuleiro encher sem ninguém fazer 4, é empate.</li></ul></details>
+  <div class="l4-tab" id="l4-tab"></div>
+  <div id="l4-msg" class="msg"></div>
+</section>
+<section class="jogo" id="mancala">
+  <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Mancala</h2></div>
+  <div class="controles"><select id="mc-dif"><option value="facil">Fácil</option><option value="medio" selected>Médio</option><option value="dificil">Difícil</option></select><button class="prim" id="mc-novo">Nova partida</button></div>
+  <details class="regras"><summary>📖 Regras da Mancala (Kalah)</summary><ul>
+  <li>Cada jogador tem 6 covas com 4 sementes e um depósito grande. As suas covas são as de baixo, e o seu depósito fica à direita.</li>
+  <li><b>Semear:</b> escolha uma cova sua. Todas as sementes dela são distribuídas, uma por cova, no sentido anti-horário, passando pelo seu depósito e pulando o do adversário.</li>
+  <li><b>Jogar de novo:</b> se a última semente cair no seu depósito, você joga outra vez.</li>
+  <li><b>Captura:</b> se a última semente cair numa cova sua que estava vazia, você pega essa semente e todas as da cova em frente, do adversário, e põe no seu depósito.</li>
+  <li><b>Fim:</b> quando um dos lados fica sem sementes, cada um guarda as que sobraram do seu lado. Ganha quem tiver mais sementes no depósito.</li></ul></details>
+  <div class="mc-tab" id="mc-tab"></div>
+  <div id="mc-msg" class="msg"></div>
+</section>
+<section class="jogo" id="batalhanaval">
+  <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Batalha naval</h2></div>
+  <div class="controles"><select id="bn-dif"><option value="facil">Fácil</option><option value="medio" selected>Médio</option><option value="dificil">Difícil</option></select><button class="prim" id="bn-novo">Nova partida</button></div>
+  <details class="regras"><summary>📖 Regras da Batalha naval</summary><ul>
+  <li>Cada um tem um mar de 10×10 com 5 navios escondidos: um de 5 casas, um de 4, dois de 3 e um de 2. Seus navios são posicionados ao acaso (toque em "Nova partida" para sortear outra vez).</li>
+  <li><b>Atirar:</b> toque numa casa do mar do computador. <b>•</b> é água; <b>✹</b> é fogo, ou seja, acertou um navio.</li>
+  <li>Quem acerta um navio atira de novo. Quem erra passa a vez.</li>
+  <li>Um navio afunda quando todas as casas dele são atingidas.</li>
+  <li><b>Vitória:</b> ganha quem afundar a frota inteira do adversário primeiro.</li></ul></details>
+  <div class="do-info" id="bn-info"></div>
+  <div class="bn-mares"><div><h4>Mar do computador (atire aqui)</h4><div class="bn-g" id="bn-pc"></div></div><div><h4>Seu mar</h4><div class="bn-g bn-meu" id="bn-eu"></div></div></div>
+  <div id="bn-msg" class="msg"></div>
+</section>
+<section class="jogo" id="escape">
+  <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Escape: o Arquivo Histórico</h2></div>
+  <div class="controles"><button class="prim" id="es-novo">Recomeçar</button></div>
+  <details class="regras"><summary>📖 Como jogar</summary><ul>
+  <li>Você está trancado num arquivo histórico com 3 salas. Para sair de cada sala, descubra como abrir a porta.</li>
+  <li>Toque nos objetos para examiná-los. Alguns têm pistas, outros pedem um código e outros guardam itens que vão para a sua mochila.</li>
+  <li>Junte as pistas e use o raciocínio: as respostas estão todas nas salas. O tempo conta, e o melhor fica no seu perfil.</li></ul></details>
+  <h3 id="es-titulo"></h3>
+  <div class="es-obj" id="es-obj"></div>
+  <div class="es-inv" id="es-inv"></div>
+  <div class="es-painel" id="es-painel"></div>
+  <div id="es-msg" class="msg"></div>
+</section>
+<section class="jogo" id="herois">
+  <div class="topo"><a class="voltar" href="#">← Jogos</a><h2>Os Três Heróis</h2></div>
+  <div class="controles"><select id="hr-sel"></select><button id="hr-desfaz">↶ Desfazer</button><button id="hr-reinicia">Reiniciar fase</button><button class="prim" id="hr-prox" style="display:none">Próxima fase →</button></div>
+  <details class="regras"><summary>📖 Como jogar</summary><ul>
+  <li>Leve os três heróis até as bandeiras 🏁. A fase só termina quando os três estão na saída.</li>
+  <li>Escolha o herói tocando no nome dele (ou nele mesmo no mapa) e mova com as setas. No teclado, use as setas e a tecla Espaço para trocar de herói.</li>
+  <li><b>🏃 Lia, a Ágil:</b> sobe degraus de 1 bloco de altura. <b>💪 Bruno, o Forte:</b> quebra paredes rachadas e empurra caixas 📦. <b>🛡️ Caio, o Escudo:</b> anda sobre espinhos ▲ sem se machucar.</li>
+  <li>Todos caem quando não há chão. Um herói pode ficar em cima de outro, e dois heróis lado a lado trocam de lugar. Escadas 🪜 servem para subir e descer.</li>
+  <li>Quem pisa num botão abre as portas 🚪. Se a Lia ou o Bruno caírem nos espinhos, use Desfazer ou Reiniciar.</li></ul></details>
+  <h3 id="hr-fase"></h3>
+  <div class="hr-tab" id="hr-tab"></div>
+  <div class="hr-herois controles" id="hr-herois"></div>
+  <div class="do-info" id="hr-info"></div>
+  <div class="hr-setas" id="hr-setas"><button data-d="c">▲</button><button data-d="e">◀</button><button data-d="b">▼</button><button data-d="d">▶</button></div>
+  <div id="hr-msg" class="msg"></div>
+</section>
+
 
 </main>
 
@@ -1737,7 +1872,7 @@ PERGUNTAS.unshift(...NOVAS);
 /* ================= CONTA (login opcional com nick + código) ================= */
 /* Link do App da Web do Apps Script (termina em /exec). Guarda logins, progresso, ranking e o contador. */
 const SERVIDOR_URL='https://script.google.com/macros/s/AKfycbzG439rQqMfUq9qFRBdON50NgU3lf6ECE7AJpz-CNLoCmtYDT_9A0_lwIm56mCHfEu7/exec';
-const JOGOS_NOMES={cacapalavras:'🔎 Caça-palavras',cruzadinha:'✏️ Cruzadinha',sudoku:'🔢 Sudoku',criptograma:'🔐 Criptograma',embaralhadas:'🔀 Palavras Embaralhadas',labirinto:'🌀 Labirinto',mapa:'🌍 Onde é?',domino:'🁫 Dominó',trilha:'⭕ Trilha',dama:'⚪ Dama',xadrez:'♞ Xadrez'};
+const JOGOS_NOMES={cacapalavras:'🔎 Caça-palavras',cruzadinha:'✏️ Cruzadinha',sudoku:'🔢 Sudoku',criptograma:'🔐 Criptograma',embaralhadas:'🔀 Palavras Embaralhadas',labirinto:'🌀 Labirinto',mapa:'🌍 Onde é?',domino:'🁫 Dominó',trilha:'⭕ Trilha',dama:'⚪ Dama',xadrez:'♞ Xadrez',reversi:'⚫ Reversi',lig4:'🔴 Lig 4',mancala:'🥜 Mancala',batalhanaval:'🚢 Batalha naval',escape:'🗝️ Escape',herois:'🛡️ Os Três Heróis'};
 const LOGIN_KEY='pt-login';
 // limpa dados antigos que versões anteriores do site deixavam no navegador
 ['pt-contador','pt-quiz-v1','pt-quiz-rank-local'].forEach(k=>{try{localStorage.removeItem(k);}catch(e){}});
@@ -1784,7 +1919,7 @@ function aplicarAjuda(){
   if(lb.m)lbDesenha();
   if(mp.sat&&mp.lista)mpMarcas();
   document.querySelectorAll('.qz-ops button').forEach(b=>b.classList.toggle('aj',a&&b.dataset.k==='0'&&!b.disabled));
-  try{if(dom.mesa){dom.dica=null;doDesenha();}if(tr.s){tr.dica=null;trDesenha();}if(dm.b){dm.dica=null;dmDesenha();}if(xz.s){xz.dica=null;xzDesenha();}}catch(e){}
+  try{if(dom.mesa){dom.dica=null;doDesenha();}if(tr.s){tr.dica=null;trDesenha();}if(dm.b){dm.dica=null;dmDesenha();}if(xz.s){xz.dica=null;xzDesenha();}if(rv.b){rv.dica=null;rvDesenha();}if(l4.b){l4.dica=-1;l4Desenha();}if(mc.a){mc.dica=-1;mcDesenha();}if(bn.eu){bnDica();bnDesenha();}if(hr.s){hr.dica=null;hrDesenha();}}catch(e){}
 }
 const dadosAtuais=()=>logado()?conta.dados:semLogin;
 function normaliza(d){d=d&&typeof d==='object'?d:{};d.acertos=Number(d.acertos)||0;d.respondidas=Number(d.respondidas)||0;d.resp=d.resp||{};d.jogos=d.jogos||{};return d;}
@@ -1796,7 +1931,7 @@ async function contaEntrar(nick,cod,lembrar){
   const r=await api({acao:'entrar',nick,codigo:cod});
   if(!r||!r.ok)throw new Error((r&&r.erro)||'Não foi possível entrar.');
   conta.nick=r.nick;conta.cod=cod;conta.dados=normaliza(r.perfil);conta.ajuda=!!r.ajuda;conta.lido=Date.now();
-  conta.antigo=!r.perfil||(Number(r.versao)||0)<4;   // servidor ainda com o Apps Script antigo
+  conta.antigo=!r.perfil||(Number(r.versao)||0)<5;   // servidor ainda com o Apps Script antigo
   try{if(lembrar)localStorage.setItem(LOGIN_KEY,JSON.stringify({nick:r.nick,cod}));else localStorage.removeItem(LOGIN_KEY);}catch(e){}
   contaMudou();return r;
 }
@@ -2585,7 +2720,370 @@ $('#xz-tab').onclick=e=>{
 $('#xz-novo').onclick=xzNovo;$('#xz-dif').onchange=xzNovo;
 /* regras abertas no computador; no celular ficam recolhidas para o tabuleiro aparecer logo */
 if(innerWidth>700)document.querySelectorAll('details.regras').forEach(d=>d.open=true);
-const INIT={domino:doNovo,trilha:trNovo,dama:dmNovo,xadrez:xzNovo,cacapalavras:wsNovo,cruzadinha:cwNovo,sudoku:sdNovo,criptograma:crNovo,embaralhadas:emNovo,labirinto:lbNovo,quiz:qzNovo,mapa:mpNovo};
+/* ================= REVERSI ================= */
+const RV_PESO=[100,-20,10,5,5,10,-20,100,-20,-50,-2,-2,-2,-2,-50,-20,10,-2,1,1,1,1,-2,10,5,-2,1,0,0,1,-2,5,5,-2,1,0,0,1,-2,5,10,-2,1,1,1,1,-2,10,-20,-50,-2,-2,-2,-2,-50,-20,100,-20,10,5,5,10,-20,100];
+const RV_D=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+function rvVira(b,sq,l){const r=sq>>3,c=sq&7,res=[];if(b[sq])return res;
+  for(const[dr,dc]of RV_D){let rr=r+dr,cc=c+dc;const t=[];while(rr>=0&&rr<8&&cc>=0&&cc<8&&b[rr*8+cc]===-l){t.push(rr*8+cc);rr+=dr;cc+=dc;}
+    if(t.length&&rr>=0&&rr<8&&cc>=0&&cc<8&&b[rr*8+cc]===l)res.push(...t);}return res;}
+function rvLances(b,l){const ms=[];for(let i=0;i<64;i++){const v=rvVira(b,i,l);if(v.length)ms.push({i,v});}return ms;}
+function rvFaz(b,m,l){b=b.slice();b[m.i]=l;m.v.forEach(x=>b[x]=l);return b;}
+function rvAval(b,l){let v=0,n=0;for(let i=0;i<64;i++){if(b[i]){v+=b[i]*RV_PESO[i];n++;}}
+  const mob=rvLances(b,1).length-rvLances(b,-1).length;
+  if(n>54)v=b.reduce((a,x)=>a+x,0)*10;return l*(v+mob*8);}
+function rvBusca(b,l,p,a,be){
+  const ms=rvLances(b,l);
+  if(!ms.length){if(!rvLances(b,-l).length){const s=b.reduce((x,y)=>x+y,0)*l;return s>0?100000+s:s<0?-100000+s:0;}return -rvBusca(b,-l,p,-be,-a);}
+  if(!p)return rvAval(b,l);
+  ms.sort((x,y)=>RV_PESO[y.i]-RV_PESO[x.i]);
+  for(const m of ms){const v=-rvBusca(rvFaz(b,m,l),-l,p-1,-be,-a);if(v>a)a=v;if(a>=be)break;}return a;}
+function rvMelhor(b,l,p,ruido=0){let mel=null,mv=-Infinity;for(const m of shuffle(rvLances(b,l))){const v=-rvBusca(rvFaz(b,m,l),-l,p-1,-Infinity,Infinity)+Math.random()*ruido;if(v>mv){mv=v;mel=m;}}return mel;}
+let rv={};
+function rvNovo(){const b=Array(64).fill(0);b[27]=b[36]=-1;b[28]=b[35]=1;rv={b,fim:false,ult:-1,dica:null,pensa:false};msg('#rv-msg','Você joga com as pretas ⚫. Sua vez!');rvDesenha();}
+function rvDesenha(){
+  const ms=!rv.fim&&!rv.pensa?rvLances(rv.b,1):[];
+  if(ajuda()&&ms.length&&!rv.dica)rv.dica=rvMelhor(rv.b,1,3);
+  $('#rv-tab').innerHTML=rv.b.map((v,i)=>`<div class="tb-c rv ${ms.some(m=>m.i===i)?'alvo':''} ${i===rv.ult?'ult':''} ${ajuda()&&rv.dica&&rv.dica.i===i?'aj':''}" data-i="${i}">${v?`<span class="rv-p ${v>0?'pt':'bc'}"></span>`:''}</div>`).join('');
+  const n1=rv.b.filter(x=>x===1).length,n2=rv.b.filter(x=>x===-1).length;$('#rv-info').textContent=`Você ⚫ ${n1} × ${n2} ⚪ Computador`;
+}
+function rvFim(){
+  if(rvLances(rv.b,1).length||rvLances(rv.b,-1).length)return false;
+  rv.fim=true;rvDesenha();const n1=rv.b.filter(x=>x===1).length,n2=rv.b.filter(x=>x===-1).length;
+  if(n1>n2){msg('#rv-msg',`🎉 Você venceu por ${n1} a ${n2}!`,'ok');ganhou('reversi');mostraFato('#rv-msg');}
+  else if(n1<n2)msg('#rv-msg',`O computador venceu por ${n2} a ${n1}.`,'erro');else msg('#rv-msg','Empate!');return true;
+}
+function rvPC(){
+  rv.pensa=true;rvDesenha();msg('#rv-msg','O computador está pensando…');
+  setTimeout(()=>{
+    const nv=$('#rv-dif').value;let txt='';
+    do{const m=rvMelhor(rv.b,-1,nv==='facil'?1:nv==='medio'?3:5,nv==='facil'?60:nv==='medio'?8:0);
+      if(!m)break;rv.b=rvFaz(rv.b,m,-1);rv.ult=m.i;
+      if(rvLances(rv.b,1).length)break;if(rvFim()){rv.pensa=false;return;}txt='Você não tem jogada e passou a vez. ';
+    }while(rvLances(rv.b,-1).length);
+    rv.pensa=false;rv.dica=null;rvDesenha();if(!rvFim())msg('#rv-msg',txt+'Sua vez.');
+  },60);
+}
+$('#rv-tab').onclick=e=>{const d=e.target.closest('[data-i]');if(!d||rv.fim||rv.pensa)return;
+  const m=rvLances(rv.b,1).find(m=>m.i===+d.dataset.i);if(!m)return msg('#rv-msg','Ali não vira nenhuma peça. Escolha uma casa marcada.','erro');
+  rv.b=rvFaz(rv.b,m,1);rv.ult=m.i;rv.dica=null;rvDesenha();if(rvFim())return;
+  if(!rvLances(rv.b,-1).length){msg('#rv-msg','O computador não tem jogada e passou. Sua vez de novo.');return;}
+  rvPC();};
+$('#rv-novo').onclick=rvNovo;$('#rv-dif').onchange=rvNovo;
+
+/* ================= LIG 4 ================= */
+const L4C=7,L4L=6;
+function l4Livre(b,c){for(let r=L4L-1;r>=0;r--)if(!b[r*L4C+c])return r;return -1;}
+function l4Venceu(b,l){
+  for(let r=0;r<L4L;r++)for(let c=0;c<L4C;c++)for(const[dr,dc]of[[0,1],[1,0],[1,1],[1,-1]]){let k=0;
+    for(;k<4;k++){const rr=r+dr*k,cc=c+dc*k;if(rr<0||rr>=L4L||cc<0||cc>=L4C||b[rr*L4C+cc]!==l)break;}
+    if(k===4)return[0,1,2,3].map(k=>(r+dr*k)*L4C+c+dc*k);}
+  return null;}
+function l4Aval(b,l){let v=0;
+  for(let r=0;r<L4L;r++)for(let c=0;c<L4C;c++)for(const[dr,dc]of[[0,1],[1,0],[1,1],[1,-1]]){
+    let a=0,o=0,ok=true;for(let k=0;k<4;k++){const rr=r+dr*k,cc=c+dc*k;if(rr<0||rr>=L4L||cc<0||cc>=L4C){ok=false;break;}const x=b[rr*L4C+cc];if(x===l)a++;else if(x)o++;}
+    if(!ok)continue;if(a&&!o)v+=a===3?50:a===2?5:1;if(o&&!a)v-=o===3?60:o===2?5:1;}
+  for(let r=0;r<L4L;r++)v+=(b[r*L4C+3]===l?4:b[r*L4C+3]?-4:0);return v;}
+const L4_ORD=[3,2,4,1,5,0,6];
+function l4Busca(b,l,p,a,be){
+  const cols=L4_ORD.filter(c=>l4Livre(b,c)>=0);if(!cols.length)return 0;
+  if(!p)return l4Aval(b,l);
+  for(const c of cols){const nb=b.slice();nb[l4Livre(b,c)*L4C+c]=l;
+    const v=l4Venceu(nb,l)?100000+p:-l4Busca(nb,-l,p-1,-be,-a);if(v>a)a=v;if(a>=be)break;}return a;}
+function l4Melhor(b,l,p,ruido=0){let mel=-1,mv=-Infinity;
+  for(const c of shuffle(L4_ORD.filter(c=>l4Livre(b,c)>=0))){const nb=b.slice();nb[l4Livre(b,c)*L4C+c]=l;
+    const v=(l4Venceu(nb,l)?100000+p:-l4Busca(nb,-l,p-1,-Infinity,Infinity))+Math.random()*ruido;if(v>mv){mv=v;mel=c;}}return mel;}
+let l4={};
+function l4Novo(){l4={b:Array(L4C*L4L).fill(0),fim:false,ult:-1,lin:null,dica:-1,pensa:false};msg('#l4-msg','Você joga com o vermelho 🔴. Toque numa coluna.');l4Desenha();}
+function l4Desenha(){
+  if(ajuda()&&!l4.fim&&!l4.pensa&&l4.dica<0)l4.dica=l4Melhor(l4.b,1,5);
+  $('#l4-tab').innerHTML=l4.b.map((v,i)=>{const c=i%L4C;return `<div class="l4-c ${l4.lin&&l4.lin.includes(i)?'lin':''} ${i===l4.ult?'ult':''}" data-c="${c}">${v?`<span class="l4-p ${v>0?'vm':'am'}"></span>`:''}${ajuda()&&i<L4C&&c===l4.dica?'<i class="l4-aj"></i>':''}</div>`;}).join('');
+}
+function l4Joga(c,l){const r=l4Livre(l4.b,c);l4.b[r*L4C+c]=l;l4.ult=r*L4C+c;l4.dica=-1;
+  const lin=l4Venceu(l4.b,l);if(lin){l4.lin=lin;l4.fim=true;l4Desenha();
+    if(l>0){msg('#l4-msg','🎉 Quatro em linha! Você venceu!','ok');ganhou('lig4');mostraFato('#l4-msg');}else msg('#l4-msg','O computador fez quatro em linha.','erro');return true;}
+  if(l4.b.every(Boolean)){l4.fim=true;l4Desenha();msg('#l4-msg','Empate: o tabuleiro encheu.');return true;}return false;}
+$('#l4-tab').onclick=e=>{const d=e.target.closest('[data-c]');if(!d||l4.fim||l4.pensa)return;const c=+d.dataset.c;
+  if(l4Livre(l4.b,c)<0)return msg('#l4-msg','Essa coluna está cheia.','erro');
+  if(l4Joga(c,1))return;l4.pensa=true;l4Desenha();msg('#l4-msg','O computador está pensando…');
+  setTimeout(()=>{const nv=$('#l4-dif').value;const m=l4Melhor(l4.b,-1,nv==='facil'?1:nv==='medio'?4:7,nv==='facil'?40:nv==='medio'?3:0);
+    l4.pensa=false;if(!l4Joga(m,-1)){l4Desenha();msg('#l4-msg','Sua vez.');}},60);};
+$('#l4-novo').onclick=l4Novo;$('#l4-dif').onchange=l4Novo;
+
+/* ================= MANCALA (Kalah, 6 covas e 4 sementes) ================= */
+// a[0..5] suas covas (da esquerda para a direita), a[6] seu depósito, a[7..12] covas do computador, a[13] depósito dele
+function mcSemeia(a,i,eu){a=a.slice();let n=a[i];a[i]=0;let p=i;const pular=eu?13:6;
+  while(n){p=(p+1)%14;if(p===pular)continue;a[p]++;n--;}
+  const meuLado=eu?(p>=0&&p<=5):(p>=7&&p<=12),dep=eu?6:13;
+  if(meuLado&&a[p]===1&&a[12-p]>0){a[dep]+=a[12-p]+1;a[p]=0;a[12-p]=0;}
+  let extra=p===dep;
+  const s1=a.slice(0,6).reduce((x,y)=>x+y,0),s2=a.slice(7,13).reduce((x,y)=>x+y,0);let fim=false;
+  if(!s1||!s2){a[6]+=s1;a[13]+=s2;for(let k=0;k<13;k++)if(k!==6)a[k]=0;fim=true;extra=false;}
+  return {a,extra,fim};}
+function mcLances(a,eu){const r=[];for(let k=0;k<6;k++){const i=eu?k:7+k;if(a[i])r.push(i);}return r;}
+function mcBusca(a,eu,p,al,be){ // valor para quem joga (eu=true: você)
+  const ms=mcLances(a,eu);if(!ms.length||!p)return eu?a[6]-a[13]:a[13]-a[6];
+  for(const i of ms){const r=mcSemeia(a,i,eu);let v;
+    if(r.fim)v=(eu?r.a[6]-r.a[13]:r.a[13]-r.a[6])*100;else if(r.extra)v=mcBusca(r.a,eu,p-1,al,be);else v=-mcBusca(r.a,!eu,p-1,-be,-al);
+    if(v>al)al=v;if(al>=be)break;}return al;}
+function mcMelhor(a,eu,p,ruido=0){let mel=-1,mv=-Infinity;for(const i of shuffle(mcLances(a,eu))){const r=mcSemeia(a,i,eu);
+  const v=(r.fim?(eu?r.a[6]-r.a[13]:r.a[13]-r.a[6])*100:r.extra?mcBusca(r.a,eu,p-1,-Infinity,Infinity):-mcBusca(r.a,!eu,p-1,-Infinity,Infinity))+Math.random()*ruido;if(v>mv){mv=v;mel=i;}}return mel;}
+let mc={};
+function mcNovo(){mc={a:[4,4,4,4,4,4,0,4,4,4,4,4,4,0],fim:false,pensa:false,ult:-1,dica:-1};msg('#mc-msg','Suas covas são as de baixo. Toque numa cova para semear.');mcDesenha();}
+function mcDesenha(){
+  const a=mc.a;if(ajuda()&&!mc.fim&&!mc.pensa&&mc.dica<0)mc.dica=mcMelhor(a,true,6);
+  const cova=(i,eu)=>`<div class="mc-cova ${eu&&a[i]&&!mc.fim?'pode':''} ${i===mc.ult?'ult':''} ${ajuda()&&i===mc.dica?'aj':''}" ${eu?`data-i="${i}"`:''}><b>${a[i]}</b><span class="mc-sem">${'•'.repeat(Math.min(a[i],12))}</span></div>`;
+  $('#mc-tab').innerHTML=`<div class="mc-dep">${a[13]}<small>PC</small></div>
+    <div class="mc-lin">${[12,11,10,9,8,7].map(i=>cova(i,false)).join('')}</div>
+    <div class="mc-lin">${[0,1,2,3,4,5].map(i=>cova(i,true)).join('')}</div>
+    <div class="mc-dep mc-eu">${a[6]}<small>Você</small></div>`;
+}
+function mcConfereFim(r){if(!r.fim)return false;mc.fim=true;mcDesenha();const e=mc.a[6],p=mc.a[13];
+  if(e>p){msg('#mc-msg',`🎉 Você venceu por ${e} a ${p}!`,'ok');ganhou('mancala');mostraFato('#mc-msg');}
+  else if(e<p)msg('#mc-msg',`O computador venceu por ${p} a ${e}.`,'erro');else msg('#mc-msg',`Empate: ${e} a ${p}.`);return true;}
+function mcPC(){mc.pensa=true;mcDesenha();msg('#mc-msg','O computador está pensando…');
+  setTimeout(function vez(){const nv=$('#mc-dif').value;const i=mcMelhor(mc.a,false,nv==='facil'?1:nv==='medio'?4:10,nv==='facil'?8:nv==='medio'?1:0);
+    const r=mcSemeia(mc.a,i,false);mc.a=r.a;mc.ult=i;mcDesenha();if(mcConfereFim(r)){mc.pensa=false;return;}
+    if(r.extra){msg('#mc-msg','A última semente do computador caiu no depósito dele: ele joga de novo…');setTimeout(vez,700);return;}
+    mc.pensa=false;mc.dica=-1;mcDesenha();msg('#mc-msg','Sua vez.');},500);}
+$('#mc-tab').onclick=e=>{const d=e.target.closest('[data-i]');if(!d||mc.fim||mc.pensa)return;const i=+d.dataset.i;if(!mc.a[i])return;
+  const r=mcSemeia(mc.a,i,true);mc.a=r.a;mc.ult=i;mc.dica=-1;mcDesenha();if(mcConfereFim(r))return;
+  if(r.extra)return msg('#mc-msg','A última semente caiu no seu depósito: jogue de novo!','ok');mcPC();};
+$('#mc-novo').onclick=mcNovo;$('#mc-dif').onchange=mcNovo;
+
+/* ================= BATALHA NAVAL ================= */
+const BN_N=10,BN_NAVIOS=[5,4,3,3,2];
+function bnFrota(){const g=Array(100).fill(-1),nav=[];
+  for(const[t,tam]of BN_NAVIOS.entries()){for(;;){const h=Math.random()<.5,r=rnd(h?10:11-tam),c=rnd(h?11-tam:10),cs=[];
+    for(let k=0;k<tam;k++)cs.push((r+(h?0:k))*10+c+(h?k:0));
+    if(cs.every(i=>g[i]<0)){cs.forEach(i=>g[i]=t);nav.push(cs);break;}}}
+  return {g,nav,tiros:Array(100).fill(0)};}
+const bnAfundou=(f,t)=>f.nav[t].every(i=>f.tiros[i]);
+const bnPerdeu=f=>f.nav.every((_,t)=>bnAfundou(f,t));
+function bnTiroPC(nv){
+  const f=bn.eu,livres=[...Array(100).keys()].filter(i=>!f.tiros[i]);
+  if(nv==='facil')return livres[rnd(livres.length)];
+  const acertoAberto=livres.length&&[...Array(100).keys()].filter(i=>f.tiros[i]&&f.g[i]>=0&&!bnAfundou(f,f.g[i]));
+  const viz=i=>[i-10,i+10,i%10?i-1:-1,i%10<9?i+1:-1].filter(x=>x>=0&&x<100);
+  if(acertoAberto.length){ // caça: continua na linha dos acertos
+    let cand=[];
+    for(const a of acertoAberto)for(const b of acertoAberto){if(a===b)continue;const d=b-a;if(d===1||d===10){
+      for(let x=a-d;x>=0&&x<100&&(d===10||Math.floor(x/10)===Math.floor(a/10));x-=d){if(!f.tiros[x]){cand.push(x);break;}if(!(f.g[x]>=0))break;}
+      for(let x=b+d;x>=0&&x<100&&(d===10||Math.floor(x/10)===Math.floor(b/10));x+=d){if(!f.tiros[x]){cand.push(x);break;}if(!(f.g[x]>=0))break;}}}
+    if(!cand.length)cand=acertoAberto.flatMap(viz).filter(x=>!f.tiros[x]);
+    if(cand.length)return cand[rnd(cand.length)];
+  }
+  if(nv==='medio'){const par=livres.filter(i=>(Math.floor(i/10)+i%10)%2===0);return (par.length?par:livres)[rnd((par.length?par:livres).length)];}
+  // difícil: mapa de probabilidade dos navios que ainda não afundaram
+  const restam=f.nav.map((n,t)=>bnAfundou(f,t)?0:n.length).filter(Boolean),dens=Array(100).fill(0);
+  for(const tam of restam)for(let r=0;r<10;r++)for(let c=0;c<10;c++)for(const h of[0,1]){
+    const cs=[];for(let k=0;k<tam;k++){const rr=r+(h?0:k),cc=c+(h?k:0);if(rr>9||cc>9){cs.length=0;break;}cs.push(rr*10+cc);}
+    if(cs.length===tam&&cs.every(i=>!f.tiros[i]||(f.g[i]>=0&&!bnAfundou(f,f.g[i])&&false)))cs.forEach(i=>dens[i]++);}
+  let mx=-1,best=[];for(const i of livres){if(dens[i]>mx){mx=dens[i];best=[i];}else if(dens[i]===mx)best.push(i);}return best[rnd(best.length)];
+}
+let bn={};
+function bnNovo(){bn={eu:bnFrota(),pc:bnFrota(),fim:false,vez:1,ultPC:-1};bnDica();msg('#bn-msg','Seus navios já estão posicionados. Toque no mar do computador para atirar.');bnDesenha();}
+function bnDica(){bn.dica=-1;if(!ajuda())return;const l=bn.pc.nav.flat().filter(i=>!bn.pc.tiros[i]);if(l.length)bn.dica=l[rnd(l.length)];}
+function bnGrade(f,meu){return [...Array(100).keys()].map(i=>{const t=f.tiros[i],nav=f.g[i]>=0,cl=['bn-c'];
+  if(t)cl.push(nav?(bnAfundou(f,f.g[i])?'afund':'fogo'):'agua');if(meu&&nav)cl.push('navio');if(!meu&&!t&&!bn.fim)cl.push('mira');
+  if(meu&&i===bn.ultPC)cl.push('ult');if(!meu&&ajuda()&&i===bn.dica)cl.push('aj');if(!meu&&bn.fim&&nav&&!t)cl.push('navio');
+  return `<div class="${cl.join(' ')}" ${meu?'':`data-i="${i}"`}>${t?(nav?'✹':'•'):''}</div>`;}).join('');}
+function bnDesenha(){$('#bn-pc').innerHTML=bnGrade(bn.pc,false);$('#bn-eu').innerHTML=bnGrade(bn.eu,true);
+  const af=f=>f.nav.filter((_,t)=>bnAfundou(f,t)).length;$('#bn-info').textContent=`Navios afundados — seus: ${af(bn.pc)}/5 · do computador: ${af(bn.eu)}/5`;}
+$('#bn-pc').onclick=e=>{const d=e.target.closest('[data-i]');if(!d||bn.fim||bn.vez!==1)return;const i=+d.dataset.i;if(bn.pc.tiros[i])return;
+  bn.pc.tiros[i]=1;const t=bn.pc.g[i];let txt=t<0?'Água.':bnAfundou(bn.pc,t)?`Afundou um navio de ${bn.pc.nav[t].length} casas!`:'Fogo! Acertou um navio.';
+  if(bn.dica===i||t>=0)bnDica();
+  if(bnPerdeu(bn.pc)){bn.fim=true;bnDesenha();msg('#bn-msg','🎉 Você afundou toda a frota! Venceu!','ok');ganhou('batalhanaval');mostraFato('#bn-msg');return;}
+  if(t>=0){bnDesenha();return msg('#bn-msg',txt+' Acertou: atire de novo.','ok');}
+  bn.vez=-1;bnDesenha();msg('#bn-msg',txt+' Vez do computador…');
+  setTimeout(function pc(){const k=bnTiroPC($('#bn-dif').value);bn.eu.tiros[k]=1;bn.ultPC=k;const tt=bn.eu.g[k];
+    if(bnPerdeu(bn.eu)){bn.fim=true;bnDesenha();msg('#bn-msg','O computador afundou toda a sua frota.','erro');return;}
+    bnDesenha();if(tt>=0){msg('#bn-msg',bnAfundou(bn.eu,tt)?'O computador afundou um navio seu! Ele atira de novo…':'O computador acertou um navio seu! Ele atira de novo…','erro');setTimeout(pc,700);return;}
+    bn.vez=1;msg('#bn-msg','O computador errou. Sua vez.');},600);};
+$('#bn-novo').onclick=bnNovo;$('#bn-dif').onchange=bnNovo;
+/* ================= ESCAPE: O ARQUIVO HISTÓRICO ================= */
+// Cada sala tem objetos. Um objeto pode mostrar uma pista, pedir um código, exigir um item ou abrir um mini-desafio.
+const ES_SALAS=[
+ {nome:'Sala 1 — A Biblioteca',intro:'Você acordou trancado na biblioteca de um velho arquivo histórico. A porta tem fechadura. Procure pistas.',
+  obj:[
+   {id:'estante',ic:'📚',nome:'Estante',txt:'Três livros grossos estão em pé: um <b style="color:#15803d">verde</b>, um <b style="color:#1d4ed8">azul</b> e um <b style="color:#b91c1c">vermelho</b>. Na lombada de cada um há um número: verde <b>4</b>, azul <b>7</b>, vermelho <b>2</b>. Eles estão fora de ordem.'},
+   {id:'bilhete',ic:'📝',nome:'Bilhete na mesa',txt:'"Arrume os livros e leia os números da esquerda para a direita.<br>• O azul fica entre os outros dois.<br>• O vermelho não fica na ponta esquerda."'},
+   {id:'cofre',ic:'🔒',nome:'Cofrinho',cod:'472',dig:3,txt:'Um cofrinho com cadeado de 3 números.',ok:'O cofre abriu! Dentro havia uma <b>chave de bronze</b> 🗝️.',da:'chave'},
+   {id:'quadro',ic:'🖼️',nome:'Quadro',txt:'Uma gravura antiga da Biblioteca de Alexandria. Atrás dela, só poeira.'},
+   {id:'porta',ic:'🚪',nome:'Porta',precisa:'chave',txt:'A porta está trancada. Precisa de uma chave.',ok:'A chave de bronze serviu! A porta rangeu e se abriu.',sai:true}
+  ]},
+ {nome:'Sala 2 — O Arquivo',intro:'Corredores de pastas e um painel de luzes na parede. A próxima porta tem um teclado de 6 dígitos.',
+  obj:[
+   {id:'painel',ic:'💡',nome:'Painel de luzes',luzes:true,txt:'Nove lâmpadas. Ao tocar numa, ela e as vizinhas (cima, baixo e lados) trocam de estado. Apague todas.',ok:'Todas as luzes se apagaram! Uma gaveta do arquivo se destravou com um clique.',da:'gaveta'},
+   {id:'gaveta',ic:'🗄️',nome:'Gaveta do arquivo',precisa:'gaveta',txt:'A gaveta está travada. Talvez algo na sala a destrave.',ok:'Dentro da gaveta há três fichas:<br>• <b>Proclamação da República</b> — 1889<br>• <b>Independência do Brasil</b> — 1822<br>• <b>Lei Áurea</b> — 1888',fica:true},
+   {id:'nota',ic:'📜',nome:'Nota colada no teclado',txt:'"Ponha as fichas em ordem cronológica, da mais antiga para a mais nova. Junte os dois últimos dígitos de cada ano."'},
+   {id:'mapa',ic:'🗺️',nome:'Mapa na parede',txt:'Um mapa do Império do Brasil em 1822. Bonito, mas não esconde nada.'},
+   {id:'porta',ic:'🔢',nome:'Teclado da porta',cod:'228889',dig:6,txt:'Uma porta com teclado de 6 dígitos.',ok:'Bipe! A porta destravou.',sai:true}
+  ]},
+ {nome:'Sala 3 — A Sala do Relógio',intro:'Última sala! Um relógio parado, uma balança e uma porta com cadeado de 3 números.',
+  obj:[
+   {id:'relogio',ic:'🕰️',nome:'Relógio parado',txt:'Os ponteiros pararam marcando <b>3 horas e 15 minutos</b>.'},
+   {id:'balanca',ic:'⚖️',nome:'Balança',txt:'Ao lado da balança há 9 moedas iguais e um cartão: "Uma das moedas é mais pesada. Qual é o menor número de pesagens que <b>sempre</b> garante achar a pesada?"',pergunta:{op:['1','2','3','4'],certa:'2',ok:'Isso: separe em 3 grupos de 3. A primeira pesagem mostra o grupo pesado; a segunda, a moeda. Escrito no verso do cartão: "o último número do cadeado é a resposta".'}},
+   {id:'diario',ic:'📔',nome:'Diário',txt:'Na última página: "Multiplique as horas pelos minutos do relógio. Esse resultado são os dois primeiros números."'},
+   {id:'janela',ic:'🪟',nome:'Janela',txt:'Gradeada. Lá fora, a cidade dorme.'},
+   {id:'porta',ic:'🔐',nome:'Cadeado final',cod:'452',dig:3,txt:'O cadeado da saída: 3 números.',ok:'O cadeado abriu! Você escapou do Arquivo Histórico!',sai:true}
+  ]}
+];
+let es={};
+function esNovo(){es={sala:0,itens:new Set(),feito:new Set(),t0:Date.now(),fim:false,luzes:null};esSala();}
+function esSala(){const S=ES_SALAS[es.sala];$('#es-titulo').textContent=S.nome;$('#es-painel').innerHTML=`<p>${S.intro}</p>`;limpaFato();msg('#es-msg','');esDesenha();}
+function esDesenha(){
+  const S=ES_SALAS[es.sala];
+  $('#es-obj').innerHTML=S.obj.map(o=>`<button class="es-o ${es.feito.has(es.sala+o.id)?'feito':''}" data-o="${o.id}"><span>${o.ic}</span>${o.nome}</button>`).join('');
+  $('#es-inv').innerHTML='Mochila: '+([...es.itens].map(i=>({chave:'🗝️ chave de bronze',gaveta:'🔓 gaveta destravada'})[i]).join(', ')||'vazia');
+}
+function esAbre(id){
+  const S=ES_SALAS[es.sala],o=S.obj.find(x=>x.id===id),k=es.sala+o.id,p=$('#es-painel');
+  let h=`<h4>${o.ic} ${o.nome}</h4>`;
+  if(es.feito.has(k)&&o.fica)h+=`<p>${o.ok}</p>`;
+  else if(es.feito.has(k)&&!o.sai)h+=`<p>${o.ok||o.txt}</p>`;
+  else if(o.precisa){if(es.itens.has(o.precisa)){es.feito.add(k);h+=`<p>${o.ok}</p>`;if(o.sai)return esPassa(o);}else h+=`<p>${o.txt}</p>`;}
+  else if(o.cod){h+=`<p>${o.txt}</p><div class="es-cod"><input id="es-in" inputmode="numeric" maxlength="${o.dig}" placeholder="${ajuda()?o.cod:'_'.repeat(o.dig)}" autocomplete="off"><button class="prim" id="es-ok">Tentar</button></div>`;}
+  else if(o.luzes){if(!es.luzes){es.luzes=ES_LUZ_INI.slice();}h+=`<p>${o.txt}</p><div class="es-luzes">${es.luzes.map((v,i)=>`<button data-l="${i}" class="${v?'on':''} ${ajuda()&&ES_LUZ_SOL.includes(i)?'aj':''}"></button>`).join('')}</div>`;}
+  else if(o.pergunta){h+=`<p>${o.txt}</p><div class="es-cod">${o.pergunta.op.map(x=>`<button data-r="${x}" class="${ajuda()&&x===o.pergunta.certa?'aj':''}">${x}</button>`).join('')}</div>`;}
+  else h+=`<p>${o.txt}</p>`;
+  p.innerHTML=h;
+  if(o.cod){const inp=$('#es-in');inp.focus();const tenta=()=>{if(inp.value.trim()===o.cod){es.feito.add(k);if(o.da)es.itens.add(o.da);p.innerHTML=`<h4>${o.ic} ${o.nome}</h4><p>${o.ok}</p>`;esDesenha();if(o.sai)esPassa(o);}else{msg('#es-msg','Código errado. Procure mais pistas.','erro');inp.select();}};
+    $('#es-ok').onclick=tenta;inp.onkeydown=e=>{if(e.key==='Enter')tenta();};}
+  if(o.luzes)p.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>{const i=+b.dataset.l,r=Math.floor(i/3),c=i%3;
+    for(const[dr,dc]of[[0,0],[1,0],[-1,0],[0,1],[0,-1]]){const rr=r+dr,cc=c+dc;if(rr>=0&&rr<3&&cc>=0&&cc<3)es.luzes[rr*3+cc]^=1;}
+    if(es.luzes.every(v=>!v)){es.feito.add(k);es.itens.add(o.da);esDesenha();p.innerHTML=`<h4>${o.ic} ${o.nome}</h4><p>${o.ok}</p>`;}else esAbre(id);});
+  if(o.pergunta)p.querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{if(b.dataset.r===o.pergunta.certa){es.feito.add(k);o.ok=o.pergunta.ok;p.innerHTML=`<h4>${o.ic} ${o.nome}</h4><p>${o.pergunta.ok}</p>`;esDesenha();}else msg('#es-msg','Não é isso. Pense em dividir as moedas em grupos.','erro');});
+  msg('#es-msg','');esDesenha();
+}
+// solução das luzes iniciais [1,0,1,0,1,0,1,0,1]: tocar nas 4 bordas do meio e no centro? (conferida no teste)
+const esToca=(l,i)=>{const r=Math.floor(i/3),c=i%3;for(const[dr,dc]of[[0,0],[1,0],[-1,0],[0,1],[0,-1]]){const rr=r+dr,cc=c+dc;if(rr>=0&&rr<3&&cc>=0&&cc<3)l[rr*3+cc]^=1;}};
+const ES_LUZ_INI=Array(9).fill(0);[0,4,8].forEach(i=>esToca(ES_LUZ_INI,i)); // começa como se alguém tivesse tocado na diagonal
+let ES_LUZ_SOL=[];
+(function(){for(let m=0;m<512;m++){const l=ES_LUZ_INI.slice();const t=[];for(let i=0;i<9;i++)if(m>>i&1){t.push(i);const r=Math.floor(i/3),c=i%3;for(const[dr,dc]of[[0,0],[1,0],[-1,0],[0,1],[0,-1]]){const rr=r+dr,cc=c+dc;if(rr>=0&&rr<3&&cc>=0&&cc<3)l[rr*3+cc]^=1;}}
+  if(l.every(v=>!v)&&(!ES_LUZ_SOL.length||t.length<ES_LUZ_SOL.length))ES_LUZ_SOL=t;}})();
+function esPassa(o){
+  if(es.sala<ES_SALAS.length-1){if($('#es-prox'))return;msg('#es-msg','🚪 '+'Porta aberta! Toque em "Próxima sala".','ok');
+    $('#es-painel').insertAdjacentHTML('beforeend','<button class="prim" id="es-prox">Próxima sala →</button>');
+    $('#es-prox').onclick=()=>{es.sala++;es.luzes=null;esSala();};return;}
+  es.fim=true;const t=Date.now()-es.t0;msg('#es-msg',`🎉 Você escapou em ${tempo(t)}!`,'ok');ganhou('escape',{tempo:t});mostraFato('#es-msg');
+}
+$('#es-obj').onclick=e=>{const b=e.target.closest('[data-o]');if(b&&!es.fim)esAbre(b.dataset.o);};
+$('#es-novo').onclick=esNovo;
+/* ================= OS TRÊS HERÓIS (inspirado em jogos de cooperação entre personagens) ================= */
+// # parede · X parede rachada · D porta · H escada · ^ espinhos · S botão · E saída · b caixa · a/f/e heróis
+const HR_INFO={a:{ic:'🏃',nome:'Lia, a Ágil',hab:'sobe degraus de 1 bloco'},f:{ic:'💪',nome:'Bruno, o Forte',hab:'quebra parede rachada e empurra caixas'},e:{ic:'🛡️',nome:'Caio, o Escudo',hab:'anda sobre espinhos sem se machucar'}};
+const HR_FASES=[
+ {nome:'1. Todos para a saída',dica:'Escolha um herói e ande. Os três precisam chegar às bandeiras 🏁.',m:[
+  '############',
+  '#..........#',
+  '#afe....EEE#',
+  '############']},
+ {nome:'2. O botão',dica:'Só a Lia sobe degraus de 1 bloco. O botão abre a porta para todos.',m:[
+  '##############',
+  '#............#',
+  '#S...........#',
+  '##.afe..D.EEE#',
+  '##############']},
+ {nome:'3. A parede rachada',dica:'O Bruno derruba paredes rachadas andando contra elas.',m:[
+  '#############',
+  '#.....X.....#',
+  '#afe..X..EEE#',
+  '#############']},
+ {nome:'4. O poço de espinhos',dica:'O Caio aguenta os espinhos. Quem pisa em cima de um herói não cai.',m:[
+  '##############',
+  '#............#',
+  '#afe.....EEE.#',
+  '#######^H#####',
+  '##############']},
+ {nome:'5. A caixa no buraco',dica:'Empurre a caixa para dentro do buraco e use-a como ponte.',m:[
+  '##############',
+  '#............#',
+  '#afeb....EEE.#',
+  '#######.######',
+  '##############']},
+ {nome:'6. Trabalho em equipe',dica:'Agora é tudo junto: parede rachada, espinhos e o botão. Cada herói tem sua vez!',m:[
+  '################',
+  '#..............#',
+  '#..............#',
+  '#....X........S#',
+  '#afe.X....DEEE##',
+  '########^H######',
+  '################']}
+];
+function hrCarrega(n){
+  const m=HR_FASES[n].m,g=m.map(l=>[...l]),h={},cx=[];
+  g.forEach((l,r)=>l.forEach((ch,c)=>{if('afe'.includes(ch)){h[ch]=[r,c];l[c]='.';}else if(ch==='b'){cx.push([r,c]);l[c]='.';}}));
+  return {g,h,cx,qb:[],porta:false,morto:null};
+}
+const hrClone=s=>({g:s.g,h:{a:[...s.h.a],f:[...s.h.f],e:[...s.h.e]},cx:s.cx.map(x=>[...x]),qb:[...s.qb],porta:s.porta,morto:null});
+const hrTile=(s,r,c)=>{const t=s.g[r][c];if(t==='X'&&s.qb.some(q=>q[0]===r&&q[1]===c))return '.';if(t==='D'&&s.porta)return '.';return t;};
+const hrHeroi=(s,r,c)=>Object.keys(s.h).find(k=>s.h[k][0]===r&&s.h[k][1]===c);
+const hrCaixa=(s,r,c)=>s.cx.findIndex(x=>x[0]===r&&x[1]===c);
+const hrSolido=t=>t==='#'||t==='X'||t==='D';
+function hrLivre(s,r,c){return !hrSolido(hrTile(s,r,c))&&!hrHeroi(s,r,c)&&hrCaixa(s,r,c)<0;}
+function hrGravidade(s){
+  for(let mudou=true;mudou;){mudou=false;
+    for(const k of['a','f','e']){const[r,c]=s.h[k];if(hrTile(s,r,c)==='H')continue;const t=hrTile(s,r+1,c);
+      if(!hrSolido(t)&&t!=='H'&&!hrHeroi(s,r+1,c)&&hrCaixa(s,r+1,c)<0){s.h[k]=[r+1,c];mudou=true;}}
+    for(const x of s.cx){const t=hrTile(s,x[0]+1,x[1]);if(!hrSolido(t)&&!hrHeroi(s,x[0]+1,x[1])&&hrCaixa(s,x[0]+1,x[1])<0){x[0]++;mudou=true;}}}
+  for(const k of['a','f','e']){const[r,c]=s.h[k];const t=hrTile(s,r,c);if(t==='^'&&k!=='e')s.morto=k;if(t==='S')s.porta=true;}
+}
+function hrMove(s0,k,d){ // d: 'e' esquerda, 'd' direita, 'c' cima, 'b' baixo. Retorna novo estado ou null
+  const s=hrClone(s0),[r,c]=s.h[k];
+  if(d==='e'||d==='d'){const dc=d==='e'?-1:1,nc=c+dc,t=hrTile(s,r,nc);
+    if(hrLivre(s,r,nc))s.h[k]=[r,nc];
+    else if(hrHeroi(s,r,nc)&&!hrSolido(t)){const o=hrHeroi(s,r,nc);s.h[o]=[r,c];s.h[k]=[r,nc];} // heróis trocam de lugar
+    else if(k==='f'&&t==='X'){s.qb.push([r,nc]);}
+    else if(k==='f'&&hrCaixa(s,r,nc)>=0&&hrLivre(s,r,nc+dc)){s.cx[hrCaixa(s,r,nc)][1]+=dc;s.h[k]=[r,nc];}
+    else if(k==='a'&&hrLivre(s,r-1,c)&&hrLivre(s,r-1,nc))s.h[k]=[r-1,nc];
+    else return null;}
+  else if(d==='c'){if((hrTile(s,r,c)==='H'||hrTile(s,r-1,c)==='H')&&hrLivre(s,r-1,c))s.h[k]=[r-1,c];else return null;}
+  else{if((hrTile(s,r,c)==='H'||hrTile(s,r+1,c)==='H')&&hrLivre(s,r+1,c))s.h[k]=[r+1,c];else return null;}
+  hrGravidade(s);return s;
+}
+const hrVenceu=s=>['a','f','e'].every(k=>hrTile(s,...s.h[k])==='E');
+const hrChave=s=>['a','f','e'].map(k=>s.h[k].join(',')).join('|')+'|'+s.cx.map(x=>x.join(',')).sort().join(';')+'|'+s.qb.map(x=>x.join(',')).sort().join(';')+'|'+(s.porta?1:0);
+function hrResolve(s0,lim=200000){ // busca em largura: devolve a lista de lances até a vitória
+  const vis=new Set([hrChave(s0)]),fila=[[s0,[]]];
+  for(let i=0;i<fila.length&&i<lim;i++){const[s,cam]=fila[i];if(hrVenceu(s))return cam;
+    for(const k of['a','f','e'])for(const d of['e','d','c','b']){const n=hrMove(s,k,d);if(!n||n.morto)continue;const ch=hrChave(n);if(vis.has(ch))continue;vis.add(ch);fila.push([n,[...cam,[k,d]]]);}}
+  return null;
+}
+let hr={};
+function hrNovo(n){if(n==null)n=hr.fase||0;$('#hr-sel').value=n;hr={fase:n,s:hrCarrega(n),sel:'a',hist:[],lances:0,fim:false,dica:null};
+  $('#hr-fase').textContent=HR_FASES[n].nome;msg('#hr-msg',HR_FASES[n].dica);limpaFato();hrDesenha();}
+function hrDesenha(){
+  const s=hr.s;
+  if(ajuda()&&!hr.fim&&!hr.dica){const sol=hrResolve(s,60000);hr.dica=sol&&sol[0];}
+  $('#hr-tab').style.gridTemplateColumns=`repeat(${s.g[0].length},1fr)`;
+  $('#hr-tab').innerHTML=s.g.map((l,r)=>l.map((_,c)=>{const t=hrTile(s,r,c),k=hrHeroi(s,r,c),cx=hrCaixa(s,r,c)>=0;
+    const cl={'#':'pd','X':'rach','D':'porta','H':'esc','^':'esp','S':s.porta?'bot on':'bot','E':'sai'}[t]||'';
+    return `<div class="hr-c ${cl} ${k&&k===hr.sel?'sel':''}" ${k?`data-k="${k}"`:''}>${k?HR_INFO[k].ic:cx?'📦':t==='E'?'🏁':t==='^'?'▲':t==='H'?'🪜':t==='D'?'🚪':''}</div>`;}).join('')).join('');
+  $('#hr-herois').innerHTML=['a','f','e'].map(k=>`<button data-k="${k}" class="${k===hr.sel?'prim':''} ${ajuda()&&hr.dica&&hr.dica[0]===k&&k!==hr.sel?'aj':''}">${HR_INFO[k].ic} ${HR_INFO[k].nome.split(',')[0]}</button>`).join('');
+  document.querySelectorAll('#hr-setas [data-d]').forEach(b=>b.classList.toggle('aj',!!(ajuda()&&hr.dica&&hr.dica[0]===hr.sel&&hr.dica[1]===b.dataset.d)));
+  $('#hr-info').innerHTML=`<b>${HR_INFO[hr.sel].ic} ${HR_INFO[hr.sel].nome}</b>: ${HR_INFO[hr.sel].hab}. · Lances: ${hr.lances}`;
+  $('#hr-prox').style.display=hr.fim&&hr.fase<HR_FASES.length-1?'':'none';
+}
+function hrAnda(d){
+  if(hr.fim)return;const n=hrMove(hr.s,hr.sel,d);if(!n)return;
+  hr.hist.push(hr.s);hr.s=n;hr.lances++;hr.dica=null;
+  if(n.morto){hrDesenha();msg('#hr-msg',`💥 ${HR_INFO[n.morto].nome.split(',')[0]} caiu nos espinhos! Toque em Desfazer ou Reiniciar.`,'erro');hr.fim='morto';return;}
+  if(hrVenceu(n)){hr.fim=true;hrDesenha();
+    msg('#hr-msg',`🎉 Fase concluída em ${hr.lances} lances!`+(hr.fase===HR_FASES.length-1?' Você terminou todas as fases!':''),'ok');
+    ganhou('herois');if(hr.fase===HR_FASES.length-1)mostraFato('#hr-msg');return;}
+  hrDesenha();
+}
+$('#hr-setas').onclick=e=>{const b=e.target.closest('[data-d]');if(b)hrAnda(b.dataset.d);};
+$('#hr-herois').onclick=e=>{const b=e.target.closest('[data-k]');if(b){hr.sel=b.dataset.k;hrDesenha();}};
+$('#hr-tab').onclick=e=>{const b=e.target.closest('[data-k]');if(b){hr.sel=b.dataset.k;hrDesenha();}};
+$('#hr-desfaz').onclick=()=>{if(!hr.hist.length||hr.fim===true)return;hr.s=hr.hist.pop();hr.lances++;hr.fim=false;hr.dica=null;msg('#hr-msg',HR_FASES[hr.fase].dica);hrDesenha();};
+$('#hr-reinicia').onclick=()=>hrNovo(hr.fase);
+$('#hr-prox').onclick=()=>hrNovo(hr.fase+1);
+$('#hr-sel').onchange=e=>hrNovo(+e.target.value);
+document.addEventListener('keydown',e=>{if(atual!=='herois')return;const d={ArrowLeft:'e',ArrowRight:'d',ArrowUp:'c',ArrowDown:'b'}[e.key];
+  if(d){e.preventDefault();hrAnda(d);}else if(e.key==='Tab'||e.key===' '){e.preventDefault();hr.sel={a:'f',f:'e',e:'a'}[hr.sel];hrDesenha();}});
+$('#hr-sel').innerHTML=HR_FASES.map((f,i)=>`<option value="${i}">${f.nome}</option>`).join('');
+const INIT={reversi:rvNovo,lig4:l4Novo,mancala:mcNovo,batalhanaval:bnNovo,escape:esNovo,herois:()=>hrNovo(0),domino:doNovo,trilha:trNovo,dama:dmNovo,xadrez:xzNovo,cacapalavras:wsNovo,cruzadinha:cwNovo,sudoku:sdNovo,criptograma:crNovo,embaralhadas:emNovo,labirinto:lbNovo,quiz:qzNovo,mapa:mpNovo};
 addEventListener('hashchange',rota);
 contaIniciar();
 rota();
