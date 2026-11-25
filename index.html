@@ -2121,33 +2121,22 @@ function qzFinal(){
     enviar({acao:'zerar_quiz'});desenhaPerfil();qzProxima();
   };
 }
-/* ===== Top 10 da página inicial: abas com os principais jogos (lidos da planilha) ===== */
-let topLido=0,topDados=null,topAba='geral';
+/* ===== Top 10 da página inicial: soma dos pontos de todos os jogos (calculada na planilha) ===== */
+let topLido=0,topLista=null;
 function topCarrega(){
   if(!SERVIDOR_URL||Date.now()-topLido<30000)return;topLido=Date.now();
-  api({acao:'rankings'}).then(r=>{
-    if(r&&r.rankings){topDados=r.rankings;topRender();}
-    else api({acao:'ranking'}).then(x=>topDesenha(x&&x.ranking)).catch(()=>{});   // servidor antigo: só o quiz
-  }).catch(()=>{});
+  api({acao:'rankings'}).then(r=>{const g=r&&r.rankings&&r.rankings.find(x=>x.id==='geral');topLista=g?g.lista:null;topRender();}).catch(()=>{});
 }
-function topDesenha(listaQuiz){ // atualiza só a aba do quiz (chega junto com outras respostas do servidor)
-  const lista=(listaQuiz||[]).filter(x=>x&&x.nick).sort((a,b)=>b.acertos-a.acertos||a.respondidas-b.respondidas).slice(0,10).map(x=>({nick:x.nick,valor:Number(x.acertos)||0}));
-  topDados=topDados||[{id:'quiz',nome:'Quiz',un:'acertos',lista:[]}];
-  const q=topDados.find(r=>r.id==='quiz');if(q&&lista.length)q.lista=lista;topRender();
-}
+function topDesenha(){} // o ranking do quiz não muda mais o quadro da página inicial
 function topRender(){
-  const el=$('#top10');const abas=(topDados||[]).filter(r=>r.lista&&r.lista.length);
-  if(!abas.length){el.style.display='none';return;}
-  if(!abas.some(r=>r.id===topAba))topAba=abas[0].id;
-  const R=abas.find(r=>r.id===topAba),eu=(conta.nick||'').toLowerCase();
-  const val=x=>R.un==='tempo'?tempo(x.valor*1000):`${x.valor} ${R.un}`;
+  const el=$('#top10'),lista=(topLista||[]).filter(x=>x&&x.nick).slice(0,10);
+  if(!lista.length){el.style.display='none';return;}
+  const eu=(conta.nick||'').toLowerCase();
   el.innerHTML=`<h3>🏆 Top 10 jogadores</h3>
-    <div class="top-abas">${abas.map(r=>`<button data-t="${r.id}" class="${r.id===topAba?'on':''}">${esc(r.id==='geral'?'⭐':(JOGOS_NOMES[r.id]||'🧠 '+r.nome).split(' ')[0])} ${esc(r.id==='geral'?'Pontos totais':r.nome)}</button>`).join('')}</div>
-    <table>${R.lista.map((x,i)=>`<tr class="${x.nick.toLowerCase()===eu?'eu':''}"><td class="pos">${i<3?['🥇','🥈','🥉'][i]:i+1}</td><td>${esc(x.nick)}</td><td class="n">${val(x)}</td></tr>`).join('')}</table>
-    ${R.un==='tempo'?'<p class="top-obs">Menor tempo primeiro.</p>':R.id==='geral'?'<p class="top-obs">Soma dos pontos de todos os jogos.</p>':''}`;
+    <table>${lista.map((x,i)=>`<tr class="${x.nick.toLowerCase()===eu?'eu':''}"><td class="pos">${i<3?['🥇','🥈','🥉'][i]:i+1}</td><td>${esc(x.nick)}</td><td class="n">${Number(x.valor)||0} pontos</td></tr>`).join('')}</table>
+    <p class="top-obs">Soma dos pontos de todos os jogos.</p>`;
   el.style.display='';
 }
-$('#top10').onclick=e=>{const b=e.target.closest('[data-t]');if(b){topAba=b.dataset.t;topRender();}};
 function qzRanking(){
   if(!SERVIDOR_URL){$('#qz-rank').innerHTML='<h3>🏆 Ranking</h3><p class="instr">Ranking indisponível.</p>';return;}
   $('#qz-rank').innerHTML='<h3>🏆 Ranking</h3><p class="instr">Carregando…</p>';
